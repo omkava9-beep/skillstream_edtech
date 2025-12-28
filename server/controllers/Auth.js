@@ -160,7 +160,7 @@ const Login = async(req, resp)=>{
             //generate jwt token 
          
             const token = jwt.sign(payload , process.env.JWT_SECRET , {
-                expiresIn:'2h'
+                expiresIn:'8760h'
             })
             const user= Exist.toObject();
 
