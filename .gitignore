@@ -27,3 +27,6 @@ Thumbs.db
 
 coverage/
 .cache/
+
+node_modules/
+**/node_modules/
