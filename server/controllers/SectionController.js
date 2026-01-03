@@ -13,19 +13,19 @@ const CreateSection = async(req , res)=>{
             })
         }
 
-        const newSection = await Section({
+        const newSection = await Section.create({
             sectionName 
         });
 
-        const updatedCourse = await Course.findById({courseId} , {
+        const updatedCourse = await Course.findByIdAndUpdate(courseId, {
             $push:{ 
                 courseContent:newSection._id
             }
         },{new:true}).populate(
             {
-                path:'Section',
+                path:'courseContent',
                 populate:{
-                    path:'SubSection'
+                    path:'subSection'
                 }
             }
         )
@@ -48,27 +48,21 @@ const CreateSection = async(req , res)=>{
 
 const UpdateSection = async(req,res)=>{
     try{
-        const {courseId, sectionName , sectionId} = req.body;
+        const {sectionName , sectionId} = req.body;
 
-        if(!sectionName || !courseId ||!sectionId){
+        if(!sectionName || !sectionId){
             return res.status(500).json({
                 success:false, 
                 message:"All fields required."
             })
         }
-        await Section.findByIdAndUpdate(sectionId , {sectionName} , {new:true});
+        const updatedSection = await Section.findByIdAndUpdate(sectionId , {sectionName} , {new:true});
 
-        const updatedCourse = await Course.findById(courseId)
-        .populate({
-            path:'courseContent',
-            populate:{
-                path:'SubSection',
-            }
-        })
+        
         return res.status(200).json({
             success: true,
             message: "Section updated successfully",
-            data: updatedCourse
+            updatedSection
         });
     }catch(e){
         console.log(e);
@@ -83,7 +77,7 @@ const DeleteSection = async(req , res)=>{
     
     try {
         const {sectionId , courseId} = req.body;
-        if(!sectionId || courseId){
+        if(!sectionId || !courseId){
             return res.status(400).json({
                 success:false,
                 message:"All fields required to Delete Section"
@@ -97,7 +91,7 @@ const DeleteSection = async(req , res)=>{
         },{new:true}).populate({
             path:'courseContent',
             populate:{
-                path:'SubSection'
+                path:'subSection'
             }
         })
 

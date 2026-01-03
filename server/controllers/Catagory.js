@@ -20,7 +20,7 @@ const CreateCatagory = async(req ,resp) =>{
         console.log(newTag);
 
         return resp.status(200).json({
-            message: 'New tag created Successfully',
+            message: 'New catagory created Successfully',
             success: true,
         })
 
@@ -40,7 +40,7 @@ const ShowAllCatagory = async(req,resp) =>{
         return resp.status(200).json({
             data:allCatagory,
             success:true,
-            message:"All tags are fetched successfully",
+            message:"All catagories are fetched successfully",
         })
 
 

@@ -2,16 +2,18 @@ const express = require('express');
 
 const router = express.Router();
 
-const { auth } = require('../middleware/auth');
+const { auth, isStudent } = require('../middleware/auth');
 const { 
   UpdateProfile, 
   DeleteAccount, 
   GetAllUsersDetails,
-  GetEnrolledCourses 
+  GetEnrolledCourses ,
+  uploadProfilePicture
 } = require('../controllers/ProfileController');
 
 router.put('/updateprofile', auth, UpdateProfile);
-router.delete('/deleteaccount', auth, DeleteAccount);
+router.post('/uploadprofilepicture', auth, uploadProfilePicture);
+router.delete('/deleteaccount', auth,isStudent, DeleteAccount);
 
 router.get('/getallusers', auth, GetAllUsersDetails);
 

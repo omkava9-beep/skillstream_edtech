@@ -15,6 +15,9 @@ const ContactUs = async (req, resp) =>{
         const mailsent = await MailSender(email , 'We have received your message' ,
         `Hello ${firstname} ${lastname} , We have received your message. We will get back to you soon.`);
 
+        const mailtoAdmin = await MailSender('omkava9@gmail.com', 'New Contact Us Message',
+        `Name: ${firstname} ${lastname}\nEmail: ${email}\nPhone Number: ${countryCode}-${phoneNo}\nMessage: ${message}`);
+
         return resp.status(200).json({
             message:'Message sent successfully',
             success:true,

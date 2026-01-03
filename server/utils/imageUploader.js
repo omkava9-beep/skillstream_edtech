@@ -1,6 +1,6 @@
 const cloudinary = require('cloudinary').v2;
 
-const imageUploder = async(imageurl , folder , height , quality)=>{
+const imageUploder = async(imagePath , folder , height , quality)=>{
     try{
         const options = {
             folder,
@@ -12,7 +12,9 @@ const imageUploder = async(imageurl , folder , height , quality)=>{
         if(quality){
             options.quality = quality;
         }
-        return await cloudinary.uploader.upload(imageurl.tempFilePath ,options );
+        // Handle both string path and object with tempFilePath
+        const pathToUpload = typeof imagePath === 'string' ? imagePath : imagePath.tempFilePath;
+        return await cloudinary.uploader.upload(pathToUpload, options);
     }catch(e){
         console.log('Error uploading image to cloudinary:', e);
         throw e;

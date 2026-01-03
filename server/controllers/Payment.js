@@ -136,7 +136,6 @@ const CapturePayment = async(req,resp)=>{
             userId,
             courseId
         }
-
     }
 
     try {

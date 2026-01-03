@@ -15,13 +15,12 @@ const { CreateCatagory,  getCatgoryPageDetails , ShowAllCatagory } = require('..
 
 router.post('/createcourse' , auth , isInstructor , CreateCourse );
 router.post('/createsection' , auth , isInstructor , CreateSection);
-router.post('/createsubsection' , auth , isInstructor ,  );
-
+router.post('/createsubsection' , auth , isInstructor , CreateSubSection );
 
 
 router.put('/updatesection/:sectionId' , auth , isInstructor , UpdateSection);
 router.put('/updatesubsection/:subSectionId' , auth , isInstructor , UpdateSubSection);
-
+ 
 
 
 router.delete('/deletesection' , auth , isInstructor , DeleteSection);
@@ -34,7 +33,7 @@ router.get('/showallcatagories' , ShowAllCatagory );
 router.get('/getallcourses' ,getAllCourses  );
 router.get('/getcourse/:courseId' , GetOneCourseAllDetails  );
 
-router.post('/enrollcourse/:courseId' , auth , isStudent );
-router.post('/createCatagory' , auth , isAdmin , CreateCatagory );
+router.post('/enrollcourse/:courseId' , auth , isStudent , );
+router.post('/createcatagory' , auth , isAdmin , CreateCatagory );
 
 module.exports = router;

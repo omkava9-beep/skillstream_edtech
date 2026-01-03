@@ -4,6 +4,8 @@ const otpGenerator = require('generate-otp')
 const bcrypt = require('bcrypt');
 const Profile = require('../models/Profile');
 const jwt = require('jsonwebtoken');
+const MailSender = require('../utils/Mailsender');
+const {passwordUpdated} = require('../mail/templates/passwordUpdate');
 require('dotenv').config();
 
 const sendOtp = async(req ,resp)=>{
@@ -227,6 +229,11 @@ const ChangePassword = async(req , resp)=>{
         }
         const hashed = await bcrypt.hash(newPassword, 10);
         await User.findByIdAndUpdate(userId , {password:hashed});
+        
+        // Send password update confirmation email
+        const emailTemplate = passwordUpdated(user.email, user.firstName);
+        await MailSender(user.email, "Password Update Confirmation", emailTemplate);
+        
         return resp.status(200).json({
             success : true,
             message : "Password Changed Successfully"

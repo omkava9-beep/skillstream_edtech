@@ -44,6 +44,7 @@ const CreateCourse = async(req , resp)=>{
             instructor:req.user.id,
             whatYouWillLearn:whatYouWillLearn,
             catagory:validcatagory._id, 
+            tag : tag,
             thumbnail:thumbnailImage.secure_url,
             price:price,
         });
@@ -55,6 +56,7 @@ const CreateCourse = async(req , resp)=>{
         },{new :true} );
         validcatagory.courses.push(newCourse._id);
         await validcatagory.save();
+
         return resp.status(200).json({
             message:'New Course created successfully',
             success:true,
@@ -69,16 +71,22 @@ const CreateCourse = async(req , resp)=>{
     }
 }
 
-const getAllCourses = async(req , resp)=>{
-    try {
-        const allCourses = await Course.find({}).populate({
-            path:'instructor',
-            populate:{
-                path:'courses',
-            }
-        }).populate({
+const getAllCourses = async(req , resp)=>{ 
+    try {        
+        const allCourses = await Course.find({})            
+        .populate({
+                path:'instructor',
+        })
+        .populate({
             path:'catagory',
-        }).exec();    
+        })
+        .populate({
+            path:'courseContent',
+                populate:{
+                    path:'subSection'
+                }
+            })
+        .exec();
         return resp.status(200).json({
             message:'All courses fetched successfully',
             success:true,
@@ -106,17 +114,24 @@ const GetOneCourseAllDetails = async(req,resp)=>{
             })
         }
 
-        const allCourseDetails = await course.populate({
-            path: 'instructor',
-            populate : {
-                path:'additionalDetails'
-            }
-        }).populate("catagory").populate("ratingAndReviews").populate({
+        // const allCourseDetails = await course.populate({
+        //     path: 'instructor',
+        //     populate : {
+        //         path:'additionalDetails'
+        //     }
+        // }).populate("catagory").populate("ratingAndReviews").populate({
+        //     path:'courseContent',
+        //     populate:{
+        //         path:'subSection',
+        //     }
+        // }).exec();
+
+        const allCourseDetails = await Course.findById(courseId).populate("instructor").populate("catagory").populate("ratingAndReviews").populate({
             path:'courseContent',
             populate:{
-                path:'subSection',
+                path:'subSection'
             }
-        }).exec();
+        });
 
         if(!allCourseDetails){
             return resp.status(403).json({

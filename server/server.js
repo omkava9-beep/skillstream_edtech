@@ -7,7 +7,7 @@ const paymentRoute= require('./routes/Payment')
 const courseRoute= require('./routes/Course')
 const profileRoute= require('./routes/Profile')
 const ratingRoute= require('./routes/Rating');
-const cloudinaryConnect = require('./config/couldinary');
+const {cloudinaryConnect} = require('./config/couldinary');
 const fileUpload = require('express-fileupload');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -19,14 +19,18 @@ app.use(require('cookie-parser')());
 
 app.use(
     cors({
-        origin : "http://localhost:3000",
+        origin : "h",
         methods : ['GET' , 'POST' , 'PUT' , 'DELETE'],
         credentials : true,
     })
 )
 dbConnect();
+cloudinaryConnect();
 
-app.use(fileUpload());
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/',
+}));
 app.use('/api/v1/user' , userRoute);
 app.use('/api/v1/contact' , contactRoute);
 app.use('/api/v1/payment' , paymentRoute);
@@ -34,7 +38,7 @@ app.use('/api/v1/course' , courseRoute);
 app.use('/api/v1/profile' , profileRoute);
 app.use('/api/v1/rating' , ratingRoute);
 
-cloudinaryConnect();
+
 const port = process.env.PORT || 3000
 app.listen(port, ()=>{
     console.log(`app listening to port number ${port}`);

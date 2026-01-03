@@ -34,7 +34,7 @@ const ResetPasswordToken = async(req , resp)=>{
 
         const updatedDetails = await User.findByIdAndUpdate(user._id , {
             token:token ,
-            resetPasswordExpires: Date.now()+(1000*5*60)
+            resetPasswordExpires: Date.now() + (5*60*1000)
         }, {new :true});
         console.log(updatedDetails);
 
@@ -73,7 +73,7 @@ const ResetPassword = async(req , resp)=>{
                 message:'Invalid token or token has been expired.'
             })
         }
-        if(user.resetPasswordExpires < Date.now()){
+        if(Date.now() > user.resetPasswordExpires){
             return resp.status(400).json({
                 success:false,
                 message:'Token has been expired.'
