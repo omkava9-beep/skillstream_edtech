@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signup Form</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Times New Roman", serif;
+      padding: 20px;
+    }
+    .form-wrapper {
+      width: 500px;
+      border: 1px solid #999;
+      padding: 16px 20px 22px;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .row label {
+      width: 140px;
+      font-size: 18px;
+    }
+    .row input[type="text"],
+    .row input[type="password"],
+    .row input[type="email"],
+    .row input[type="date"],
+    .row select,
+    .row textarea,
+    .row input[type="search"] {
+      flex: 1;
+      padding: 6px 8px;
+      font-size: 16px;
+      border: 1px solid #999;
+    }
+    .row textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+    .inline-options {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 17px;
+    }
+    .inline-options input {
+      margin-right: 4px;
+    }
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      font-size: 16px;
+      padding: 6px 12px;
+      border: 1px solid #555;
+      background: #f6f6f6;
+      cursor: pointer;
+    }
+    button:hover { background: #e9e9e9; }
+  </style>
+</head>
+<body>
+  <div class="form-wrapper">
+    <h2>Signup</h2>
+
+    <div class="row">
+      <label for="username">User name</label>
+      <input id="username" type="text" placeholder="EnterName" />
+    </div>
+
+    <div class="row">
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Enter Password" />
+    </div>
+
+    <div class="row">
+      <label>Gender</label>
+      <div class="inline-options">
+        <label><input type="radio" name="gender" /> Male</label>
+        <label><input type="radio" name="gender" /> Female</label>
+        <label><input type="radio" name="gender" /> Others</label>
+      </div>
+    </div>
+
+    <div class="row">
+      <label for="dob">Birth Date</label>
+      <input id="dob" type="date" />
+    </div>
+
+    <div class="row">
+      <label for="email">Email ID</label>
+      <input id="email" type="email" />
+    </div>
+
+    <div class="row">
+      <label>Area Of Intrest</label>
+      <div class="inline-options">
+        <label><input type="checkbox" checked /> DS</label>
+        <label><input type="checkbox" /> DBMS</label>
+        <label><input type="checkbox" /> Full Stack</label>
+      </div>
+    </div>
+
+    <div class="row">
+      <label for="dept">Department</label>
+      <select id="dept">
+        <option>-- Select Branch --</option>
+        <option>CS</option>
+        <option>IT</option>
+        <option>ECE</option>
+        <option>ME</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label for="books">No. of Book Issued</label>
+      <input id="books" type="number" min="0" style="width:80px;" />
+    </div>
+
+    <div class="row" style="align-items: flex-start;">
+      <label for="addr">Address</label>
+      <textarea id="addr"></textarea>
+    </div>
+
+    <div class="row">
+      <label for="cv">Upload CV</label>
+      <input id="cv" type="file" />
+    </div>
+
+    <div class="row">
+      <label for="search">Search Here</label>
+      <input id="search" type="search" />
+    </div>
+
+    <div class="range-row">
+      <label for="rating">Rate this form(0 to 50)</label>
+      <input id="rating" type="range" min="0" max="50" value="25" />
+    </div>
+
+    <div class="buttons">
+      <button type="button">Click me</button>
+      <button type="reset">Reset</button>
+    </div>
+  </div>
+</body>
+</html>

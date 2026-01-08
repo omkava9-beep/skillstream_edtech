@@ -5,11 +5,10 @@ import HighlightedText from "./HighlightedText";
 import { TypeAnimation } from "react-type-animation";
 
 const CodeBlocks = ({
-  position,
+  reverse = false,
   heading1,
   heading2,
   highlightedText,
-
   subheading,
   button1,
   button2,
@@ -19,75 +18,68 @@ const CodeBlocks = ({
 }) => {
   return (
     <div
-      className={`relative flex ${position} my-20 gap-10 
-      justify-between items-start min-h-[380px] max-w-[1500px]`}
+      className={`relative sm:flex sm:flex-row
+      ${reverse ? "sm:flex-row-reverse" : "sm:flex-row"}
+      gap-12 items-center justify-between
+      w-full p-4 sm:px-8 lg:px-12`}
     >
       {/* LEFT SECTION */}
-      <div className="flex flex-col w-[50%] gap-8 flex-shrink-0">
-        <h2 className="text-4xl font-semibold">
-          {heading1}<HighlightedText text={highlightedText}></HighlightedText>{heading2}
+      <div className="flex flex-col gap-6 w-full lg:w-1/2">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight">
+          {heading1}
+          <HighlightedText text={highlightedText} />
+          {heading2}
         </h2>
 
-        <p className="text-richblack-300 font-bold text-[16px]">
+        <p className="text-richblack-300 font-medium text-sm sm:text-base">
           {subheading}
         </p>
 
-        <div className="flex gap-7 mt-7">
+        <div className="flex flex-row gap-4 mb-7">
           <YellowButton>{button1}</YellowButton>
           <DarkButton>{button2}</DarkButton>
         </div>
       </div>
 
       {/* RIGHT SECTION */}
-      <div className="relative w-[50%] flex justify-center flex-shrink-0">
-        
-        {/* BACKGROUND GLOW */}
+      <div className="relative w-full lg:w-1/2 flex justify-center overflow-hidden">
         <div
-          className={`absolute top-1/4  right-4/12
-          w-[372.95px] h-[257.05px] rounded-full
-          opacity-20 blur-[68px]
+          className={`absolute top-24 sm:top-1/4
+          w-[240px] sm:w-[360px]
+          h-[160px] sm:h-[260px]
+          rounded-full opacity-20 blur-[90px]
           ${backgroundGradient}`}
         />
 
-        {/* GLASS CODE CARD */}
-        <div
-          className="relative z-10 w-full max-w-[520px] h-[300px]
-          rounded-xl overflow-hidden
-          bg-white/10 backdrop-blur-lg
-          border border-white/10
-          shadow-xl shadow-black/30"
+        <div className="relative z-10 w-full max-w-[520px]
+          rounded-xl bg-white/10 backdrop-blur-lg
+          border border-white/10 shadow-xl shadow-black/30"
         >
-          <div className="flex h-full">
-            
-            {/* LINE NUMBERS */}
-            <div className="w-[8%] text-richblack-300 font-inter font-bold text-center py-4 border-r border-white/10">
-              {Array.from({ length: 11 }).map((_, i) => (
+          <div className="flex">
+            <div className="hidden sm:flex flex-col text-richblack-300 font-bold text-center py-4 px-3 border-r border-white/10">
+              {Array.from({ length: 12 }).map((_, i) => (
                 <p key={i}>{i + 1}</p>
               ))}
             </div>
 
-            {/* CODE AREA */}
-            <div className="relative w-[92%] px-4 py-4 font-mono font-bold leading-6 overflow-hidden">
-              
-              {/* INVISIBLE PLACEHOLDER */}
-              <pre className="opacity-0 select-none">
+            <div className="relative px-4 py-4 font-mono leading-6 w-full">
+              <pre className="opacity-0 select-none whitespace-pre-wrap">
                 {codeblock}
               </pre>
 
-              {/* TYPING TEXT */}
-              <div className={`absolute inset-0 ${codeColor} pt-3.5 pl-3.5`}>
+              <div className={`absolute inset-0 ${codeColor} pt-4 pl-4`}>
                 <TypeAnimation
                   sequence={[codeblock, 2500, ""]}
                   repeat={Infinity}
-                  cursor={true}
+                  cursor
                   speed={70}
                   style={{
                     whiteSpace: "pre-line",
-                    display: "block",
+                    fontSize: "14px",
+                    lineHeight: "22px",
                   }}
                 />
               </div>
-
             </div>
           </div>
         </div>
