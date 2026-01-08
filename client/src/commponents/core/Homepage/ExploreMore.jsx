@@ -51,10 +51,9 @@ const ExploreMore = () => {
         </div>
 
         {/* ================= COURSE CARDS ================= */}
-        <div className="w-full max-w-6xl">
+        <div className="w-full justify-center max-w-6xl">
           <div
           className="
-            sm:grid-cols-2
             gap-6
             sm:md:grid
             sm:md:grid-cols-2

@@ -142,13 +142,13 @@ const Home = () => {
               </div>
 
               {/* ===== TIMELINE + IMAGE ROW ===== */}
-              <div className="max-w-[1280px] mx-auto px-4 flex lg:flex-row gap-[52px] items-center">
+              <div className="max-w-[1280px] mx-auto px-4 sm:flex sm:md:flex-row lg:flex-row gap-10 items-center">
 
                 {/* ===== Timeline ===== */}
-                <div className="relative flex flex-col gap-10 lg:w-1/2 pl-8">
+                <div className="relative flex flex-col gap-8 sm:gap-10 w-full lg:w-1/2 pl-6 sm:pl-8 mb-5">
 
                   {/* Vertical line */}
-                  <div className="absolute left-3 top-0 h-full w-[2px] bg-richblack-200"></div>
+                  <div className="absolute left-2 sm:left-3 top-0 h-full w-[2px] bg-richblack-200"></div>
 
                   <Timeline
                     logo={Logo1}
@@ -173,33 +173,41 @@ const Home = () => {
                 </div>
 
                 {/* ===== Image + Stats ===== */}
-                <div className="lg:w-1/2 relative flex justify-center font-inter">
+                <div className="w-full lg:w-1/2 relative flex justify-center font-inter">
 
                   {/* Image */}
                   <img
                     src={TimelineImage}
                     alt="Timeline Illustration"
-                    className="w-full h-136.25 object-contain"
+                    className="w-full max-w-[500px] sm:max-w-[600px] lg:max-w-full object-contain m-2 "
                   />
 
                   {/* Stats Card */}
-                  <div className="
-                    absolute bottom-1.75 left-1/2 -translate-x-1/2
-                    bg-caribbeangreen-600 text-white
-                    flex gap-13 px-10 py-6
-                    shadow-lg
-                  ">
+                  <div
+                    className="
+                      absolute
+                      -bottom-10 sm:-bottom-11 md:-bottom-11
+                      left-1/2 -translate-x-1/2
+                      bg-caribbeangreen-600 text-white
+                      flex flex-col sm:flex-row
+                      gap-6 sm:gap-10
+                      px-6 sm:px-10
+                      py-4 sm:py-6
+                      md:
+                      shadow-lg
+                    "
+                  >
                     <div className="flex items-center gap-3">
-                      <h1 className="text-3xl font-bold">10</h1>
-                      <div className="text-sm leading-tight text-caribbeangreen-300">
+                      <h1 className="text-xl sm:text-3xl font-bold">10</h1>
+                      <div className="text-xs sm:text-sm leading-tight text-caribbeangreen-300">
                         <p>YEARS</p>
                         <p>EXPERIENCE</p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <h1 className="text-3xl font-bold">250</h1>
-                      <div className="text-sm leading-tight  text-caribbeangreen-300">
+                      <h1 className="text-xl sm:text-3xl font-bold">250</h1>
+                      <div className="text-xs sm:text-sm leading-tight text-caribbeangreen-300">
                         <p>TYPES OF</p>
                         <p>COURSES</p>
                       </div>
@@ -208,6 +216,7 @@ const Home = () => {
 
                 </div>
               </div>
+
             </div>
 
           </div>
@@ -217,58 +226,110 @@ const Home = () => {
       {/* section3 */}
       <div className=" bg-richblack-900 ">
         {/* part-1  */}
-        <div className="flex py-[90px] px-[120px] relative gap-[98px]">
-          <div className=" min-w-[616px] h-[545px] bg-richblack-25">
+        <div className="
+          flex flex-col items-center
+          lg:flex-row
+          items-center
+          gap-12 lg:gap-[98px]
+          py-16 sm:py-20 lg:py-[90px]
+          px-6 sm:px-12 lg:px-[120px]
+        ">
 
+          
+          {/* ===== Instructor Image ===== */}
+          <div className="
+            lg:left-[140px] lg:top-[110px]
+            -mt-40 sm:-mt-56 lg:mt-0
+          ">
+            <img
+              src={instructor}
+              alt="Instructor"
+              className="
+                w-60 sm:w-72 lg:w-auto
+              "
+            />
           </div>
-          <div className="absolute left-[140px] top-[110px] ">
-              <img src={instructor} alt=""/>
-          </div>
-          <div className=" flex flex-col items-start gap-[12px] justify-center max-w-171.5">
-            <h2 className=" text-[36px] font-semibold leading-[44px] tracking-[-2%]">
-              <p>Become an</p>
-              <HighlightedText text="Instructor"></HighlightedText>
+
+          {/* ===== Text Content ===== */}
+          <div className="
+             items-center
+            gap-3
+            justify-center
+            lg:max-w-[686px]
+            text-center lg:text-left
+          ">
+            <div className="flex text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight lg:leading-[44px] tracking-tight justify-center lg:justify-start gap-2">
+              <h2 className="text-2xl flex sm:text-3xl lg:text-[36px] font-semibold leading-tight lg:leading-[44px] tracking-tight">
+              Become an 
             </h2>
-            <p className=" font-medium text-[16px] leading-[24px] text-richblack-300 mb-7">Instructors from around the world teach millions of students on StudyNotion. We provide the tools and skills to teach what you love.</p>
-            <YellowButton >Start Teaching Today</YellowButton>
+            <HighlightedText text={` Instructor`} />
+
+            </div>
+            
+
+            <p className="flex flex-col items-center font-medium text-sm sm:text-base leading-6 mt-2.5 text-richblack-300 mb-6">
+              <p className=" mb-2">
+              Instructors from around the world teach millions of students on
+              StudyNotion. We provide the tools and skills to teach what you love.
+              </p>
+
+              <YellowButton className="mt-4">Start Teaching Today</YellowButton>
+            </p>
+
             
           </div>
-        </div>
-        {/* part-2 */}
-        <div className="p-5 bg-richblack-900 flex flex-col justify-center gap-5 items-center">
-          <h2 className=" text-richblack-25 text-[36px] font-medium mb-8">Review from other Learners</h2>
-          <div className=" flex gap-7 ">
 
-            <ReviewCard 
-              name="Cody Fisher"
-              email="tim.jennings@example.com"
-              avatar="https://i.pravatar.cc/150?u=cody"
-              review="Coordination of activities improved tremendously with Learn codings."
-              rating={4.5}
-            />
-            <ReviewCard 
-              name="Cody Fisher"
-              email="tim.jennings@example.com"
-              avatar="https://i.pravatar.cc/150?u=cody"
-              review="Coordination of activities improved tremendously with Learn codings."
-              rating={4.5}
-            />
-            <ReviewCard 
-              name="Cody Fisher"
-              email="tim.jennings@example.com"
-              avatar="https://i.pravatar.cc/150?u=cody"
-              review="Coordination of activities improved tremendously with Learn codings."
-              rating={4.5}
-            />
-            <ReviewCard 
-              name="Cody Fisher"
-              email="tim.jennings@example.com"
-              avatar="https://i.pravatar.cc/150?u=cody"
-              review="Coordination of activities improved tremendously with Learn codings."
-              rating={4.5}
-            />
-          </div>
         </div>
+
+<div className="bg-richblack-900 px-4 py-10 sm:px-6 lg:px-12 flex flex-col items-center gap-8">
+
+  {/* Heading */}
+  <h2 className="text-richblack-25 text-2xl sm:text-3xl lg:text-[36px] font-medium text-center">
+    Review from other Learners
+  </h2>
+
+  {/* Cards */}
+  <div className="
+    w-full
+    max-w-7xl
+    sm:grid
+    sm:grid-cols-2
+    lg:grid-cols-4
+    gap-6
+    place-items-center
+  ">
+    <ReviewCard
+      name="Cody Fisher"
+      email="tim.jennings@example.com"
+      avatar="https://i.pravatar.cc/150?u=cody"
+      review="Coordination of activities improved tremendously with Learn codings."
+      rating={4.5}
+    />
+    <ReviewCard
+      name="Cody Fisher"
+      email="tim.jennings@example.com"
+      avatar="https://i.pravatar.cc/150?u=cody"
+      review="Coordination of activities improved tremendously with Learn codings."
+      rating={4.5}
+    />
+    <ReviewCard
+      name="Cody Fisher"
+      email="tim.jennings@example.com"
+      avatar="https://i.pravatar.cc/150?u=cody"
+      review="Coordination of activities improved tremendously with Learn codings."
+      rating={4.5}
+    />
+    <ReviewCard
+      name="Cody Fisher"
+      email="tim.jennings@example.com"
+      avatar="https://i.pravatar.cc/150?u=cody"
+      review="Coordination of activities improved tremendously with Learn codings."
+      rating={4.5}
+    />
+  </div>
+
+</div>
+
           </div>
 
 
