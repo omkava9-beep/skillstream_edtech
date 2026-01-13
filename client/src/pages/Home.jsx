@@ -19,15 +19,15 @@ import img1 from '../assets/Images/Know_your_progress.svg'
 import img2 from '../assets/Images/Plan_your_lessons.svg'
 import img3 from '../assets/Images/Compare_with_others.svg'
 import instructor from '../assets/Images/Instructor.png'
-import ExploreMore from "../commponents/core/Homepage/Exploremore";
+import ExploreMore from "../commponents/core/Homepage/ExploreMore";
 import ReviewCard from "../commponents/core/Homepage/ReviewCard";
 import Footer from "../commponents/core/Homepage/Footer";
 
 const Home = () => {
   return (
     <div className="w-full">
-      <div className="flex flex-col w-full max-w-[1280px] mx-auto font-inter">
-        <div className="flex flex-col items-center gap-12 px-1.5">
+      <div className="flex flex-col w-full max-w-[1280px] mx-auto font-inter ">
+        <div className="flex flex-col items-center gap-12 px-1.5  ">
 
           <Link to="/signup">
             <div
@@ -106,7 +106,7 @@ const Home = () => {
           
           <div className="mx-auto px-4 relative">
             
-            <div className="homepage_bg h-[333px] w-full rounded-xl flex items-center top-4 justify-center">
+            <div className="homepage_bg h-[333px] w-full rounded-xl flex items-center top-4 justify-center ">
               
               <div className="w-11/12 max-w-max flex flex-col items-center gap-5 mx-auto sm:flex-row">
                 <YellowButton>Explore Full Catalog</YellowButton>

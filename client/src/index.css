@@ -113,6 +113,7 @@
   --max-w-max-content: 1260px;
   --max-w-max-content-tab: 650px;
 }
+
 .homepage_bg {
   background-image: url("./assets/Images/bghome.svg");
   background-repeat: repeat;

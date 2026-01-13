@@ -5,31 +5,53 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setToken } from '../../redux/slices/authReducer'
 import { setUser } from '../../redux/slices/profileReducer'
+import { apiConnector } from '../../../services/apiConnector'
+import {auth} from '../../../services/apis'
+
+import { setSignupData } from '../../redux/slices/authReducer'
 
 const SignUpForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({ 
-        firstname: '', lastname: '', email: '', password: '', confirmpassword: '' ,accountType: 'student' 
+        firstname: '', lastname: '', email: '', password: '', confirmpassword: '' ,accountType: 'Student' 
     })
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    const [accountType, setAccountType] = useState("student");
-
     const changeHandler = (event) => {
         setFormData(prev => ({ ...prev, [event.target.name]: event.target.value }))
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        if(formData.password !== formData.confirmpassword) {
+
+        if (formData.password !== formData.confirmpassword) {
             toast.error("Passwords do not match");
             return;
         }
-        console.log(formData)
-        dispatch(setToken("mock-jwt-token"))
-        dispatch(setUser({ ...formData, image: `https://api.dicebear.com/5.x/initials/svg?seed=${formData.firstname} ${formData.lastname}` }))
-        toast.success("Account Created")
+
+        try {
+            // Store signup data in Redux to use after OTP verification
+            dispatch(setSignupData(formData));
+
+            // Call SENDOTP API
+            const response = await apiConnector("POST", auth.SENDOTP_API, {
+                email: formData.email,
+            });
+
+            console.log("SENDOTP API RESPONSE............", response);
+
+            if (!response.data.success) {
+                throw new Error(response.data.message);
+            }
+
+            toast.success("OTP Sent Successfully");
+            navigate("/verify-email");
+
+        } catch (error) {
+            console.log("SENDOTP API ERROR............", error);
+            toast.error(error.response?.data?.message || "Could not send OTP");
+        }
     }
 
     return (
@@ -37,9 +59,8 @@ const SignUpForm = () => {
             {/* Tab Switcher */}
             <div className='flex bg-[#161D29] p-1 gap-x-1 my-6 rounded-full max-w-max border-b border-[#AFB2BF]'>
                 <button
-                    className={`${accountType === "student" ? "bg-[#000814] text-[#F1F2FF]" : "bg-transparent text-[#999DAA]"} py-2 px-5 rounded-full transition-all duration-200`}
-                    onClick={() => {setFormData({...formData , accountType: 'student'} )
-                                    setAccountType("student");
+                    className={`${formData.accountType === "Student" ? "bg-[#000814] text-[#F1F2FF]" : "bg-transparent text-[#999DAA]"} py-2 px-5 rounded-full transition-all duration-200`}
+                    onClick={() => {setFormData({...formData , accountType: 'Student'}  )
                 }}
 
                     name='student'
@@ -47,10 +68,9 @@ const SignUpForm = () => {
                     Student
                 </button>
                 <button
-                    className={`${accountType === "instructor" ? "bg-[#000814] text-[#F1F2FF]" : "bg-transparent text-[#999DAA]"} py-2 px-5 rounded-full transition-all duration-200`}
+                    className={`${formData.accountType === "Instructor" ? "bg-[#000814] text-[#F1F2FF]" : "bg-transparent text-[#999DAA]"} py-2 px-5 rounded-full transition-all duration-200`}
                     name='instructor'
-                    onClick={() => {setFormData({...formData , accountType: 'instructor'} )
-                                    setAccountType("instructor");
+                    onClick={() => { setFormData({ ...formData, accountType: 'Instructor' })
                 }}
                 >
                     Instructor

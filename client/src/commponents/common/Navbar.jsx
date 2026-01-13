@@ -1,4 +1,4 @@
-import { Link, useLocation, matchPath } from "react-router-dom";
+import { Link, useLocation, matchPath, useNavigate } from "react-router-dom";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { useSelector } from "react-redux";
 import profileReducer from "../../redux/slices/profileReducer";
@@ -9,13 +9,16 @@ import logo from "../../assets/Logo/Logo-Full-Light.png"
 import { apiConnector } from "../../../services/apiConnector";
 import { catagories } from "../../../services/apis";
 import { useEffect, useState } from "react";
+import { deleteToken } from "../../redux/slices/authReducer";
+import { useDispatch } from "react-redux";
 
 const Navbar = () => {
   const { token } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.profile);
   const {totalItems} = useSelector((state) => state.cart);
   const location = useLocation();
-
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const [subLinks, setSubLinks] = useState([]);
 
   const fetchSublinks = async () => {
@@ -51,9 +54,9 @@ const Navbar = () => {
 
         {/* ===== Nav Links (Desktop) ===== */}
         <ul className="hidden md:flex items-center gap-8">
-          {NavbarLinks.map((link) => {
+          {NavbarLinks.map((link, index) => {
             return (
-              <li key={link.id}>
+              <li key={index}>
                 {
                   link.title === "Catalog" ? (
                     <div className="relative flex items-center gap-2 group cursor-pointer">
@@ -173,6 +176,25 @@ const Navbar = () => {
               >
                 Dashboard
               </Link>
+              <button
+                onClick={() => {
+                  dispatch(deleteToken());
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("user");
+                  navigate("/login");
+                }}
+                className="
+                  px-5 py-2
+                  rounded-md
+                  bg-richblack-800
+                  text-richblack-50
+                  hover:bg-richblack-700
+                  hover:scale-105
+                  transition-all
+                "
+              >
+                Logout
+              </button>
             </div>
            
           )}

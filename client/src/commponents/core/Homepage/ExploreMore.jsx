@@ -28,7 +28,7 @@ const ExploreMore = () => {
 
   return (
     <div className="w-full flex ">
-      <div className="w-full max-w-[1280px] px-4 sm:px-6 md:px-8 py-16 flex flex-col items-center gap-12">
+      <div className="w-full max-w-[1280px] px-4 sm:px-6 md:px-8 py-16 flex flex-col items-center gap-12 ">
 
         {/* ================= TABS ================= */}
         <div className="w-full flex overflow-x-auto scrollbar-hide">

@@ -5,7 +5,9 @@ import { setUser } from '../../redux/slices/profileReducer'
 import { Link, useNavigate } from 'react-router-dom'
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 import { toast } from 'react-hot-toast'
+import { auth } from '../../../services/apis'
 import { gsap } from 'gsap'
+import { apiConnector } from '../../../services/apiConnector'
 
 const LoginForm = () => {
     const navigate = useNavigate()
@@ -25,13 +27,28 @@ const LoginForm = () => {
         setFormData(prev => ({ ...prev, [event.target.name]: event.target.value }))
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault()
-        dispatch(setToken("mock-jwt-token"))
-        dispatch(setUser({ ...formData, image: `https://api.dicebear.com/5.x/initials/svg?seed=${formData.email}` }))
-        console.log(formData)
-        toast.success("Logged In")
-        navigate('/dashboard')
+        try{
+            const api_url = auth.AUTH_API;
+            const resp = await apiConnector('POST' , api_url , { email : formData.email , password : formData.password});
+            console.log(resp);
+
+            if(!resp.data.success){
+                throw new Error(resp.data.message);
+            }
+            dispatch(setToken(resp.data.token));
+            const userImage = resp.data?.user?.image? resp.data.user.image : 'https://api.dicebear.com/5.x/initials/svg?seed='+resp.data.user.name;
+            dispatch(setUser({name : resp.data.user.name , email : resp.data.user.email , image : userImage}));
+        
+            localStorage.setItem('token' , resp.data.token);
+            localStorage.setItem('user' , JSON.stringify(resp.data.user));
+            navigate('/dashboard');
+            console.log(userImage)
+        } catch(e) {
+            console.log("LOGIN API ERROR............", e)
+            toast.error(e.response?.data?.message || "Login Failed")
+        }
     }
 
   return (
@@ -71,7 +88,7 @@ const LoginForm = () => {
                 {showPassword ? <AiOutlineEyeInvisible fontSize={24}/> : <AiOutlineEye fontSize={24}/>}
             </span>
             
-            <Link to='#'>
+            <Link to='/forgot-password'>
                 <p className='text-xs mt-1 text-[#47A5C5] hover:text-[#5eb7d6] ml-auto w-max transition-colors duration-200'>
                     Forgot Password?
                 </p>
