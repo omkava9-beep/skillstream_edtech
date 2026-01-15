@@ -13,6 +13,7 @@ import ForgotPassword from './pages/ResetPasswordPages/ForgotPassword'
 import CheckEmail from './pages/ResetPasswordPages/CheckEmail'
 import OpenRoute from './commponents/common/OpenRoute'
 import AboutUs from './pages/AboutUs'
+import ContactUs from './pages/ContactUs'
 function App() {
   
   return (
@@ -40,7 +41,8 @@ function App() {
           <Route path='/reset-password/:token' element={<ResetPassword/>}></Route>
           <Route path='/forgot-password' element={<ForgotPassword/>}></Route>
           <Route path='/check-email' element={<CheckEmail/>}></Route>
-          <Route path='/about-us' element={<AboutUs/>}></Route>
+          <Route path='/about' element={<AboutUs/>}></Route>
+          <Route path='/contact' element={<ContactUs/>}></Route>
           <Route 
             path='/dashboard' 
             element={
