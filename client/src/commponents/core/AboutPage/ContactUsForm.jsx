@@ -33,7 +33,8 @@ const ContactUsForm = () => {
             }
             
         } catch (error) {
-            toast.error(error.response.data.message);
+            console.log("CONTACT API ERROR:", error);
+            toast.error(error?.response?.data?.message || "Something went wrong");
         }
     }
 
