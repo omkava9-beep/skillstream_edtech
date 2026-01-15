@@ -22,13 +22,11 @@ router.put('/updatesection/:sectionId' , auth , isInstructor , UpdateSection);
 router.put('/updatesubsection/:subSectionId' , auth , isInstructor , UpdateSubSection);
  
 
-
 router.delete('/deletesection' , auth , isInstructor , DeleteSection);
 router.delete('/deletesubsection' , auth , isInstructor , DeleteSubSection);
 
 router.post('/getcatgorypagedetails/:catagoryId' , getCatgoryPageDetails );
 router.get('/showallcatagories' , ShowAllCatagory );
-
 
 router.get('/getallcourses' ,getAllCourses  );
 router.get('/getcourse/:courseId' , GetOneCourseAllDetails  );

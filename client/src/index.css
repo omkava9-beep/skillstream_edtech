@@ -120,3 +120,14 @@
   background-position: top center;
   background-size: contain;
 }
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-50%); }
+  100% { transform: translateX(-100%); }
+}
+.scrolling-container {
+  display: flex;
+  width: max-content;
+  animation: scroll 2s linear infinite;
+}

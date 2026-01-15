@@ -2,17 +2,19 @@ import React, { useState } from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { setToken } from '../../redux/slices/authReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { setToken, setLoading } from '../../redux/slices/authReducer'
 import { setUser } from '../../redux/slices/profileReducer'
 import { apiConnector } from '../../../services/apiConnector'
 import {auth} from '../../../services/apis'
+import Loader from '../common/Loader'
 
 import { setSignupData } from '../../redux/slices/authReducer'
 
 const SignUpForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { loading } = useSelector((state) => state.auth);
     const [formData, setFormData] = useState({ 
         firstname: '', lastname: '', email: '', password: '', confirmpassword: '' ,accountType: 'Student' 
     })
@@ -30,6 +32,7 @@ const SignUpForm = () => {
             return;
         }
 
+        dispatch(setLoading(true));
         try {
             // Store signup data in Redux to use after OTP verification
             dispatch(setSignupData(formData));
@@ -52,14 +55,17 @@ const SignUpForm = () => {
             console.log("SENDOTP API ERROR............", error);
             toast.error(error.response?.data?.message || "Could not send OTP");
         }
+        dispatch(setLoading(false));
     }
 
     return (
         <div className='mt-6'>
+            {loading && <Loader />}
             {/* Tab Switcher */}
             <div className='flex bg-[#161D29] p-1 gap-x-1 my-6 rounded-full max-w-max border-b border-[#AFB2BF]'>
                 <button
-                    className={`${formData.accountType === "Student" ? "bg-[#000814] text-[#F1F2FF]" : "bg-transparent text-[#999DAA]"} py-2 px-5 rounded-full transition-all duration-200`}
+                    disabled={loading}
+                    className={`${formData.accountType === "Student" ? "bg-[#000814] text-[#F1F2FF]" : "bg-transparent text-[#999DAA]"} py-2 px-5 rounded-full transition-all duration-200 disabled:opacity-50`}
                     onClick={() => {setFormData({...formData , accountType: 'Student'}  )
                 }}
 
@@ -68,7 +74,8 @@ const SignUpForm = () => {
                     Student
                 </button>
                 <button
-                    className={`${formData.accountType === "Instructor" ? "bg-[#000814] text-[#F1F2FF]" : "bg-transparent text-[#999DAA]"} py-2 px-5 rounded-full transition-all duration-200`}
+                    disabled={loading}
+                    className={`${formData.accountType === "Instructor" ? "bg-[#000814] text-[#F1F2FF]" : "bg-transparent text-[#999DAA]"} py-2 px-5 rounded-full transition-all duration-200 disabled:opacity-50`}
                     name='instructor'
                     onClick={() => { setFormData({ ...formData, accountType: 'Instructor' })
                 }}
@@ -82,26 +89,26 @@ const SignUpForm = () => {
                     <label className='w-full'>
                         <p className='text-[0.875rem] text-[#F1F2FF] mb-1 leading-5.5'>First Name <sup className='text-pink-200'>*</sup></p>
                         <input type="text" required name="firstname" onChange={changeHandler} value={formData.firstname} placeholder="Enter first name" 
-                            className='bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF]'/>
+                            className='bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF] focus:outline-none focus:border-yellow-400 transition-colors duration-200'/>
                     </label>
                     <label className='w-full'>
                         <p className='text-[0.875rem] text-[#F1F2FF] mb-1 leading-5.5'>Last Name <sup className='text-pink-200'>*</sup></p>
                         <input type="text" required name="lastname" onChange={changeHandler} value={formData.lastname} placeholder="Enter last name" 
-                            className='bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF]'/>
+                            className='bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF] focus:outline-none focus:border-yellow-400 transition-colors duration-200'/>
                     </label>
                 </div>
 
                 <label className='w-full'>
                     <p className='text-[0.875rem] text-[#F1F2FF] mb-1 leading-5.5'>Email Address <sup className='text-pink-200'>*</sup></p>
                     <input type="email" required name="email" onChange={changeHandler} value={formData.email} placeholder="Enter email address" 
-                        className='bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF]'/>
+                        className='bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF] focus:outline-none focus:border-yellow-400 transition-colors duration-200'/>
                 </label>
 
                 <div className='flex gap-x-4'>
                     <label className='w-full relative'>
                         <p className='text-[0.875rem] text-[#F1F2FF] mb-1 leading-5.5'>Create Password <sup className='text-pink-200'>*</sup></p>
                         <input type={showPassword ? "text" : "password"} required name="password" onChange={changeHandler} value={formData.password} placeholder="Enter Password" 
-                            className='bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF]'/>
+                            className='bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF] focus:outline-none focus:border-yellow-400 transition-colors duration-200'/>
                         <span onClick={() => setShowPassword(prev => !prev)} className='absolute right-3 top-[38px] cursor-pointer text-[#AFB2BF]'>
                             {showPassword ? <AiOutlineEyeInvisible fontSize={24} /> : <AiOutlineEye fontSize={24} />}
                         </span>
@@ -110,14 +117,17 @@ const SignUpForm = () => {
                     <label className='w-full relative'>
                         <p className='text-[0.875rem] text-[#F1F2FF] mb-1 leading-5.5'>Confirm Password <sup className='text-pink-200'>*</sup></p>
                         <input type={showConfirmPassword ? "text" : "password"} required name="confirmpassword" onChange={changeHandler} value={formData.confirmpassword} placeholder="Confirm Password" 
-                            className='bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF]'/>
+                            className='bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF] focus:outline-none focus:border-yellow-400 transition-colors duration-200'/>
                         <span onClick={() => setShowConfirmPassword(prev => !prev)} className='absolute right-3 top-[38px] cursor-pointer text-[#AFB2BF]'>
                             {showConfirmPassword ? <AiOutlineEyeInvisible fontSize={24} /> : <AiOutlineEye fontSize={24} />}
                         </span>
                     </label>
                 </div>
 
-                <button className='w-full bg-yellow-400 rounded-lg font-medium text-[#000814] px-3 py-2 mt-6 hover:bg-yellow-500 transition-all duration-200'>
+                <button 
+                    disabled={loading}
+                    className='w-full bg-yellow-400 rounded-lg font-medium text-[#000814] px-3 py-2 mt-6 hover:bg-yellow-500 transition-all duration-200 disabled:opacity-50'
+                >
                     Create Account
                 </button>
             </form>

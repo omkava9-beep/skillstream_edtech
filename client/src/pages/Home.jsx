@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import HighlightedText from "../commponents/core/Homepage/HighlightedText";
 import { FaArrowRight } from "react-icons/fa";
@@ -299,6 +299,7 @@ const Home = () => {
             gap-6
             place-items-center
           ">
+            
             <ReviewCard
               name="Cody Fisher"
               email="tim.jennings@example.com"
@@ -306,6 +307,8 @@ const Home = () => {
               review="Coordination of activities improved tremendously with Learn codings."
               rating={4.5}
             />
+            
+            
             <ReviewCard
               name="Cody Fisher"
               email="tim.jennings@example.com"

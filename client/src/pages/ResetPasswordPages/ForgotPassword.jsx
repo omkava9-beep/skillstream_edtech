@@ -1,15 +1,30 @@
 import React, { useState } from "react"
 import { BiArrowBack } from "react-icons/bi"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import {apiConnector} from "../../../services/apiConnector"
+import {auth} from "../../../services/apis"
+import toast from "react-hot-toast"
+
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("")
+  const navigate = useNavigate()
 
-  function handleSubmit(e){
+  async function handleSubmit(e){
     e.preventDefault()
-    console.log(email);
-    
-  }
+    try {
+        const response = await apiConnector('POST' , auth.MAIL_SENDER_API , {email});
+        if(response?.data?.success){
+            toast.success(response?.data?.message);
+            navigate("/check-email", { state: { email } })
+        }
+        else{
+            toast.error(response?.data?.message);
+        }
+    }catch (error) {
+        toast.error(error?.response?.data?.message || "Failed to send email");
+    }
+}
 
   return (
     <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">

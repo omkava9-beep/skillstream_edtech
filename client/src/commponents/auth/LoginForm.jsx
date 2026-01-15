@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
-import { setToken } from '../../redux/slices/authReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { setToken, setLoading } from '../../redux/slices/authReducer'
 import { setUser } from '../../redux/slices/profileReducer'
 import { Link, useNavigate } from 'react-router-dom'
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
@@ -8,20 +8,24 @@ import { toast } from 'react-hot-toast'
 import { auth } from '../../../services/apis'
 import { gsap } from 'gsap'
 import { apiConnector } from '../../../services/apiConnector'
+import Loader from '../common/Loader'
 
 const LoginForm = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const { loading } = useSelector((state) => state.auth)
     const [formData, setFormData] = useState({ email: "", password: "" })
     const [showPassword, setShowPassword] = useState(false)
     const formRef = useRef(null)
 
     useEffect(() => {
-        gsap.fromTo(formRef.current.children, 
-            { y: 20, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "back.out(1.7)" }
-        )
-    }, [])
+        if (!loading && formRef.current) {
+            gsap.fromTo(formRef.current.children, 
+                { y: 20, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "back.out(1.7)" }
+            )
+        }
+    }, [loading])
 
     function changeHandler(event) {
         setFormData(prev => ({ ...prev, [event.target.name]: event.target.value }))
@@ -29,6 +33,7 @@ const LoginForm = () => {
 
     async function handleSubmit(e) {
         e.preventDefault()
+        dispatch(setLoading(true))
         try{
             const api_url = auth.AUTH_API;
             const resp = await apiConnector('POST' , api_url , { email : formData.email , password : formData.password});
@@ -43,15 +48,19 @@ const LoginForm = () => {
         
             localStorage.setItem('token' , resp.data.token);
             localStorage.setItem('user' , JSON.stringify(resp.data.user));
+            toast.success("Login Successful")
             navigate('/dashboard');
             console.log(userImage)
         } catch(e) {
             console.log("LOGIN API ERROR............", e)
             toast.error(e.response?.data?.message || "Login Failed")
         }
+        dispatch(setLoading(false))
     }
 
   return (
+    <>
+    {loading && <Loader />}
     <form ref={formRef} onSubmit={handleSubmit} className='flex flex-col w-full gap-y-4 mt-6'>
         <label className='w-full'>
             <p className='text-[0.875rem] text-[#F1F2FF] mb-1 leading-5.5'>
@@ -88,20 +97,21 @@ const LoginForm = () => {
                 {showPassword ? <AiOutlineEyeInvisible fontSize={24}/> : <AiOutlineEye fontSize={24}/>}
             </span>
             
-            <Link to='/forgot-password'>
+            
                 <p className='text-xs mt-1 text-[#47A5C5] hover:text-[#5eb7d6] ml-auto w-max transition-colors duration-200'>
-                    Forgot Password?
+                    <Link to='/forgot-password'>Forgot Password?</Link>
                 </p>
-            </Link>
         </label>
 
         <button 
             type="submit"
-            className='bg-[#FFD60A] rounded-lg font-bold text-[#000814] px-3 py-2 mt-6 hover:bg-[#ffe668] hover:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)]'
+            disabled={loading}
+            className='bg-[#FFD60A] rounded-lg font-bold text-[#000814] px-3 py-2 mt-6 hover:bg-[#ffe668] hover:scale-95 transition-all duration-200 shadow-[2px_2px_0px_0px_rgba(255,255,255,0.18)] disabled:opacity-50'
         >
             Login
         </button>
     </form>
+    </>
   )
 }
 
