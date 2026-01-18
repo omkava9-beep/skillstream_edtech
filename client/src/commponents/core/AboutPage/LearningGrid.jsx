@@ -53,9 +53,10 @@ const LearningGrid = () => {
                     <div
                         key={index}
                         className={`${index === 0 && "lg:col-span-2 lg:h-[280px] p-5"}
-                        ${card.order % 2 === 1 ? "bg-richblack-700 lg:h-[280px] p-5" : "bg-richblack-800 lg:h-[280px] p-5"}
+                        ${card.order % 2 === 1 ? "bg-richblack-800 lg:h-[280px] p-5" : "bg-richblack-900 lg:h-[280px] p-5"}
                         ${card.order === 3 && "lg:col-start-2"}
                         ${card.order < 0 && "bg-transparent"}
+                        hover:bg-richblack-700 transition-colors duration-200 cursor-default
                         `}
                     >
                         {card.order < 0 ? (
