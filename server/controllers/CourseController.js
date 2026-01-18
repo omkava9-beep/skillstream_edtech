@@ -25,7 +25,7 @@ const CreateCourse = async(req , resp)=>{
         const validcatagory = await Catagory.findOne({name : catagory});
         if(!validcatagory){
             return resp.status(404).json({
-                message:'catagory does not exist please enter a valid Tag',
+                message:'catagory does not exist please enter a valid Catagory',
                 success:true,
             });
         }

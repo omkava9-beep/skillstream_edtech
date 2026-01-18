@@ -55,7 +55,14 @@ const ShowAllCatagory = async (req, resp) => {
 const getCatgoryPageDetails = async (req, resp) => {
     try {
         const { catalogId } = req.params;
-        const catagoryDetails = await Catagory.findById(catalogId).populate('courses').exec();
+        const catagoryDetails = await Catagory.findById(catalogId)
+            .populate({
+                path: "courses",
+                populate: {
+                    path: "instructor",
+                },
+            })
+            .exec()
         if (!catagoryDetails) {
             return resp.status(404).json({
                 success: false,
@@ -63,35 +70,35 @@ const getCatgoryPageDetails = async (req, resp) => {
 
             });
         }
-        if (catagoryDetails.courses.length === 0) {
-            return resp.status(200).json({
-                success: true,
-                message: "No courses found for this catagory",
-                catagory : catagoryDetails.name,
-                description : catagoryDetails.description,
-                data: {
-                    topsellings: [],
-                    selectedCourses: [],
-                    expectSelected: [],
-                },
-            });
-        }
         const selectedCourses = catagoryDetails.courses;
-        const catagoriesExpectSelectedCatagory = await Catagory.find({ _id: { $ne: catalogId } }).populate('courses');
+        const catagoriesExpectSelectedCatagory = await Catagory.find({
+            _id: { $ne: catalogId },
+        })
+            .populate({
+                path: "courses",
+                populate: {
+                    path: "instructor",
+                },
+            })
+            .exec()
         let differentCourses = [];
         for (const catagory of catagoriesExpectSelectedCatagory) {
             differentCourses.push(...catagory.courses);
         }
         // //get the top selling courses
 
-        const courses = await Course.find().sort({ studentsEnrolled: -1 }).limit(10).exec();
+        const courses = await Course.find()
+            .populate("instructor")
+            .sort({ studentsEnrolled: -1 })
+            .limit(10)
+            .exec()
         const topsellings = courses;
 
         return resp.status(200).json({
             catagory: catagoryDetails.name,
             description: catagoryDetails.description,
-            data : {
-               topsellings: topsellings,
+            data: {
+                topsellings: topsellings,
                 selectedCourses: selectedCourses,
                 expectSelected: catagoriesExpectSelectedCatagory,
             },

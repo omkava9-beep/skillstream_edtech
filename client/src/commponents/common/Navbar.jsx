@@ -1,4 +1,5 @@
-import { Link, useLocation, matchPath, useNavigate } from "react-router-dom";
+import { Link, useLocation, matchPath, useNavigate, matchRoutes } from "react-router-dom";
+import { createPortal } from "react-dom";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
 import { NavbarLinks } from "../../data/navbar-links";
@@ -7,9 +8,10 @@ import { IoMdSearch } from "react-icons/io";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import logo from "../../assets/Logo/Logo-Full-Light.png"
 import { apiConnector } from "../../../services/apiConnector";
-import { catagories } from "../../../services/apis";
+import { catagories, courseEndpoints } from "../../../services/apis";
 import { useEffect, useState } from "react";
 import { deleteToken } from "../../redux/slices/authReducer";
+
 
 const Navbar = () => {
   const { token } = useSelector((state) => state.auth);
@@ -32,17 +34,54 @@ const Navbar = () => {
     }
   }
 
+  // Search States
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [allCourses, setAllCourses] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    // Debounce search or filter effect could go here, 
+    // but for now we filter immediately on render or input change 
+    if (searchQuery.trim() === "") {
+        setSearchResults([]);
+        return;
+    }
+    const results = allCourses.filter(course => 
+        course.courseName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (course.instructor?.firstName + " " + course.instructor?.lastName).toLowerCase().includes(searchQuery.toLowerCase())
+    );
+     setSearchResults(results);
+  }, [searchQuery, allCourses]);
+
   useEffect(() => {
     fetchSublinks();
-  }, [])
+  }, []);
+
+  const handleSearchClick = async () => {
+    setShowSearch(true);
+    if (allCourses.length === 0) {
+        try {
+            const { data } = await apiConnector("GET", courseEndpoints.GET_ALL_COURSE_API);
+            if (data.success) {
+                setAllCourses(data.data);
+            }
+        } catch (error) {
+            console.log("Could not fetch courses for search", error);
+        }
+    }
+  }
 
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname);
   }
 
   return (
-    <div className="sticky top-0 z-50 w-full backdrop-blur-md bg-richblack-900/80 border-b border-richblack-700">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+    <div className="sticky top-0 z-50 w-full backdrop-blur-md bg-richblack-900/80 border-b border-richblack-700 transition-all duration-200">
+      
+
+
+      <div className={`max-w-[1280px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between transition-all duration-200 ${showSearch ? "blur-sm opacity-50 select-none pointer-events-none" : ""}`}>
 
         {/* ===== Logo ===== */}
         <Link to="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
@@ -98,6 +137,7 @@ const Navbar = () => {
 
           {/* Search (Desktop) */}
           <button
+            onClick={handleSearchClick}
             className="hidden lg:block p-2 rounded-full text-richblack-200 hover:text-yellow-400 hover:bg-richblack-800 transition-all"
           >
             <IoMdSearch size={22} />
@@ -164,6 +204,69 @@ const Navbar = () => {
           </button>
         </div>
       </div>
+
+       {/* ===== Search Overlay (Desktop) ===== */}
+       {/* ===== Search Overlay (Desktop) - Portal to Body ===== */}
+        {showSearch && createPortal(
+            <div className="fixed inset-0 z-[1000] flex justify-center items-start pt-3 pointer-events-none">
+                {/* Backdrop to catch clicks */}
+                <div 
+                    className="absolute inset-0 bg-transparent pointer-events-auto cursor-default" 
+                    onClick={() => { setShowSearch(false); setSearchQuery(""); }}
+                />
+
+                {/* Search Box Container - Matches Navbar alignment */}
+                <div className="relative w-full max-w-[600px] pointer-events-auto z-[1010]">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search for courses, instructors..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            autoFocus
+                            className="w-full bg-richblack-800 text-richblack-5 rounded-full py-2 pl-10 pr-10 border border-richblack-700 focus:border-yellow-50 focus:outline-none transition-all shadow-xl"
+                        />
+                        <IoMdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-richblack-200 text-xl" />
+                        <button 
+                            onClick={() => { setShowSearch(false); setSearchQuery(""); }}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-richblack-200 hover:text-richblack-50"
+                        >
+                            <AiOutlineClose />
+                        </button>
+                    </div>
+
+                    {/* Suggestions Dropdown */}
+                    {searchQuery && searchResults.length > 0 && (
+                        <div className="absolute top-[120%] left-0 w-full bg-richblack-800 rounded-lg border border-richblack-700 shadow-xl overflow-hidden max-h-[300px] overflow-y-auto">
+                            {searchResults.map((course) => (
+                                <Link 
+                                    to={`/course/${course._id}`} 
+                                    key={course._id} 
+                                    className="block px-4 py-3 hover:bg-richblack-700 transition-colors border-b border-richblack-700 last:border-0"
+                                    onClick={() => { setShowSearch(false); setSearchQuery(""); }}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <img src={course.thumbnail} alt="" className="w-10 h-10 rounded object-cover" />
+                                        <div>
+                                            <p className="text-richblack-5 font-medium text-sm line-clamp-1">{course.courseName}</p>
+                                            <p className="text-richblack-300 text-xs">
+                                                {course.instructor?.firstName} {course.instructor?.lastName}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                    {searchQuery && searchResults.length === 0 && (
+                         <div className="absolute top-[120%] left-0 w-full bg-richblack-800 rounded-lg border border-richblack-700 shadow-xl p-4 text-center text-richblack-200">
+                             No results found
+                         </div>
+                    )}
+                </div>
+            </div>,
+            document.body
+        )}
 
       {/* ===== Mobile Menu Overlay ===== */}
       {isMenuOpen && (
