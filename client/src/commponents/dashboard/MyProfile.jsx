@@ -15,7 +15,7 @@ const MyProfile = () => {
   return (
     <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-4">
       {/* Page Title */}
-      <h1 className="text-richblack-5 text-3xl font-semibold mb-6">
+      <h1 className="text-richblack-5 text-3xl font-semibold mb-6 mt-2.5">
         My Profile
       </h1>
 
@@ -52,7 +52,7 @@ const MyProfile = () => {
         <hr className="border-richblack-700 mb-4" />
 
         <p className="text-richblack-200 text-sm leading-relaxed">
-          {user?.about || 'Write something about yourself...'}
+          {user?.additionalDetails?.about || 'Write something about yourself...'}
         </p>
       </div>
 
@@ -71,10 +71,9 @@ const MyProfile = () => {
           <Detail label="First Name" value={user?.firstName} />
           <Detail label="Last Name" value={user?.lastName} />
           <Detail label="Email" value={user?.email} />
-          <Detail label="Phone Number" value={user?.contact || '—'} />
-          <Detail label="Date of Birth" value={user?.dateOfBirth || '—'} />
-          <Detail label="Gender" value={user?.gender || '—'} />
-          <Detail label="Language" value={user?.language || '—'} />
+          <Detail label="Phone Number" value={user?.additionalDetails?.contact || '—'} />
+          <Detail label="Date of Birth" value={user?.additionalDetails?.dateOfBirth || '—'} />
+          <Detail label="Gender" value={user?.additionalDetails?.gender || '—'} />
         </div>
       </div>
     </div>

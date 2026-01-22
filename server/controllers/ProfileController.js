@@ -6,7 +6,7 @@ const { cloudinary } = require('../config/couldinary');
 const bcrypt = require('bcrypt');
 const UpdateProfile = async (req, resp) => {
     try {
-        const { gender, dateOfBirth, about, contact, linkedinProfile } = req.body;
+        const { firstName, lastName, gender, dateOfBirth, about, contact, linkedinProfile } = req.body;
         const userId = req.user.id;
 
         const user = await User.findById(userId);
@@ -18,6 +18,14 @@ const UpdateProfile = async (req, resp) => {
         }
         const profileId = user.additionalDetails;
         const profileDetails = await Profile.findById(profileId);
+        if (firstName) {
+            user.firstName = firstName;
+        }
+        if (lastName) {
+            user.lastName = lastName;
+        }
+        await user.save();
+
         if (gender) {
             profileDetails.gender = gender;
         }
@@ -35,10 +43,13 @@ const UpdateProfile = async (req, resp) => {
         }
 
         await profileDetails.save();
+
+        const updatedUserDetails = await User.findById(userId).populate("additionalDetails")
+
         return resp.status(200).json({
             success: true,
             message: 'Profile updated Successfully',
-            profileDetails
+            updatedUserDetails
         })
     } catch (error) {
         return resp.status(500).json({

@@ -12,15 +12,15 @@ export default function UpdatePassword() {
 
   const [showOldPassword, setShowOldPassword] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false)
 
   const [formData, setFormData] = useState({
     oldPassword: "",
     newPassword: "",
-    confirmPassword: "",
+    confirmNewPassword: "",
   })
 
-  const { oldPassword, newPassword, confirmPassword } = formData
+  const { oldPassword, newPassword, confirmNewPassword } = formData
 
   const handleOnChange = (e) => {
     setFormData((prevData) => ({
@@ -31,7 +31,7 @@ export default function UpdatePassword() {
 
   const handleOnSubmit = (e) => {
     e.preventDefault()
-    if (newPassword !== confirmPassword) {
+    if (newPassword !== confirmNewPassword) {
       alert("Passwords do not match")
       return
     }
@@ -41,9 +41,9 @@ export default function UpdatePassword() {
   return (
     <>
       <form onSubmit={handleOnSubmit}>
-        <div className="my-10 flex flex-col gap-y-6 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-8 px-12">
-          <h2 className="text-lg font-semibold text-richblack-5">Password</h2>
-          <div className="flex flex-col gap-5 lg:flex-row">
+        <div className="my-6 md:my-10 flex flex-col gap-y-4 md:gap-y-6 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 md:p-8 md:px-12">
+          <h2 className="text-base md:text-lg font-semibold text-richblack-5">Password</h2>
+          <div className="flex flex-col gap-4 md:gap-5 lg:flex-row">
             <div className="relative flex flex-col gap-2 lg:w-[48%]">
               <label htmlFor="oldPassword" className="lable-style text-richblack-50 text-[14px]">
                 Current Password
@@ -98,19 +98,19 @@ export default function UpdatePassword() {
                 Confirm New Password
               </label>
               <input
-                type={showConfirmPassword ? "text" : "password"}
-                name="confirmPassword"
-                id="confirmPassword"
+                type={showConfirmNewPassword ? "text" : "password"}
+                name="confirmNewPassword"
+                id="confirmNewPassword"
                 placeholder="Confirm New Password"
                 className="form-style bg-[#161D29] rounded-lg text-[#F1F2FF] w-full p-3 border-b border-[#AFB2BF] focus:outline-none focus:border-yellow-400 transition-colors duration-200"
                 onChange={handleOnChange}
-                value={confirmPassword}
+                value={confirmNewPassword}
               />
               <span
-                onClick={() => setShowConfirmPassword((prev) => !prev)}
+                onClick={() => setShowConfirmNewPassword((prev) => !prev)}
                 className="absolute right-3 top-[38px] z-[10] cursor-pointer"
               >
-                {showConfirmPassword ? (
+                {showConfirmNewPassword ? (
                   <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
                 ) : (
                   <AiOutlineEye fontSize={24} fill="#AFB2BF" />
@@ -118,12 +118,12 @@ export default function UpdatePassword() {
               </span>
             </div>
         </div>
-        <div className="flex justify-end gap-2">
+        <div className="flex flex-col sm:flex-row justify-end gap-2 md:gap-3 mt-4 md:mt-0">
           <button
             onClick={() => {
               navigate("/dashboard/my-profile")
             }}
-            className="cursor-pointer rounded-md bg-richblack-700 py-2 px-5 font-semibold text-richblack-50"
+            className="cursor-pointer rounded-md bg-richblack-700 hover:bg-richblack-600 py-2 px-4 md:px-5 font-semibold text-richblack-50 transition-all text-sm md:text-base"
           >
             Cancel
           </button>

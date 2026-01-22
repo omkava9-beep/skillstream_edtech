@@ -16,7 +16,7 @@ const LearningLanguageSection = ({ img1, img2, img3 }) => {
         y: 50,
         opacity: 0,
         duration: 1,
-        stagger: 0.2,
+        stagger: 1,
         ease: "power2.out",
         scrollTrigger: {
           trigger: container.current,

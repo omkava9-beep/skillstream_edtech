@@ -6,6 +6,7 @@ export const catagories = {
 
 export const courseEndpoints = {
     GET_ALL_COURSE_API: `${BASE_URL}/api/v1/course/getallcourses`,
+    GET_COURSE : `${BASE_URL}/api/v1/course/getcourse`
 }
 
 export const auth = {
@@ -38,3 +39,4 @@ export const settingsEndpoints = {
     CHANGE_PASSWORD_API: `${BASE_URL}/api/v1/user/changepassword`,
     DELETE_PROFILE_API: `${BASE_URL}/api/v1/profile/deleteaccount`,
 }
+

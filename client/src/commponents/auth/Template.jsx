@@ -34,11 +34,12 @@ const Template = ({ title, des1, des2, formtype, imgmain }) => {
       ref={compRef}
       className="
         w-full
-        min-h-[calc(100vh-3.5rem)]
-        bg-[#000814]
+        min-h-screen
+        bg-richblack-900
         flex items-center justify-center
         px-4 sm:px-6 lg:px-10
         py-10
+        pt-20
         overflow-hidden
       "
     >

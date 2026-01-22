@@ -22,9 +22,10 @@ import img1 from '../assets/Images/Know_your_progress.svg'
 import img2 from '../assets/Images/Plan_your_lessons.svg'
 import img3 from '../assets/Images/Compare_with_others.svg'
 import instructor from '../assets/Images/Instructor.png'
-import ExploreMore from "../commponents/core/Homepage/ExploreMore";
+
 import ReviewCard from "../commponents/core/Homepage/ReviewCard";
 import Footer from "../commponents/core/Homepage/Footer";
+import ExploreMore from "../commponents/core/Homepage/Exploremore";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -56,13 +57,61 @@ const Home = () => {
           scrub: 1,
         },
       });
+
+      // Section 3: Instructor animation
+      gsap.from(".instructor-img", {
+        x: -50,
+        opacity: 0,
+        duration: 2,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".instructor-section",
+          start: "top 80%",
+        },
+      });
+
+      gsap.from(".instructor-text", {
+        x: 50,
+        opacity: 0,
+        duration: 2,
+        stagger: 0.2,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".instructor-section",
+          start: "top 80%",
+        },
+      });
+
+      // Section 3: Review section animation
+      gsap.from(".review-section-heading", {
+        y: 30,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".review-section",
+          start: "top 85%",
+        },
+      });
+
+      gsap.from(".review-card-item", {
+        y: 50,
+        opacity: 0,
+        duration: 1.5,
+        stagger: 0.2,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".review-section",
+          start: "top 85%",
+        },
+      });
     },
     { scope: container }
   );
 
   return (
-    <div className="w-full" ref={container}>
-      <div className="flex flex-col w-full max-w-[1280px] mx-auto font-inter ">
+    <div className="w-full pt-14" ref={container}>
+      <div className="flex flex-col w-full max-w-[1400px] mx-auto font-inter ">
         <div className="flex flex-col items-center gap-12 px-1.5  ">
 
           <Link to="/signup" className="hero-element">
@@ -155,7 +204,7 @@ const Home = () => {
             <div className="flex flex-col items-center gap-20">
 
               {/* ===== TEXT ROW (same alignment as part-1) ===== */}
-              <div className="max-w-[1280px] mx-7 px-4 gap-12 items-start md:flex md:flex-row  ">
+              <div className="max-w-[1400px] mx-7 px-4 gap-12 items-start md:flex md:flex-row  ">
                 
                 {/* Left */}
                 <div className="lg:w-1/2">
@@ -179,7 +228,7 @@ const Home = () => {
               </div>
 
               {/* ===== TIMELINE + IMAGE ROW ===== */}
-              <div className="max-w-[1280px] mx-auto px-4 sm:flex sm:md:flex-row lg:flex-row gap-10 items-center">
+              <div className="max-w-[1400px] mx-auto px-4 sm:flex sm:md:flex-row lg:flex-row gap-10 items-center">
 
                 {/* ===== Timeline ===== */}
                 <div className="relative flex flex-col gap-8 sm:gap-10 w-full lg:w-1/2 pl-6 sm:pl-8 mb-5">
@@ -270,6 +319,7 @@ const Home = () => {
           gap-12 lg:gap-[98px]
           py-16 sm:py-20 lg:py-[90px]
           px-6 sm:px-12 lg:px-[120px]
+          instructor-section
         ">
 
           
@@ -277,6 +327,7 @@ const Home = () => {
           <div className="
             lg:left-[140px] lg:top-[110px]
             -mt-40 sm:-mt-56 lg:mt-0
+            instructor-img
           ">
             <img
               src={instructor}
@@ -294,6 +345,7 @@ const Home = () => {
             justify-center
             lg:max-w-[686px]
             text-center lg:text-left
+            instructor-text
           ">
             <div className="flex text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight lg:leading-[44px] tracking-tight justify-center lg:justify-start gap-2">
               <h2 className="text-2xl flex sm:text-3xl lg:text-[36px] font-semibold leading-tight lg:leading-[44px] tracking-tight">
@@ -318,10 +370,10 @@ const Home = () => {
 
         </div>
 
-        <div className="bg-richblack-900 px-4 py-10 sm:px-6 lg:px-12 flex flex-col items-center gap-8">
+        <div className="bg-richblack-900 px-4 py-10 sm:px-6 lg:px-12 flex flex-col items-center gap-8 review-section">
 
           {/* Heading */}
-          <h2 className="text-richblack-25 text-2xl sm:text-3xl lg:text-[36px] font-medium text-center">
+          <h2 className="text-richblack-25 text-2xl sm:text-3xl lg:text-[36px] font-medium text-center review-section-heading">
             Review from other Learners
           </h2>
 
@@ -336,36 +388,44 @@ const Home = () => {
             place-items-center
           ">
             
-            <ReviewCard
-              name="Cody Fisher"
-              email="tim.jennings@example.com"
-              avatar="https://i.pravatar.cc/150?u=cody"
-              review="Coordination of activities improved tremendously with Learn codings."
-              rating={4.5}
-            />
+            <div className="review-card-item">
+              <ReviewCard
+                name="Cody Fisher"
+                email="tim.jennings@example.com"
+                avatar="https://i.pravatar.cc/150?u=cody"
+                review="Coordination of activities improved tremendously with Learn codings."
+                rating={4.5}
+              />
+            </div>
             
             
-            <ReviewCard
-              name="Cody Fisher"
-              email="tim.jennings@example.com"
-              avatar="https://i.pravatar.cc/150?u=cody"
-              review="Coordination of activities improved tremendously with Learn codings."
-              rating={4.5}
-            />
-            <ReviewCard
-              name="Cody Fisher"
-              email="tim.jennings@example.com"
-              avatar="https://i.pravatar.cc/150?u=cody"
-              review="Coordination of activities improved tremendously with Learn codings."
-              rating={4.5}
-            />
-            <ReviewCard
-              name="Cody Fisher"
-              email="tim.jennings@example.com"
-              avatar="https://i.pravatar.cc/150?u=cody"
-              review="Coordination of activities improved tremendously with Learn codings."
-              rating={4.5}
-            />
+            <div className="review-card-item">
+              <ReviewCard
+                name="Cody Fisher"
+                email="tim.jennings@example.com"
+                avatar="https://i.pravatar.cc/150?u=cody"
+                review="Coordination of activities improved tremendously with Learn codings."
+                rating={4.5}
+              />
+            </div>
+            <div className="review-card-item">
+              <ReviewCard
+                name="Cody Fisher"
+                email="tim.jennings@example.com"
+                avatar="https://i.pravatar.cc/150?u=cody"
+                review="Coordination of activities improved tremendously with Learn codings."
+                rating={4.5}
+              />
+            </div>
+            <div className="review-card-item">
+              <ReviewCard
+                name="Cody Fisher"
+                email="tim.jennings@example.com"
+                avatar="https://i.pravatar.cc/150?u=cody"
+                review="Coordination of activities improved tremendously with Learn codings."
+                rating={4.5}
+              />
+            </div>
           </div>
 
         </div>

@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { HomePageExplore } from "../../../data/homepage-explore";
 import CourseCard from "./CourseCard";
+import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const tabsName = [
   "Free",
@@ -17,6 +21,35 @@ const ExploreMore = () => {
   const [currentCard, setCurrentCard] = useState(
     HomePageExplore[0].courses[0].heading
   );
+  const container = useRef();
+
+  useGSAP(
+    () => {
+      gsap.from(".explore-tabs", {
+        y: 20,
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top 85%",
+        },
+      });
+
+      gsap.from(".explore-card", {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: container.current,
+          start: "top 70%",
+        },
+      });
+    },
+    { scope: container }
+  );
 
   const setMyCards = (value) => {
     setCurrentTab(value);
@@ -28,11 +61,11 @@ const ExploreMore = () => {
   };
 
   return (
-    <div className="w-full flex ">
-      <div className="w-full max-w-[1280px] px-4 sm:px-6 md:px-8 py-16 flex flex-col items-center gap-12 ">
+    <div className="w-full flex " ref={container}>
+      <div className="w-full max-w-[1400px] px-4 sm:px-6 md:px-8 py-16 flex flex-col items-center gap-12 ">
 
         {/* ================= TABS ================= */}
-        <div className="w-full flex overflow-x-auto scrollbar-hide">
+        <div className="w-full flex overflow-x-auto scrollbar-hide explore-tabs">
           <div className="flex gap-3 bg-richblack-800 border border-richblack-700 rounded-full p-2">
             {tabsName.map((element, index) => (
               <button
@@ -65,7 +98,7 @@ const ExploreMore = () => {
         >
 
             {courses.map((element, index) => (
-              <div key={index} className="lg:min-w-[320px] m-8">
+              <div key={index} className="lg:min-w-[320px] m-8 explore-card">
                 <CourseCard
                   cardData={element}
                   currentCard={currentCard}

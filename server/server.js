@@ -19,7 +19,7 @@ app.use(require('cookie-parser')());
 
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL,
+        origin: "*",
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true,
     })

@@ -6,7 +6,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CourseCard from '../commponents/catalogpage/CourseCard';
 import { IoIosArrowDown, IoIosArrowUp, IoIosSearch } from 'react-icons/io';
 import Footer from '../commponents/core/Homepage/Footer';
-
+import Loader from '../commponents/common/Loader';
 
 
 const CatalogPage = () => {
@@ -15,6 +15,7 @@ const CatalogPage = () => {
 
   const {catalogId} = useParams();
 
+  const [loading, setLoading] = useState(false);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [expectSelected, setExpectSelected] = useState([]);
   const [topsellings, setTopsellings] = useState([]);
@@ -23,17 +24,19 @@ const CatalogPage = () => {
 
   useEffect(()=>{
     const fetchData = async()=>{
-      const {data} = await apiConnector("GET", catagorypage.CATAGORY_PAGE_API+catalogId)
-      
-      setCatagory(data.catagory);
-      setDescription(data.description);
-      setSelectedCourses(data.data.selectedCourses);
-      setExpectSelected(data.data.expectSelected);
-      setTopsellings(data.data.topsellings);
-      console.log("selectedCourses",data.data.selectedCourses)
-      console.log("expectSelected",data.data.expectSelected)
-      console.log("topsellings",data.data.topsellings)
-      console.log("catagory",data.catagory)
+      setLoading(true);
+      try {
+        const {data} = await apiConnector("GET", catagorypage.CATAGORY_PAGE_API+catalogId)
+        
+        setCatagory(data.catagory);
+        setDescription(data.description);
+        setSelectedCourses(data.data.selectedCourses);
+        setExpectSelected(data.data.expectSelected);
+        setTopsellings(data.data.topsellings);
+      } catch (error) {
+        console.log("Error fetching catalog data", error);
+      }
+      setLoading(false);
     } 
     fetchData();
   },[catalogId])
@@ -79,164 +82,144 @@ const CatalogPage = () => {
   const [showAllOther, setShowAllOther] = useState(false);
 
   return (
-    <div className="min-h-screen bg-richblack-900">
+    <div className="bg-gradient-to-br from-richblack-900 via-richblack-900 to-richblack-800 text-richblack-5 min-h-screen pt-14">
+      {loading && <Loader />}
+      
       {/* Hero Section */}
-            {/* ... hero section content ... */}
-      <div className="w-full bg-richblack-800 border-b border-richblack-700">
-        <div className="max-w-11/12 mx-auto px-4 sm:px-6 py-10 flex flex-col items-center lg:flex-row gap-8 lg:gap-12">
-          
-          {/* Left Content */}
-          <div className="flex-1 flex flex-col gap-4">
-             {/* ... nav ... */}
-            <nav className="flex items-center gap-2 text-sm text-richblack-300">
-              <span className="hover:text-richblack-50 cursor-pointer transition-colors">Home</span>
-              <span className="text-richblack-500">/</span>
-              <span className="hover:text-richblack-50 cursor-pointer transition-colors">Catalog</span>
-              <span className="text-richblack-500">/</span>
-              <span className="text-yellow-50 font-medium">{catagory}</span>
-            </nav>
+      <div className="relative overflow-hidden py-12 border-b border-richblack-700">
+        <div className="absolute top-0 left-0 w-80 h-80 bg-yellow-200 rounded-full mix-blend-screen filter blur-3xl opacity-10"></div>
+        <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500 rounded-full mix-blend-screen filter blur-3xl opacity-10"></div>
+        
+        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-xs md:text-sm text-richblack-400 mb-6">
+            <span className="hover:text-richblack-100 cursor-pointer transition-colors">Home</span>
+            <span className="text-richblack-600">/</span>
+            <span className="hover:text-richblack-100 cursor-pointer transition-colors">Catalog</span>
+            <span className="text-richblack-600">/</span>
+            <span className="text-yellow-100 font-semibold">{catagory}</span>
+          </nav>
 
-            {/* Category Title */}
-            <h1 className="text-3xl md:text-4xl font-bold text-richblack-5 leading-tight">
+          {/* Category Title & Description */}
+          <div>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-yellow-100 to-yellow-300 bg-clip-text text-transparent mb-3 leading-tight">
               {catagory}
             </h1>
-
-            {/* Description */}
-            <p className="text-richblack-200 text-base md:text-lg leading-relaxed max-w-2xl">
+            <p className="text-richblack-300 text-sm md:text-base leading-relaxed max-w-3xl">
               {description}
             </p>
           </div>
-            {/* ... Right Sidebar ... */}
-          {/* Right Sidebar - Related Resources */}
-          <div className="lg:w-[280px] shrink-0">
-            <div className="bg-richblack-700 rounded-xl p-5 border border-richblack-600">
-              <h3 className="text-lg font-semibold text-richblack-5 mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-yellow-50"></span>
-                Related Resources
-              </h3>
-              <ul className="flex flex-col gap-3">
-                <li className="text-richblack-200 hover:text-yellow-50 cursor-pointer transition-colors flex items-center gap-2 text-sm">
-                  <span className="text-yellow-50">📄</span> Python Documentation
-                </li>
-                <li className="text-richblack-200 hover:text-yellow-50 cursor-pointer transition-colors flex items-center gap-2 text-sm">
-                  <span className="text-yellow-50">📄</span> Java Documentation
-                </li>
-                <li className="text-richblack-200 hover:text-yellow-50 cursor-pointer transition-colors flex items-center gap-2 text-sm">
-                  <span className="text-yellow-50">📄</span> C++ Documentation
-                </li>
-              </ul>
-            </div>
-          </div>
-
         </div>
       </div>
-      <div className=' flex flex-col max-w-11/12 mx-auto'>
-        <div className=' flex flex-col items-start justify-center'>
-          <h2 className=' font-semibold text-[30px] text-richblack-5 mt-5'>
-            Courses to get you started
-          </h2>
+
+      {/* Main Content */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-12">
+        
+        {/* Courses to Get Started Section */}
+        <div className="mb-16">
+          <h2 className="text-2xl md:text-3xl font-bold text-richblack-5 mb-6">Courses to get you started</h2>
 
           {/* Search Input */}
-          <div className="relative w-full md:w-[400px] mt-6">
-              <input
-                  type="text"
-                  placeholder="Search courses or instructors..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-richblack-800 text-richblack-5 rounded-full py-2 pl-10 pr-4 border border-richblack-700 focus:border-yellow-50 focus:outline-none transition-colors"
-              />
-              <IoIosSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-richblack-200 text-lg" />
+          <div className="relative w-full md:w-96 mb-8">
+            <input
+              type="text"
+              placeholder="Search courses or instructors..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-richblack-800 text-richblack-5 rounded-lg py-3 pl-11 pr-4 border border-richblack-700 focus:border-yellow-100 focus:outline-none transition-colors text-sm"
+            />
+            <IoIosSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-richblack-400 text-lg" />
           </div>
 
-          <div className='flex flex-col md:flex-row justify-between items-center w-full mt-4 gap-4'>
-            <div className='flex gap-4 overflow-x-auto w-full md:w-auto pb-2 md:pb-0'>
-              <div onClick={()=>handleFilterType("Most Popular")} className=' flex- justify-center text-center cursor-pointer min-w-max' >
-                <p>Most Popular </p>
-                <div className={`h-[2px] ${filterType === "Most Popular" ? "bg-yellow-50 text-yellow-100 " : ""} w-full mt-3 transition-colors duration-300 ease-in-out`}></div>
-              </div>
-             <div onClick={()=>handleFilterType("Newest")} className=' flex- justify-center text-center cursor-pointer min-w-max' >
-                <p>Newest</p>
-                <div className={`h-[2px] ${filterType === "Newest" ? "bg-yellow-50 text-yellow-100 " : ""} w-full mt-3 transition-colors duration-300 ease-in-out`}></div>
-             </div>
-             <div onClick={()=>handleFilterType("Trending")} className=' flex- justify-center text-center cursor-pointer min-w-max' >
-                <p>Trending</p>
-                <div className={`h-[2px] ${filterType === "Trending" ? "bg-yellow-50 text-yellow-100 " : ""} w-full mt-3 transition-colors duration-300 ease-in-out`}></div>
-             </div>
+          {/* Filter Tabs & Show All Button */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-richblack-700">
+            <div className="flex gap-6 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
+              {["Most Popular", "Newest", "Trending"].map((type) => (
+                <div
+                  key={type}
+                  onClick={() => handleFilterType(type)}
+                  className="cursor-pointer min-w-max transition-all duration-300"
+                >
+                  <p className={`text-sm font-medium pb-2 ${filterType === type ? "text-yellow-100" : "text-richblack-300"}`}>
+                    {type}
+                  </p>
+                  <div
+                    className={`h-1 transition-colors duration-300 ${
+                      filterType === type ? "bg-yellow-100" : "bg-richblack-700"
+                    } w-full`}
+                  ></div>
+                </div>
+              ))}
             </div>
-            
-            <button 
-                onClick={() => setShowAll(!showAll)} 
-                className='text-yellow-50 flex items-center gap-2 hover:scale-110 transition-all duration-200 cursor-pointer whitespace-nowrap'
+
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="text-yellow-100 flex items-center gap-2 hover:scale-105 transition-all duration-200 cursor-pointer whitespace-nowrap text-sm font-semibold"
             >
-                {showAll ? "Show Less" : "Show All"}
-                {showAll ? <IoIosArrowUp /> : <IoIosArrowDown />}
+              {showAll ? "Show Less" : "Show All"}
+              {showAll ? <IoIosArrowUp /> : <IoIosArrowDown />}
             </button>
           </div>
-          <div className='h-px bg-richblack-600 w-full'>
-            
-          </div>
+
+          {/* Courses Grid */}
           {activeCourses?.length === 0 ? (
-            <p className="text-xl text-richblack-5 mt-4">No courses available for this category</p>
+            <p className="text-base text-richblack-300 py-8">No courses available for this category</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {activeCourses
                 ?.slice(0, showAll ? activeCourses.length : 3)
                 .map((course) => (
-                  <CourseCard
-                    course={course}
-                    key={course._id}
-                    Height={"h-[250px]"}
-                  />
+                  <CourseCard course={course} key={course._id} Height="h-60" />
                 ))}
             </div>
           )}
         </div>
 
         {/* Top Selling Section */}
-        {/* Top Selling Section */}
-        <div className="mx-auto box-content w-full max-w-maxContentTab px-4 py-12 lg:max-w-maxContent">
-            <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6'>
-                <h2 className="section_heading text-2xl md:text-3xl font-bold text-richblack-5">Top Selling Courses</h2>
-                 <button 
-                    onClick={() => setShowAllTopSelling(!showAllTopSelling)} 
-                    className='text-yellow-50 flex items-center gap-2 hover:scale-110 transition-all duration-200 cursor-pointer'
-                >
-                    {showAllTopSelling ? "Show Less" : "Show All"}
-                    {showAllTopSelling ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {topsellings?.slice(0, showAllTopSelling ? topsellings.length : 3).map((course, i) => (
-                    <CourseCard course={course} key={i} Height={"h-[250px]"} />
-                ))}
-            </div>
+        <div className="mb-16">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-richblack-5">Top Selling Courses</h2>
+            <button
+              onClick={() => setShowAllTopSelling(!showAllTopSelling)}
+              className="text-yellow-100 flex items-center gap-2 hover:scale-105 transition-all duration-200 cursor-pointer whitespace-nowrap text-sm font-semibold"
+            >
+              {showAllTopSelling ? "Show Less" : "Show All"}
+              {showAllTopSelling ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {topsellings?.slice(0, showAllTopSelling ? topsellings.length : 3).map((course) => (
+              <CourseCard course={course} key={course._id} Height="h-60" />
+            ))}
+          </div>
         </div>
 
         {/* Other Categories Section */}
-        {/* Other Categories Section */}
-        <div className="mx-auto box-content w-full max-w-maxContentTab px-4 py-12 lg:max-w-maxContent">
-             <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6'>
-                <h2 className="section_heading text-2xl md:text-3xl font-bold text-richblack-5">Other Categories Courses</h2>
-                <button 
-                    onClick={() => setShowAllOther(!showAllOther)} 
-                    className='text-yellow-50 flex items-center gap-2 hover:scale-110 transition-all duration-200 cursor-pointer'
-                >
-                    {showAllOther ? "Show Less" : "Show All"}
-                    {showAllOther ? <IoIosArrowUp /> : <IoIosArrowDown />}
-                </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {expectSelected?.flatMap((category) => category.courses)?.slice(0, showAllOther ? 20 : 3).map((course, i) => (
-                    <CourseCard course={course} key={i} Height={"h-[250px]"} />
-                ))}
-            </div>
+        <div className="mb-16">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-richblack-5">Other Categories Courses</h2>
+            <button
+              onClick={() => setShowAllOther(!showAllOther)}
+              className="text-yellow-100 flex items-center gap-2 hover:scale-105 transition-all duration-200 cursor-pointer whitespace-nowrap text-sm font-semibold"
+            >
+              {showAllOther ? "Show Less" : "Show All"}
+              {showAllOther ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {expectSelected
+              ?.flatMap((category) => category.courses)
+              ?.slice(0, showAllOther ? 20 : 3)
+              .map((course) => (
+                <CourseCard course={course} key={course._id} Height="h-60" />
+              ))}
+          </div>
         </div>
 
       </div>
 
-      <Footer></Footer>
-
-      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

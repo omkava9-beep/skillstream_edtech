@@ -5,8 +5,10 @@ import { BiArrowBack } from 'react-icons/bi'
 import { apiConnector } from '../../../services/apiConnector'
 import { auth } from '../../../services/apis'
 import { toast } from 'react-hot-toast'
+import Loader from '../../commponents/common/Loader'
 
 const ResetPassword = () => {
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { token } = useParams()
   if(!token){
@@ -37,6 +39,7 @@ const ResetPassword = () => {
       return
     }
 
+    setLoading(true)
     try {
       const response = await apiConnector("POST", `${auth.CHANGE_PASSWORD_API}/${token}`, {
         password,
@@ -53,10 +56,13 @@ const ResetPassword = () => {
       console.log("RESETPASSWORD ERROR............", error)
       toast.error(error?.response?.data?.message || "Reset Password Failed")
     }
+    setLoading(false)
   }
 
   return (
-    <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
+    <>
+      {loading && <Loader />}
+      <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
       <div className="max-w-[500px] p-4 lg:p-8">
         <h1 className="text-[1.875rem] font-semibold leading-[2.375rem] text-richblack-5">
           Choose  new password
@@ -129,7 +135,8 @@ const ResetPassword = () => {
           </Link>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 

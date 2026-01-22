@@ -19,11 +19,12 @@ import Catalog from './pages/CatalogPage'
 import MyProfile from './commponents/dashboard/MyProfile'
 import EnrolledCourses from './commponents/dashboard/EnrolledCourses'
 import Settings from './commponents/dashboard/Settings'
+import CoursePage from './pages/CoursePage'
 function App() {
   
   return (
     <div className=' text-white min-h-screen bg-richblack-900 justify-center'>
-      <Navbar/>
+      <Navbar className="sticky top-0 z-50" />
         <Routes>
           <Route path='/' element={<Home/>}></Route>
           <Route 
@@ -66,6 +67,7 @@ function App() {
             <Route path="/dashboard/purchase-history" element={<div>Purchase History Component Placeholder</div>} />
             {/* Add more nested routes as needed based on sidebar-links.js */}
           </Route>
+          <Route path="/courses/:courseid" element={<CoursePage></CoursePage>}></Route>
           
         </Routes>
     </div>

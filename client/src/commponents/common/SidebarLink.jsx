@@ -17,13 +17,19 @@ const SidebarLink = ({link, iconName}) => {
   return (
     <NavLink
     to={link.path}
-    className={ `relative px-8 py-2 text-sm font-medium ${matchRoute(link.path) ? "bg-yellow-800 text-yellow-50" :"bg-opacity-0 text-richblack-300"} transition-all duration-200`}
+    className={ `relative px-6 py-3 mx-2 rounded-lg text-sm font-semibold flex items-center gap-x-2 transition-all duration-300 border border-transparent ${
+      matchRoute(link.path) 
+        ? "bg-gradient-to-r from-yellow-400/20 to-yellow-300/10 text-yellow-50 border-yellow-400/50 shadow-lg shadow-yellow-400/20" 
+        : "text-richblack-300 hover:bg-richblack-700/30 hover:text-richblack-5 hover:border-yellow-400/30"
+    }`}
     >
-        <span className={`absolute left-0 top-0 h-full w-[0.2rem] bg-yellow-50 ${matchRoute(link.path) ? "opacity-100": "opacity-0"}`}>
+        <span className={`absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-yellow-400 to-yellow-300 rounded-r-md transition-all duration-300 ${
+          matchRoute(link.path) ? "opacity-100" : "opacity-0"
+        }`}>
 
         </span>
 
-        <div className='flex item-center gap-x-2'>
+        <div className='flex items-center gap-x-2'>
             <Icon className="text-lg" />
             <span>{link.name}</span>
         </div>

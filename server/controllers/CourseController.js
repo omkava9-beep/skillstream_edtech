@@ -103,7 +103,7 @@ const getAllCourses = async(req , resp)=>{
 
 const GetOneCourseAllDetails = async(req,resp)=>{
     try {
-        const {courseId} = req.body;
+        const {courseId} = req.params;
 
         const course = await Course.findById(courseId);
 

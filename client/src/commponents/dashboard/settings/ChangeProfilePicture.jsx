@@ -3,6 +3,7 @@ import { FiUpload } from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
 import { updateDisplayPicture } from "../../../services/operations/profileAPI"
 import IconBtn from "../../common/IconBtn"
+import Loader from "../../common/Loader"
 
 export default function ChangeProfilePicture() {
   const { token } = useSelector((state) => state.auth)
@@ -57,16 +58,17 @@ export default function ChangeProfilePicture() {
 
   return (
     <>
-      <div className="flex items-center justify-between rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-8 px-12 text-richblack-5">
+      {loading && <Loader />}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 md:p-8 md:px-12 text-richblack-5 gap-4 md:gap-6">
         <div className="flex items-center gap-x-4">
           <img
             src={previewSource || user?.image}
             alt={`profile-${user?.firstName}`}
-            className="aspect-square w-[78px] rounded-full object-cover"
+            className="aspect-square w-[60px] md:w-[78px] rounded-full object-cover"
           />
           <div className="space-y-2">
-            <p>Change Profile Picture</p>
-            <div className="flex flex-row gap-3">
+            <p className="text-sm md:text-base">Change Profile Picture</p>
+            <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
               <input
                 type="file"
                 ref={fileInputRef}

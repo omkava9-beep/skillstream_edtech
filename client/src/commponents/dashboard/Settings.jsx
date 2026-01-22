@@ -10,7 +10,7 @@ const Settings = () => {
 
   return (
     <div className='flex flex-col gap-10'>
-        <h1 className="mb-14 text-3xl font-medium text-richblack-5">
+        <h1 className="mb-7 mt-7 sm:mt-9 md:mt-6 lg:mt-0 lg:mb-0 text-3xl font-medium text-richblack-5">
             Edit Profile
         </h1>
 
