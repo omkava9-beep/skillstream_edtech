@@ -6,7 +6,12 @@ export const catagories = {
 
 export const courseEndpoints = {
     GET_ALL_COURSE_API: `${BASE_URL}/api/v1/course/getallcourses`,
-    GET_COURSE : `${BASE_URL}/api/v1/course/getcourse`
+    GET_COURSE: `${BASE_URL}/api/v1/course/getcourse`
+}
+
+export const instructorEndpoints = {
+    GET_INSTRUCTOR_STATS_API: `${BASE_URL}/api/v1/course/instructor/stats`,
+    GET_INSTRUCTOR_COURSES_API: `${BASE_URL}/api/v1/course/instructor/courses`
 }
 
 export const auth = {

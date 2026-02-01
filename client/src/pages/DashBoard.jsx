@@ -22,7 +22,7 @@ const DashBoard = () => {
 
   return (
     !token? navigate("/login") : 
-    <div className='relative w-full bg-gradient-to-br from-richblack-900 via-richblack-900 to-richblack-800 pt-14 min-h-screen'>
+    <div className='relative w-full bg-gradient-to-br from-richblack-900 via-richblack-900 to-richblack-800 pt-14 h-screen overflow-hidden'>
         {/* Decorative gradient blobs - fixed background layer */}
         <div className='fixed inset-0 pointer-events-none z-0 pt-14 overflow-hidden'>
             <div className='absolute top-10 left-10 w-60 h-60 md:w-96 md:h-96 bg-gradient-to-br from-yellow-400/40 to-yellow-300/20 rounded-full blur-2xl opacity-40'></div>
@@ -32,11 +32,11 @@ const DashBoard = () => {
         </div>
         
         {/* Main content on top of blobs */}
-        <div className='relative z-10 flex w-full min-h-screen pt-0 flex-col lg:flex-row'>
+        <div className='relative z-10 flex w-full h-full pt-0 flex-col lg:flex-row'>
             {/* Mobile Menu Toggle */}
             <button 
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className='lg:hidden fixed top-16 left-4 z-50 px-4 py-2 bg-gradient-to-r from-richblack-800 to-richblack-700 border border-richblack-600 rounded-lg text-richblack-5 hover:from-richblack-700 hover:to-richblack-600 hover:border-yellow-400/50 transition-all duration-200 shadow-lg hover:shadow-yellow-400/20 font-semibold flex items-center gap-2'
+                className='lg:hidden fixed top-[60px] left-4 z-50 px-4 py-2 bg-linear-to-r from-richblack-800 to-richblack-700 border border-richblack-600 rounded-lg text-richblack-5 hover:from-richblack-700 hover:to-richblack-600 hover:border-yellow-400/50 transition-all duration-200 shadow-lg hover:shadow-yellow-400/20 font-semibold flex items-center gap-2'
             >
                 {isSidebarOpen ? (
                     <>
@@ -51,11 +51,10 @@ const DashBoard = () => {
                 )}
             </button>
 
-            {/* Sidebar - Hidden on mobile, visible on lg */}
-            <div className={`fixed lg:static inset-y-14 left-0 z-40 lg:z-10 transition-transform duration-300 ${
+            <div className={`fixed lg:relative top-14 lg:top-0 bottom-0 left-0 z-50 lg:z-10 transition-transform duration-300 h-full ${
                 isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
             }`}>
-                <Sidebar />
+                <Sidebar setOpen={setIsSidebarOpen} />
             </div>
 
             {/* Mobile Overlay */}
@@ -67,7 +66,7 @@ const DashBoard = () => {
             )}
 
             {/* Main Content */}
-            <div className='flex-1 overflow-y-auto w-full lg:w-auto'>
+            <div className='flex-1 overflow-y-auto h-full w-full lg:w-auto'>
                 <div className='mx-auto w-full md:w-11/12 lg:max-w-[1200px] py-8 md:py-12 px-4 md:px-0 text-richblack-5'>
                     <Outlet />
                 </div>

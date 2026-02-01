@@ -62,7 +62,7 @@ const Home = () => {
       gsap.from(".instructor-img", {
         x: -50,
         opacity: 0,
-        duration: 2,
+        duration: 1.5,
         ease: "power2.out",
         scrollTrigger: {
           trigger: ".instructor-section",
@@ -73,7 +73,7 @@ const Home = () => {
       gsap.from(".instructor-text", {
         x: 50,
         opacity: 0,
-        duration: 2,
+        duration: 1.5,
         stagger: 0.2,
         ease: "power2.out",
         scrollTrigger: {

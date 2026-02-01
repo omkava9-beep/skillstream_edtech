@@ -9,8 +9,8 @@ const Settings = () => {
     const {user} = useSelector((state)=>state.profile);
 
   return (
-    <div className='flex flex-col gap-10'>
-        <h1 className="mb-7 mt-7 sm:mt-9 md:mt-6 lg:mt-0 lg:mb-0 text-3xl font-medium text-richblack-5">
+    <div className='max-w-[1000px] mx-auto px-4 sm:px-6 py-10 flex flex-col gap-10'>
+        <h1 className="text-3xl font-medium text-richblack-5">
             Edit Profile
         </h1>
 

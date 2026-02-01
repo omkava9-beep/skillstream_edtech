@@ -93,7 +93,9 @@ const Razorpay = require('razorpay');
 //         })
 //     }
 // }
-
+const CapturePaymentForMultipleItems = async (req, resp) => {
+    const userId = req.user.id;
+}
 
 const CapturePayment = async(req,resp)=>{
     const userId = req.user.id;

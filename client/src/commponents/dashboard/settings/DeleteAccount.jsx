@@ -21,12 +21,12 @@ export default function DeleteAccount() {
 
   return (
     <>
-      <div className="my-6 md:my-10 flex flex-col md:flex-row gap-x-4 md:gap-x-5 rounded-md border-[1px] border-pink-700 bg-pink-900 p-6 md:p-8 md:px-12">
-        <div className="flex aspect-square h-12 md:h-14 w-12 md:w-14 items-center justify-center rounded-full bg-pink-700 flex-shrink-0">
-          <FiTrash2 className="text-2xl md:text-3xl text-pink-200" />
+      <div className="my-6 md:my-10 flex flex-col sm:flex-row gap-x-5 gap-y-4 rounded-md border-[1px] border-pink-700 bg-pink-900 p-6 md:p-8 md:px-12">
+        <div className="flex aspect-square h-14 w-14 items-center justify-center rounded-full bg-pink-700">
+          <FiTrash2 className="text-3xl text-pink-200" />
         </div>
         <div className="flex flex-col space-y-2">
-          <h2 className="text-base md:text-lg font-semibold text-richblack-5">
+          <h2 className="text-lg font-semibold text-richblack-5">
             Delete Account
           </h2>
           <div className="w-full md:w-3/5 text-pink-25 text-sm md:text-base">
@@ -38,7 +38,7 @@ export default function DeleteAccount() {
           </div>
           <button
             type="button"
-            className="w-fit cursor-pointer italic text-pink-300 hover:text-pink-200 transition-colors text-sm md:text-base mt-2"
+            className="w-fit cursor-pointer italic text-pink-300 hover:text-pink-200 transition-colors text-sm md:text-base"
             onClick={handleDeleteAccount}
           >
             I want to delete my account.

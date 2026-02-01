@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { createPortal } from "react-dom"
 
 import { sidebarLinks } from '../../data/dashboard-links'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,7 +9,7 @@ import { VscSettingsGear, VscSignOut as VscSignOutIcon } from "react-icons/vsc"
 import { deleteToken } from '../../redux/slices/authReducer'
 import { ACCOUNT_TYPE } from '../../utils/constants'
 
-const Sidebar = () => {
+const Sidebar = ({ setOpen }) => {
 
     const {user, loading: profileLoading} = useSelector((state) => state.profile);
     const {loading: authLoading} = useSelector((state) => state.auth);
@@ -48,21 +49,21 @@ const Sidebar = () => {
 
     if(profileLoading || authLoading) {
         return (
-            <div className='grid min-w-[220px] items-center border-r border-r-richblack-700/50 bg-gradient-to-b from-richblack-800 to-richblack-900 shadow-xl lg:sticky top-14' style={{ minHeight: 'calc(100vh - 56px)' }}>
+            <div className='grid min-w-[220px] items-center border-r border-r-richblack-700/50 bg-gradient-to-b from-richblack-800 to-richblack-900 shadow-xl h-full'>
                 <div className='spinner'></div>
             </div>
         )
     }
 
   return (
-    <div className='flex min-w-[220px] flex-col border-r border-r-richblack-700/50 bg-gradient-to-b from-richblack-800 to-richblack-900 py-10 overflow-y-auto shadow-xl lg:sticky top-14 max-h-[calc(100vh-56px)]' style={{ minHeight: 'calc(100vh - 56px)' }}>
+    <div className='flex min-w-[220px] flex-col border-r border-r-richblack-700/50 bg-gradient-to-b from-richblack-800 to-richblack-900 py-10 overflow-y-auto shadow-xl h-full'>
 
         <div className='flex flex-col'>
             {
                 sidebarLinks.map((link) => {
                     if(link.type && user?.accountType !== link.type) return null;
                     return (
-                        <SidebarLink key={link.id}  link={link} iconName={link.icon} />
+                        <SidebarLink key={link.id}  link={link} iconName={link.icon} setOpen={setOpen} />
                     )
                 })
             }
@@ -73,6 +74,7 @@ const Sidebar = () => {
             <SidebarLink 
                 link={{name:"Settings", path:"settings"}}
                 iconName="VscSettingsGear"
+                setOpen={setOpen}
             />
 
             <button 
@@ -101,11 +103,10 @@ const Sidebar = () => {
 
         </div>
 
-        {/* Confirmation Modal should be rendered here if it exists */}
-        {/* Placeholder for now as I need to find/create a Modal component */}
-        {confirmationModal && (
-            <div className='fixed inset-0 mt-0! grid place-items-center overflow-hidden bg-richblack-900 bg-opacity-40 z-[100] pointer-events-auto'>
-                <div className='w-11/12 max-w-[350px] rounded-lg border border-richblack-400 bg-richblack-800 p-6 shadow-2xl pointer-events-auto' onClick={(e) => e.stopPropagation()}>
+        {/* Confirmation Modal */}
+        {confirmationModal && createPortal(
+            <div className='fixed inset-0 mt-0! grid place-items-center overflow-hidden bg-richblack-900 bg-opacity-40 z-50 pointer-events-auto backdrop-blur-sm shadow-none'>
+                <div className='w-11/12 max-w-[350px] rounded-lg border border-richblack-400 bg-richblack-800 p-6 shadow-2xl pointer-events-auto animate-in zoom-in duration-200' onClick={(e) => e.stopPropagation()}>
                     <p className='text-2xl font-semibold text-richblack-5'>{confirmationModal.text1}</p>
                     <p className='mt-3 mb-5 leading-6 text-richblack-200'>{confirmationModal.text2}</p>
                     <div className='flex items-center gap-x-4'>
@@ -123,7 +124,8 @@ const Sidebar = () => {
                         </button>
                     </div>
                 </div>
-            </div>
+            </div>,
+            document.body
         )}
 
     </div>

@@ -20,6 +20,9 @@ import MyProfile from './commponents/dashboard/MyProfile'
 import EnrolledCourses from './commponents/dashboard/EnrolledCourses'
 import Settings from './commponents/dashboard/Settings'
 import CoursePage from './pages/CoursePage'
+import InstructorDashBoard from './pages/InstructorDashBoard'
+import AddCourse from './pages/AddCourse'
+
 function App() {
   
   return (
@@ -60,7 +63,9 @@ function App() {
           >
             {/* Nested Routes */}
             <Route index element={<MyProfile/>}></Route>
-
+            <Route path="/dashboard/enrolled-courses" element={<EnrolledCourses/>}></Route>
+            <Route path='/dashboard/instructor' element={<InstructorDashBoard/>}></Route>
+            <Route path='/dashboard/add-course' element={<AddCourse/>}></Route>
             <Route path="/dashboard/settings" element={<Settings/>} />
             <Route path="/dashboard/cart" element={<div>Cart Component Placeholder</div>} />
             <Route path="/dashboard/enrolled-courses" element={<EnrolledCourses/>}></Route>

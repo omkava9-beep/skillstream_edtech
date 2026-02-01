@@ -42,10 +42,18 @@ const Navbar = () => {
   // Handle scroll event for hide/show navbar
   useEffect(() => {
     // Ensure navbar is visible on initial mount
+    fetchSublinks();
     setIsVisible(true);
     
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      
+      // Don't hide navbar on mobile/tablet screens
+      if (window.innerWidth < 1024) {
+        setIsVisible(true);
+        prevScrollY.current = currentScrollY;
+        return;
+      }
       
       // Only hide/show after user has scrolled from initial position
       if (!isInitialMount.current) {
@@ -66,17 +74,16 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   
-  const profileHandler = () => {
-    console.log('profileHandler')
-  }
 
   // Search States
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [allCourses, setAllCourses] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const [links , setLinks] = useState([]);
 
   useEffect(() => {
+    
     // Debounce search or filter effect could go here, 
     // but for now we filter immediately on render or input change 
     if (searchQuery.trim() === "") {
@@ -113,8 +120,8 @@ const Navbar = () => {
   }
 
   return (
-    <div className={`fixed top-0 z-50 w-full h-14 backdrop-blur-xl bg-gradient-to-b from-richblack-900/40 via-richblack-900/20 to-transparent border-b border-richblack-700/10 shadow-lg shadow-richblack-900/20 transition-all duration-500 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}>
-      <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/5 via-transparent to-yellow-400/5 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+    <div className={`fixed bg-richblack-900 md:bg-transparent top-0 z-50 w-full h-14 backdrop-blur-xl bg-linear-to-b from-richblack-900/40 via-richblack-900/20 to-transparent border-b border-richblack-700/10 shadow-lg shadow-richblack-900/20 transition-all duration-500 ${isVisible ? "translate-y-0 opacity-100" : "lg:-translate-y-full lg:opacity-0 translate-y-0 opacity-100"}`}>
+      <div className="absolute inset-0 bg-linear-to-r from-yellow-400/5 via-transparent to-yellow-400/5 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
       <div className={`relative max-w-[1400px] mx-auto px-4 sm:px-6 h-full flex items-center justify-between transition-all duration-200 ${showSearch ? "blur-sm opacity-50 select-none pointer-events-none" : ""}`}>
 
@@ -142,7 +149,7 @@ const Navbar = () => {
                       </p>
                       <IoIosArrowDropdown className={`text-lg transition-all duration-300 ${matchRoute("/catalog/:catalogId") ? "text-yellow-100" : "text-richblack-5 group-hover:text-yellow-100"} group-hover:rotate-180`} />
 
-                      <div className="invisible absolute left-[50%] top-[140%] z-[1000] flex w-[200px] translate-x-[-50%] translate-y-[1em] flex-col rounded-xl bg-gradient-to-br from-richblack-700 to-richblack-800 p-4 text-richblack-50 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-[0.5em] group-hover:opacity-100 lg:w-[300px] shadow-2xl border border-richblack-600/50 backdrop-blur-xl">
+                      <div className="invisible absolute left-[50%] top-[140%] z-50 flex w-[200px] translate-x-[-50%] translate-y-[1em] flex-col rounded-xl bg-linear-to-br from-richblack-700 to-richblack-800 p-4 text-richblack-50 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-[0.5em] group-hover:opacity-100 lg:w-[300px] shadow-2xl border border-richblack-600/50 backdrop-blur-xl">
                         <div className="absolute left-[50%] top-0 -z-10 h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-richblack-700"></div>
                         {
                           subLinks?.length > 0 ? (
@@ -160,7 +167,7 @@ const Navbar = () => {
                       </div>
                       
                       {/* Active Indicator for Catalog */}
-                      <span className={`absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-yellow-100 to-yellow-400 rounded-full transition-all duration-300 ${matchRoute("/catalog/:catalogId") ? "w-full" : "w-0 group-hover:w-full"}`}></span>
+                      <span className={`absolute -bottom-1 left-0 h-1 bg-linear-to-r from-yellow-100 to-yellow-400 rounded-full transition-all duration-300 ${matchRoute("/catalog/:catalogId") ? "w-full" : "w-0 group-hover:w-full"}`}></span>
                     </div>
                   ) : (
                     <Link to={link?.path} className="relative group">
@@ -168,7 +175,7 @@ const Navbar = () => {
                         {link.title}
                       </p>
                       {/* Hover/Active Indicator */}
-                      <span className={`absolute -bottom-1 left-0 h-1 bg-gradient-to-r from-yellow-100 to-yellow-400 rounded-full transition-all duration-300 ${matchRoute(link?.path) ? "w-full" : "w-0 group-hover:w-full"}`}></span>
+                      <span className={`absolute -bottom-1 left-0 h-1 bg-linear-to-r from-yellow-100 to-yellow-400 rounded-full transition-all duration-300 ${matchRoute(link?.path) ? "w-full" : "w-0 group-hover:w-full"}`}></span>
                     </Link>
                   )
                 }
@@ -195,7 +202,7 @@ const Navbar = () => {
                 <IoCartOutline className="text-2xl text-richblack-5 group-hover:text-yellow-400 transition-colors duration-300 group-hover:scale-110" />
               </div>
               {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 text-center text-xs font-bold text-richblack-900 animate-bounce shadow-lg shadow-yellow-400/50">
+                <span className="absolute -top-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-linear-to-br from-yellow-300 to-yellow-500 text-center text-xs font-bold text-richblack-900 animate-bounce shadow-lg shadow-yellow-400/50">
                   {totalItems}
                 </span>
               )}
@@ -210,7 +217,7 @@ const Navbar = () => {
               </div>
 
               {/* Dropdown Menu */}
-              <div className="invisible absolute top-[120%] right-0 z-[1000] flex flex-col rounded-xl bg-gradient-to-br from-richblack-700 to-richblack-800 p-2 text-richblack-5 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100 min-w-[170px] shadow-2xl border border-richblack-600/50 backdrop-blur-xl group-hover:translate-y-1">
+              <div className="invisible absolute top-[120%] right-0 z-50 flex flex-col rounded-xl bg-linear-to-br from-richblack-700 to-richblack-800 p-2 text-richblack-5 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100 min-w-[170px] shadow-2xl border border-richblack-600/50 backdrop-blur-xl group-hover:translate-y-1">
                 <div className="absolute -top-1.5 right-3 h-4 w-4 rotate-45 border-t border-l border-richblack-600 bg-richblack-700"></div>
                 <Link
                   to="/dashboard"
@@ -243,7 +250,7 @@ const Navbar = () => {
                 <Link to="/login" className="px-5 py-2 rounded-lg border-2 border-richblack-600 text-richblack-5 hover:border-yellow-400 hover:text-yellow-400 hover:bg-yellow-400/5 transition-all duration-300 font-medium">
                   Login
                 </Link>
-                <Link to="/signup" className="px-5 py-2 rounded-lg bg-gradient-to-r from-yellow-100 to-yellow-300 text-richblack-900 font-bold hover:shadow-lg hover:shadow-yellow-400/50 hover:scale-105 transition-all duration-300">
+                <Link to="/signup" className="px-5 py-2 rounded-lg bg-linear-to-r from-yellow-100 to-yellow-300 text-richblack-900 font-bold hover:shadow-lg hover:shadow-yellow-400/50 hover:scale-105 transition-all duration-300">
                   Sign Up
                 </Link>
               </>
@@ -263,7 +270,7 @@ const Navbar = () => {
        {/* ===== Search Overlay (Desktop) ===== */}
        {/* ===== Search Overlay (Desktop) - Portal to Body ===== */}
         {showSearch && createPortal(
-            <div className="fixed inset-0 z-[1000] flex justify-center items-start pt-3 pointer-events-none">
+            <div className="fixed inset-0 z-50 flex justify-center items-start pt-3 pointer-events-none">
                 {/* Backdrop to catch clicks */}
                 <div 
                     className="absolute inset-0 bg-transparent pointer-events-auto cursor-default" 
@@ -271,7 +278,7 @@ const Navbar = () => {
                 />
 
                 {/* Search Box Container - Matches Navbar alignment */}
-                <div className="relative w-full max-w-[600px] pointer-events-auto z-[1010]">
+                <div className="relative w-full max-w-[600px] pointer-events-auto z-50">
                     <div className="relative">
                         <input
                             type="text"
@@ -325,7 +332,7 @@ const Navbar = () => {
 
       {/* ===== Mobile Menu Overlay ===== */}
       {isMenuOpen && (
-        <div className="lg:hidden absolute top-[100%] left-0 w-full bg-richblack-900/98 backdrop-blur-xl border-b border-richblack-700 py-8 px-6 shadow-2xl animate-in slide-in-from-top duration-300">
+        <div className="lg:hidden absolute top-full left-0 w-full bg-richblack-900/98 backdrop-blur-xl border-b border-richblack-700 py-8 px-6 shadow-2xl animate-in slide-in-from-top duration-300">
           <ul className="flex flex-col gap-y-6">
             {NavbarLinks.map((link, index) => (
               <li key={index} className="border-b border-richblack-800 pb-4 last:border-0">
