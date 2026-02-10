@@ -22,6 +22,8 @@ import Settings from './commponents/dashboard/Settings'
 import CoursePage from './pages/CoursePage'
 import InstructorDashBoard from './pages/InstructorDashBoard'
 import AddCourse from './pages/AddCourse'
+import MyCourses from './commponents/dashboard/MyCourses'
+import PurchaseHistory from './commponents/dashboard/PurchaseHistory'
 
 function App() {
   
@@ -66,10 +68,11 @@ function App() {
             <Route path="/dashboard/enrolled-courses" element={<EnrolledCourses/>}></Route>
             <Route path='/dashboard/instructor' element={<InstructorDashBoard/>}></Route>
             <Route path='/dashboard/add-course' element={<AddCourse/>}></Route>
+            <Route path='/dashboard/my-courses' element={<MyCourses/>}></Route>
             <Route path="/dashboard/settings" element={<Settings/>} />
             <Route path="/dashboard/cart" element={<div>Cart Component Placeholder</div>} />
             <Route path="/dashboard/enrolled-courses" element={<EnrolledCourses/>}></Route>
-            <Route path="/dashboard/purchase-history" element={<div>Purchase History Component Placeholder</div>} />
+            <Route path="/dashboard/purchase-history" element={<PurchaseHistory />} />
             {/* Add more nested routes as needed based on sidebar-links.js */}
           </Route>
           <Route path="/courses/:courseid" element={<CoursePage></CoursePage>}></Route>

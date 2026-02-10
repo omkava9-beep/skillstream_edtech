@@ -6,7 +6,19 @@ const User = require('../models/User');
 
 const auth = async (req, resp, next) => {
     try {
-        const token = req.header('Authorization')?.replace('Bearer ', "") || req.cookies.token || req.body.token;
+        // Extract token from multiple possible sources
+        let token = null;
+
+        // Check Authorization header (case-insensitive)
+        const authHeader = req.header('Authorization') || req.headers?.authorization;
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            token = authHeader.replace('Bearer ', '');
+        }
+
+        // Fallback to cookies or body
+        if (!token) {
+            token = req.cookies?.token || req.body?.token;
+        }
 
         if (!token) {
             return resp.status(401).json({

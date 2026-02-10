@@ -6,7 +6,12 @@ export const catagories = {
 
 export const courseEndpoints = {
     GET_ALL_COURSE_API: `${BASE_URL}/api/v1/course/getallcourses`,
-    GET_COURSE: `${BASE_URL}/api/v1/course/getcourse`
+    GET_COURSE: `${BASE_URL}/api/v1/course/getcourse`,
+    CREATE_COURSE_API: `${BASE_URL}/api/v1/course/createcourse`,
+    CREATE_SECTION_API: `${BASE_URL}/api/v1/course/createsection`,
+    CREATE_SUBSECTION_API: `${BASE_URL}/api/v1/course/createsubsection`,
+    DELETE_COURSE_API: `${BASE_URL}/api/v1/course/deletecourse`,
+    EDIT_COURSE_API: `${BASE_URL}/api/v1/course/editcourse`,
 }
 
 export const instructorEndpoints = {
@@ -45,3 +50,8 @@ export const settingsEndpoints = {
     DELETE_PROFILE_API: `${BASE_URL}/api/v1/profile/deleteaccount`,
 }
 
+export const paymentEndpoints = {
+    CREATE_ORDER_API: `${BASE_URL}/api/v1/payment/createorder`,
+    VERIFY_PAYMENT_API: `${BASE_URL}/api/v1/payment/verifyPayment`,
+    GET_PAYMENT_HISTORY_API: `${BASE_URL}/api/v1/payment/getPaymentHistory`,
+}

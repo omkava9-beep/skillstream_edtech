@@ -4,9 +4,11 @@ const Section = require("../models/Section");
 
 const CreateSection = async (req, res) => {
     try {
+        console.log("CREATE_SECTION_REQUEST:", req.body);
         const { sectionName, courseId } = req.body;
 
         if (!courseId || !sectionName) {
+            console.log("SECTION_MISSING_FIELDS:", { courseId, sectionName });
             return res.status(400).json({
                 success: false,
                 message: "missing field in sectionCreation",
@@ -14,8 +16,10 @@ const CreateSection = async (req, res) => {
         }
 
         const newSection = await Section.create({
-            sectionName
+            sectionName,
+            courseId
         });
+        console.log("SECTION_CREATED:", newSection._id);
 
         const updatedCourse = await Course.findByIdAndUpdate(courseId, {
             $push: {
@@ -33,15 +37,16 @@ const CreateSection = async (req, res) => {
         return res.status(200).json({
             success: true,
             message: "New section created Successfully",
-            data: updatedCourse,
+            data: newSection,
+            course: updatedCourse
         })
     } catch (e) {
-        console.log("error occured in section controller :-", e);
+        console.error("SECTION_CREATE_ERROR:", e);
         return res.status(500).json({
             success: false,
-            message: "Something went wrong",
+            message: "Something went wrong in section creation",
+            error: e.message
         })
-
     }
 
 }

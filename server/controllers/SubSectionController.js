@@ -4,12 +4,14 @@ const imageUploder = require('../utils/imageUploader');
 
 const CreateSubSection = async (req, res) => {
     try {
+        console.log("CREATE_SUBSECTION_REQUEST:", { ...req.body, video: !!req.files?.videoUpload });
         const { sectionId, title, timeDuration, description } = req.body;
 
-        const video = req.files.videoUpload;
-        if (!sectionId || !title || !timeDuration || !description || !video) {
+        const video = req.files?.videoUpload;
+        if (!sectionId || !title || !description || !video) {
+            console.log("SUBSECTION_MISSING_FIELDS:", { sectionId, title, description, video: !!video });
             return res.status(403).json({
-                message: "all fields are required to create a section",
+                message: "all fields are required to create a subsection",
                 success: false,
             })
         }
@@ -43,9 +45,11 @@ const CreateSubSection = async (req, res) => {
         })
 
     } catch (error) {
+        console.error("SUBSECTION_CREATE_ERROR:", error);
         return res.status(500).json({
             success: false,
-            message: "Internal Server Error!!",
+            message: "Internal Server Error in subsection creation",
+            error: error.message
         })
     }
 }
@@ -120,7 +124,7 @@ const DeleteSubSection = async (req, resp) => {
         const deleteSection = await Subsection.findByIdAndDelete(subsectionId);
         if (!deleteSection) {
             return resp.status(404).json({
-                message: 'This subSection does not exist so we can nont delete It.',
+                message: 'This subSection does not exist so we cannot delete it.',
                 success: false,
             })
         }

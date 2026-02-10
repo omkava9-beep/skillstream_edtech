@@ -80,7 +80,6 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [allCourses, setAllCourses] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
-  const [links , setLinks] = useState([]);
 
   useEffect(() => {
     

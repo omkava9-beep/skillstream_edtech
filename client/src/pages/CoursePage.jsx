@@ -5,18 +5,19 @@ import { courseEndpoints } from '../../services/apis';
 import RatingStars from '../commponents/common/RatingStars';
 import GetAvgRating from '../utils/avgRating';
 import Loader from '../commponents/common/Loader';
+import BuyCourseButton from '../commponents/course/BuyCourseButton';
 import { IoSwapVertical } from 'react-icons/io5';
 import { AiFillGold } from 'react-icons/ai';
 import { FiCheck, FiClock, FiUsers, FiBarChart, FiDownload, FiShare2 } from 'react-icons/fi';
 import { MdOutlineOndemandVideo } from 'react-icons/md';
 
 const CoursePage = () => {
+    console.log("!!! COURSE PAGE V3 - PAYMENT GATEWAY FIXED !!!");
     const location = useLocation();
     const navigate = useNavigate();
     const courseId = location.pathname.split('/').pop();
     const [courseData, setCourseData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [enrollLoading, setEnrollLoading] = useState(false);
     
     useEffect(()=>{
         const fetchCourseDetails = async()=>{
@@ -42,17 +43,6 @@ const CoursePage = () => {
     }
 
     const avgReview = GetAvgRating(courseData?.ratingAndReviews);
-
-    const handleEnroll = async() => {
-        setEnrollLoading(true);
-        try {
-            // Add enrollment API call here
-            console.log('Enrolling in course...');
-        } catch(e) {
-            console.log('Error enrolling course:', e);
-        }
-        setEnrollLoading(false);
-    }
 
     return (
         <div className="bg-gradient-to-br from-richblack-900 via-richblack-900 to-richblack-800 pt-10 text-richblack-5 min-h-screen">
@@ -146,14 +136,9 @@ const CoursePage = () => {
                                     </div>
                                 </div>
 
-                                {/* Enroll Button */}
-                                <button 
-                                    onClick={handleEnroll}
-                                    disabled={enrollLoading}
-                                    className="w-full mb-3 bg-gradient-to-r from-yellow-100 to-yellow-300 text-richblack-900 font-bold py-3 px-4 rounded-lg hover:shadow-lg hover:shadow-yellow-500/50 transition-all duration-300 disabled:opacity-50 transform hover:scale-105 text-sm"
-                                >
-                                    {enrollLoading ? 'Processing...' : 'Enroll Now'}
-                                </button>
+                                {/* Buy Course Button */}
+                                <BuyCourseButton course={courseData} />
+
 
                                 {/* Share Button */}
                                 <button className="w-full flex items-center justify-center gap-2 bg-richblack-700 hover:bg-richblack-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 mb-4 border border-richblack-600 text-sm">
@@ -317,12 +302,11 @@ const CoursePage = () => {
                 <div className="relative z-10 text-center">
                     <h3 className="text-2xl md:text-3xl font-bold mb-3">Ready to Transform Your Skills?</h3>
                     <p className="text-richblack-300 mb-6 text-sm">Join thousands of students already learning with us</p>
-                    <button 
-                        onClick={handleEnroll}
-                        className="px-6 py-3 bg-gradient-to-r from-yellow-100 to-yellow-300 text-richblack-900 font-bold rounded-lg hover:shadow-lg hover:shadow-yellow-500/50 transition-all duration-300 transform hover:scale-105 text-sm"
-                    >
-                        Start Learning Now
-                    </button>
+                    <div className="flex justify-center">
+                        <div className="w-full max-w-xs">
+                            <BuyCourseButton course={courseData} />
+                        </div>
+                    </div>
                 </div>
                 </div>
                 </div>

@@ -58,9 +58,16 @@ const getCatgoryPageDetails = async (req, resp) => {
         const catagoryDetails = await Catagory.findById(catalogId)
             .populate({
                 path: "courses",
-                populate: {
-                    path: "instructor",
-                },
+                match: { status: "Published" }, // Only get published courses
+                populate: [
+                    { path: "instructor" },
+                    {
+                        path: "courseContent",
+                        populate: {
+                            path: "subSection",
+                        }
+                    }
+                ],
             })
             .exec()
         if (!catagoryDetails) {
@@ -76,6 +83,7 @@ const getCatgoryPageDetails = async (req, resp) => {
         })
             .populate({
                 path: "courses",
+                match: { status: "Published" }, // Only get published courses
                 populate: {
                     path: "instructor",
                 },
@@ -87,7 +95,7 @@ const getCatgoryPageDetails = async (req, resp) => {
         }
         // //get the top selling courses
 
-        const courses = await Course.find()
+        const courses = await Course.find({ status: "Published" }) // Only get published courses
             .populate("instructor")
             .sort({ studentsEnrolled: -1 })
             .limit(10)

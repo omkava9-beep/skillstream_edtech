@@ -1,43 +1,63 @@
 const User = require('../models/User');
-
 const Course = require('../models/Course');
-
-const Tag = require('../models/Catagory');
-const imageUploder = require('../utils/imageUploader');
 const Catagory = require('../models/Catagory');
-const { populate } = require('../models/Section');
+const Section = require("../models/Section");
+const Subsection = require("../models/Subsection");
+const imageUploder = require('../utils/imageUploader');
 
 
 
 const CreateCourse = async (req, resp) => {
     try {
-        const { name, description, whatYouWillLearn, catagory, tag, price } = req.body;
+        console.log("CREATE_COURSE_REQUEST_BODY:", req.body);
+        const { name, description, whatYouWillLearn, catagory, tag: _tag, price, status } = req.body;
 
-        if (!name || !description || !whatYouWillLearn || !catagory || !price) {
+        if (!name || !description || !whatYouWillLearn || !catagory || (price === undefined || price === null || price === "")) {
+            console.log("MISSING_FIELDS:", { name, description, whatYouWillLearn, catagory, price });
             return resp.status(422).json({
                 message: "All fields are required for creating the course!",
+                success: false,
+                missingFields: { name: !name, description: !description, whatYouWillLearn: !whatYouWillLearn, catagory: !catagory, price: (price === undefined || price === null || price === "") }
+            })
+        }
+
+        const thumbnail = req.files ? req.files.thumbnailImage : null;
+        if (!thumbnail) {
+            return resp.status(422).json({
+                message: "Thumbnail image is required",
                 success: false,
             })
         }
 
-        const thumbnail = req.files.thumbnailImage;
-
         const validcatagory = await Catagory.findById(catagory);
         if (!validcatagory) {
             return resp.status(404).json({
-                message: 'catagory does not exist please enter a valid Catagory',
+                message: 'category does not exist please enter a valid Category',
                 success: false,
             });
         }
 
-        const instructorDetails = await User.findById(req.user.id);
+        const instructorId = req.user.id || req.user._id;
+        const instructorDetails = await User.findById(instructorId);
         if (!instructorDetails) {
+            console.log("INSTRUCTOR_NOT_FOUND_FOR_ID:", instructorId);
             return resp.status(404).json({
                 message: 'Instructor details not found',
                 success: false,
             });
         }
+
+        let tag = _tag;
+        if (typeof _tag === 'string') {
+            try {
+                tag = JSON.parse(_tag);
+            } catch (e) {
+                tag = [_tag];
+            }
+        }
+
         const thumbnailImage = await imageUploder(thumbnail.tempFilePath, process.env.COURSE_THUMBNAIL_FOLDER_NAME);
+
         const newCourse = await Course.create({
             courseName: name,
             courseDescription: description,
@@ -47,22 +67,38 @@ const CreateCourse = async (req, resp) => {
             tag: tag,
             thumbnail: thumbnailImage.secure_url,
             price: price,
+            status: status || "Draft",
         });
+
         console.log("new course created :- ", newCourse);
-        await User.findByIdAndUpdate(instructorDetails._id, {
+
+        const instructorUpdate = await User.findByIdAndUpdate(instructorDetails._id, {
             $push: {
                 courses: newCourse._id,
             }
         }, { new: true });
+
         validcatagory.courses.push(newCourse._id);
         await validcatagory.save();
+
+        const populatedCourse = await Course.findById(newCourse._id)
+            .populate("instructor")
+            .populate("catagory")
+            .populate({
+                path: "courseContent",
+                populate: {
+                    path: "subSection"
+                }
+            })
+            .exec();
 
         return resp.status(200).json({
             message: 'New Course created successfully',
             success: true,
-            data: newCourse,
+            data: populatedCourse,
         })
     } catch (error) {
+        console.error("COURSE_CREATE_ERROR:", error);
         return resp.status(500).json({
             message: 'Error creating course',
             success: false,
@@ -73,7 +109,8 @@ const CreateCourse = async (req, resp) => {
 
 const getAllCourses = async (req, resp) => {
     try {
-        const allCourses = await Course.find({})
+        // Only return published courses for public viewing
+        const allCourses = await Course.find({ status: "Published" })
             .populate({
                 path: 'instructor',
             })
@@ -135,7 +172,7 @@ const GetOneCourseAllDetails = async (req, resp) => {
 
         if (!allCourseDetails) {
             return resp.status(403).json({
-                message: "course id is not able to finnd the course details something might be wrong int the course id",
+                message: "Course ID not found in the database. Something might be wrong with the ID.",
                 success: false,
             })
         }
@@ -234,4 +271,65 @@ const EditCourse = async (req, res) => {
     }
 }
 
-module.exports = { CreateCourse, getAllCourses, GetOneCourseAllDetails, EditCourse };
+const DeleteCourse = async (req, res) => {
+    try {
+        const { courseId } = req.body
+
+        // Find the course
+        const course = await Course.findById(courseId)
+        if (!course) {
+            return res.status(404).json({ message: "Course not found" })
+        }
+
+        // Unenroll students from the course
+        const studentsEnrolled = course.studentsEnrolled
+        for (const studentId of studentsEnrolled) {
+            await User.findByIdAndUpdate(studentId, {
+                $pull: { courses: courseId },
+            })
+        }
+
+        // Delete sections and sub-sections
+        const courseSections = course.courseContent
+        for (const sectionId of courseSections) {
+            // Delete sub-sections of the section
+            const section = await Section.findById(sectionId)
+            if (section) {
+                const subSections = section.subSection
+                for (const subSectionId of subSections) {
+                    await Subsection.findByIdAndDelete(subSectionId)
+                }
+            }
+
+            // Delete the section
+            await Section.findByIdAndDelete(sectionId)
+        }
+
+        // Remove course from Category
+        await Catagory.findByIdAndUpdate(course.catagory, {
+            $pull: { courses: courseId },
+        });
+
+        // Remove course from Instructor's courses array
+        await User.findByIdAndUpdate(course.instructor, {
+            $pull: { courses: courseId },
+        });
+
+        // Delete the course
+        await Course.findByIdAndDelete(courseId)
+
+        return res.status(200).json({
+            success: true,
+            message: "Course deleted successfully",
+        })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: error.message,
+        })
+    }
+}
+
+module.exports = { CreateCourse, getAllCourses, GetOneCourseAllDetails, EditCourse, DeleteCourse };
