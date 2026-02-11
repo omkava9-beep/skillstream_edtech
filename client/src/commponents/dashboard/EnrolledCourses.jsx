@@ -127,20 +127,7 @@ const EnrolledCourses = () => {
                   <FiBookOpen className="text-richblack-500" size={48} />
                 </div>
               )}
-              {/* Status Badge */}
-              {course.status && (
-                <div className="absolute top-3 right-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      course.status === 'Published'
-                        ? 'bg-caribbeangreen-700 text-caribbeangreen-50'
-                        : 'bg-yellow-700 text-yellow-50'
-                    }`}
-                  >
-                    {course.status}
-                  </span>
-                </div>
-              )}
+
             </div>
 
             {/* Course Details */}

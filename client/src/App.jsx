@@ -24,6 +24,7 @@ import InstructorDashBoard from './pages/InstructorDashBoard'
 import AddCourse from './pages/AddCourse'
 import MyCourses from './commponents/dashboard/MyCourses'
 import PurchaseHistory from './commponents/dashboard/PurchaseHistory'
+import ViewCourse from '../src/pages/ViewCourse'
 
 function App() {
   
@@ -76,6 +77,15 @@ function App() {
             {/* Add more nested routes as needed based on sidebar-links.js */}
           </Route>
           <Route path="/courses/:courseid" element={<CoursePage></CoursePage>}></Route>
+          <Route path='/view-course/:id' 
+                element={
+                  <PrivateRoute>
+                    <ViewCourse></ViewCourse>
+                  </PrivateRoute>
+                }
+                >
+
+          </Route>
           
         </Routes>
     </div>
