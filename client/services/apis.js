@@ -12,6 +12,8 @@ export const courseEndpoints = {
     CREATE_SUBSECTION_API: `${BASE_URL}/api/v1/course/createsubsection`,
     DELETE_COURSE_API: `${BASE_URL}/api/v1/course/deletecourse`,
     EDIT_COURSE_API: `${BASE_URL}/api/v1/course/editcourse`,
+    GET_FULL_COURSE_DETAILS_AUTHENTICATED: `${BASE_URL}/api/v1/course/getFullCourseDetails`,
+    LECTURE_COMPLETION_API: `${BASE_URL}/api/v1/course/updateCourseProgress`,
 }
 
 export const instructorEndpoints = {
@@ -53,5 +55,12 @@ export const settingsEndpoints = {
 export const paymentEndpoints = {
     CREATE_ORDER_API: `${BASE_URL}/api/v1/payment/createorder`,
     VERIFY_PAYMENT_API: `${BASE_URL}/api/v1/payment/verifyPayment`,
+    CREATE_MULTI_ORDER_API: `${BASE_URL}/api/v1/payment/createmultiorder`,
+    VERIFY_MULTI_PAYMENT_API: `${BASE_URL}/api/v1/payment/verifymultipayment`,
     GET_PAYMENT_HISTORY_API: `${BASE_URL}/api/v1/payment/getPaymentHistory`,
+}
+
+export const ratingsEndpoints = {
+    REVIEW_DETAILS_API: `${BASE_URL}/api/v1/rating/getallratings`,
+    CREATE_RATING_API: `${BASE_URL}/api/v1/rating/createrating`,
 }

@@ -11,6 +11,7 @@
     "@reduxjs/toolkit": "^2.11.2",
     "concurrently": "^8.2.2",
     "generate-otp": "^1.0.6",
+    "react-rating-stars-component": "^2.2.0",
     "react-redux": "^9.2.0"
   }
 }

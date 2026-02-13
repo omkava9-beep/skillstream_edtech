@@ -187,10 +187,12 @@ const CoursePage = () => {
                 <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
                 <h2 className="text-2xl font-bold mb-6">What You'll Learn</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-start gap-3 group p-4 bg-richblack-900/50 rounded-lg hover:bg-richblack-800/50 transition-all duration-300">
-                        <FiCheck className="text-xl text-yellow-100 shrink-0 mt-1 group-hover:scale-110 transition-transform"/>
-                        <p className="text-richblack-300 text-sm leading-relaxed">{courseData?.whatYouWillLearn}</p>
-                    </div>
+                    {courseData?.whatYouWillLearn?.split('\n').filter(point => point.trim()).map((point, index) => (
+                        <div key={index} className="flex items-start gap-3 group p-4 bg-richblack-900/50 rounded-lg hover:bg-richblack-800/50 transition-all duration-300">
+                            <FiCheck className="text-xl text-yellow-100 shrink-0 mt-1 group-hover:scale-110 transition-transform"/>
+                            <p className="text-richblack-300 text-sm leading-relaxed">{point}</p>
+                        </div>
+                    ))}
                 </div>
                 </div>
             </div>

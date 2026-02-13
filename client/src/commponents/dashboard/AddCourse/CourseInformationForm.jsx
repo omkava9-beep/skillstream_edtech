@@ -1,14 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
 import ImageUpload from './ImageUpload';
 import { apiConnector } from '../../../../services/apiConnector';
 import { catagories } from '../../../../services/apis';
 import { FiChevronRight } from 'react-icons/fi';
+import ChipInput from '../../common/ChipInput';
+import RequirementsField from './RequirementsField';
 
 const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, saveDraft }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  
+  const { setValue, getValues } = useForm({
+    defaultValues: {
+      tags: courseInfo.tags || [],
+      whatYouWillLearn: courseInfo.whatYouWillLearn || ''
+    }
+  });
 
   // Fetch categories on mount
   useEffect(() => {
@@ -39,13 +49,7 @@ const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, save
     }
   };
 
-  const handleTagsChange = (e) => {
-    const value = e.target.value;
-    setCourseInfo((prev) => ({
-      ...prev,
-      tags: value.split(',').map((tag) => tag.trim()).filter((tag) => tag),
-    }));
-  };
+
 
   const handleThumbnailChange = (file) => {
     setCourseInfo((prev) => ({
@@ -151,25 +155,17 @@ const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, save
       </div>
 
       {/* What You Will Learn */}
-      <div>
-        <label htmlFor="whatYouWillLearn" className="block text-richblack-5 text-sm font-medium mb-2">
-          What You Will Learn <span className="text-pink-200">*</span>
-        </label>
-        <textarea
-          id="whatYouWillLearn"
-          name="whatYouWillLearn"
-          value={courseInfo.whatYouWillLearn}
-          onChange={handleInputChange}
-          placeholder="What students will learn from this course"
-          rows={4}
-          className={`w-full bg-richblack-700 text-richblack-5 border ${
-            errors.whatYouWillLearn ? 'border-pink-200' : 'border-richblack-600'
-          } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-caribbeangreen-300 transition-all resize-none`}
-        />
-        {errors.whatYouWillLearn && (
-          <p className="text-pink-200 text-sm mt-1">{errors.whatYouWillLearn}</p>
-        )}
-      </div>
+      <RequirementsField
+        label="What You Will Learn"
+        name="whatYouWillLearn"
+        placeholder="Enter a learning outcome"
+        errors={errors}
+        setValue={(name, value) => {
+          setValue(name, value);
+          setCourseInfo(prev => ({ ...prev, [name]: value }));
+        }}
+        getValues={getValues}
+      />
 
       {/* Price and Category Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -223,37 +219,18 @@ const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, save
       </div>
 
       {/* Tags */}
-      <div>
-        <label htmlFor="tags" className="block text-richblack-5 text-sm font-medium mb-2">
-          Tags <span className="text-pink-200">*</span>
-        </label>
-        <input
-          type="text"
-          id="tags"
-          name="tags"
-          value={courseInfo.tags.join(', ')}
-          onChange={handleTagsChange}
-          placeholder="Enter tags separated by commas (e.g., React, JavaScript, Web Development)"
-          className={`w-full bg-richblack-700 text-richblack-5 border ${
-            errors.tags ? 'border-pink-200' : 'border-richblack-600'
-          } rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-caribbeangreen-300 transition-all`}
-        />
-        {errors.tags && (
-          <p className="text-pink-200 text-sm mt-1">{errors.tags}</p>
-        )}
-        {courseInfo.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-3">
-            {courseInfo.tags.map((tag, index) => (
-              <span
-                key={index}
-                className="bg-caribbeangreen-700 text-caribbeangreen-50 px-3 py-1 rounded-full text-sm"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
+      <ChipInput
+        label="Tags"
+        name="tags"
+        placeholder="Enter a tag and press Enter"
+        register={() => {}}
+        errors={errors}
+        setValue={(name, value) => {
+          setValue(name, value);
+          setCourseInfo(prev => ({ ...prev, [name]: value }));
+        }}
+        getValues={getValues}
+      />
 
       {/* Thumbnail Upload */}
       <ImageUpload

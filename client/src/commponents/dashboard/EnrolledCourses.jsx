@@ -173,12 +173,12 @@ const EnrolledCourses = () => {
               <div className="mt-4">
                 <div className="flex items-center justify-between mb-2 text-xs text-richblack-400">
                   <span>Progress</span>
-                  <span>0%</span>
+                  <span>{course.progressPercentage || 0}%</span>
                 </div>
                 <div className="w-full bg-richblack-700 rounded-full h-2 overflow-hidden">
                   <div
                     className="bg-gradient-to-r from-caribbeangreen-300 to-caribbeangreen-500 h-full rounded-full transition-all duration-300"
-                    style={{ width: '0%' }}
+                    style={{ width: `${course.progressPercentage || 0}%` }}
                   ></div>
                 </div>
               </div>

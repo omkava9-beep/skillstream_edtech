@@ -86,6 +86,95 @@ const CapturePayment = async (req, res) => {
     }
 }
 
+// Multi-Course Payment Handler for Cart
+const CaptureMultipleCourses = async (req, res) => {
+    const userId = req.user.id;
+    const { courseIds } = req.body;  //Array of course IDs
+
+    if (!courseIds || !Array.isArray(courseIds) || courseIds.length === 0) {
+        return res.status(403).json({
+            message: 'Please provide valid course IDs',
+            success: false,
+        });
+    }
+
+    try {
+        // Fetch all courses
+        const courses = await Course.find({ _id: { $in: courseIds } });
+
+        if (courses.length !== courseIds.length) {
+            return res.status(404).json({
+                message: 'Some courses not found',
+                success: false,
+            });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found',
+                success: false,
+            });
+        }
+
+        // Check if user is already enrolled in any course
+        const uid = new mongoose.Types.ObjectId(userId);
+        const alreadyEnrolled = courses.filter(course =>
+            course.studentsEnrolled.includes(uid)
+        );
+
+        if (alreadyEnrolled.length > 0) {
+            return res.status(403).json({
+                message: `Already enrolled in: ${alreadyEnrolled.map(c => c.courseName).join(', ')}`,
+                success: false,
+            });
+        }
+
+        // Calculate total amount
+        const totalAmount = courses.reduce((sum, course) => sum + (course.price || 0), 0);
+
+        if (totalAmount === 0 || isNaN(totalAmount)) {
+            return res.status(400).json({
+                message: 'Invalid total amount',
+                success: false,
+            });
+        }
+
+        const options = {
+            amount: totalAmount * 100, // Amount in paise
+            currency: 'INR',
+            receipt: `rcpt_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+            notes: {
+                userId,
+                courseIds: courseIds.join(','),  // Store as comma-separated string
+                courseCount: courseIds.length
+            }
+        };
+
+        const paymentResponse = await instance.orders.create(options);
+        console.log("RAZORPAY MULTI-COURSE ORDER CREATED:", paymentResponse);
+
+        return res.status(200).json({
+            success: true,
+            message: 'Multi-course order created successfully',
+            orderId: paymentResponse.id,
+            courseNames: courses.map(c => c.courseName).join(', '),
+            courseCount: courses.length,
+            currency: paymentResponse.currency,
+            amount: paymentResponse.amount,
+        });
+
+    } catch (error) {
+        console.error("CAPTURE MULTIPLE COURSES ERROR:", error);
+        return res.status(500).json({
+            message: error.message || "Could not create multi-course order",
+            success: false,
+            error: error
+        });
+    }
+};
+
+
 const VerifyPayment = async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courseId } = req.body;
     const userId = req.user.id;
@@ -169,6 +258,114 @@ const VerifyPayment = async (req, res) => {
             return res.status(500).json({
                 success: false,
                 message: "Could not enroll student",
+            });
+        }
+    }
+
+    return res.status(400).json({ success: false, message: "Payment Failed" });
+};
+
+// Verify Multi-Course Payment
+const VerifyMultipleCoursesPayment = async (req, res) => {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courseIds } = req.body;
+    const userId = req.user.id;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !courseIds || !userId) {
+        return res.status(400).json({
+            success: false,
+            message: "Payment details are incomplete",
+        });
+    }
+
+    let body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+        .createHmac("sha256", process.env.RAZORPAY_SECRET)
+        .update(body.toString())
+        .digest("hex");
+
+    if (expectedSignature === razorpay_signature) {
+        // Payment is verified, now enroll in all courses
+        try {
+            const enrolledCourses = [];
+            const courseProgressIds = [];
+            let totalAmount = 0;
+
+            // Process each course
+            for (const courseId of courseIds) {
+                // 1. Enroll student in course
+                const enrolledCourse = await Course.findByIdAndUpdate(
+                    courseId,
+                    { $push: { studentsEnrolled: userId } },
+                    { new: true }
+                );
+
+                if (!enrolledCourse) {
+                    console.error(`Course not found: ${courseId}`);
+                    continue;
+                }
+
+                enrolledCourses.push(enrolledCourse);
+                totalAmount += enrolledCourse.price || 0;
+
+                // 2. Create course progress
+                const newCourseProgress = await CourseProgress.create({
+                    courseID: courseId,
+                    completedVideos: [],
+                });
+
+                courseProgressIds.push(newCourseProgress._id);
+
+                // 3. Record individual payment
+                await Payment.create({
+                    userId,
+                    courseId,
+                    orderId: razorpay_order_id,
+                    paymentId: razorpay_payment_id,
+                    signature: razorpay_signature,
+                    amount: enrolledCourse.price,
+                });
+            }
+
+            // 4. Update user with all courses and progress
+            const enrolledStudent = await User.findByIdAndUpdate(
+                userId,
+                {
+                    $push: {
+                        courses: { $each: courseIds },
+                        courseProgress: { $each: courseProgressIds },
+                    },
+                },
+                { new: true }
+            );
+
+            // 5. Send confirmation email
+            try {
+                const courseNames = enrolledCourses.map(c => c.courseName).join(', ');
+                const emailResponse = await MailSender(
+                    enrolledStudent.email,
+                    `Successfully Enrolled in ${enrolledCourses.length} Courses`,
+                    `<h2>Congratulations ${enrolledStudent.firstName} ${enrolledStudent.lastName}!</h2>
+                    <p>You have been successfully enrolled in the following courses:</p>
+                    <ul>${enrolledCourses.map(c => `<li>${c.courseName}</li>`).join('')}</ul>
+                    <p>Total Amount Paid: ₹${totalAmount}</p>
+                    <p>Start learning now!</p>`
+                );
+                console.log("Email sent successfully: ", emailResponse.response);
+            } catch (error) {
+                console.error("Error occurred while sending mail: ", error);
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: `Payment Verified and Student Enrolled in ${enrolledCourses.length} courses`,
+                enrolledCount: enrolledCourses.length,
+            });
+
+        } catch (error) {
+            console.error("VERIFY MULTI-COURSE PAYMENT ERROR:", error);
+            return res.status(500).json({
+                success: false,
+                message: "Could not enroll student in all courses",
             });
         }
     }
@@ -270,4 +467,12 @@ const GetPaymentHistory = async (req, res) => {
     }
 };
 
-module.exports = { CapturePayment, VerifyPayment, VerifySignature, GetPaymentHistory };
+module.exports = {
+    CapturePayment,
+    VerifyPayment,
+    CaptureMultipleCourses,
+    VerifyMultipleCoursesPayment,
+    VerifySignature,
+    GetPaymentHistory
+};
+

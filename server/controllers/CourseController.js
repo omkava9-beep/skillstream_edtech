@@ -4,6 +4,8 @@ const Catagory = require('../models/Catagory');
 const Section = require("../models/Section");
 const Subsection = require("../models/Subsection");
 const imageUploder = require('../utils/imageUploader');
+const CourseProgress = require("../models/CourseProgress");
+const { convertSecondsToDuration } = require("../utils/secToDuration");
 
 
 
@@ -163,12 +165,23 @@ const GetOneCourseAllDetails = async (req, resp) => {
         //     }
         // }).exec();
 
-        const allCourseDetails = await Course.findById(courseId).populate("instructor").populate("catagory").populate("ratingAndReviews").populate({
-            path: 'courseContent',
-            populate: {
-                path: 'subSection'
-            }
-        });
+        const allCourseDetails = await Course.findById(courseId)
+            .populate("instructor")
+            .populate("catagory")
+            .populate({
+                path: "ratingAndReviews",
+                populate: {
+                    path: "user",
+                    select: "firstName lastName image email",
+                },
+            })
+            .populate({
+                path: "courseContent",
+                populate: {
+                    path: "subSection",
+                },
+            })
+            .exec()
 
         if (!allCourseDetails) {
             return resp.status(403).json({
@@ -332,4 +345,154 @@ const DeleteCourse = async (req, res) => {
     }
 }
 
-module.exports = { CreateCourse, getAllCourses, GetOneCourseAllDetails, EditCourse, DeleteCourse };
+
+const getFullCourseDetails = async (req, res) => {
+    try {
+        const { courseId } = req.body
+        const userId = req.user.id
+        const courseDetails = await Course.findOne({
+            _id: courseId,
+        })
+            .populate({
+                path: "instructor",
+                populate: {
+                    path: "additionalDetails",
+                },
+            })
+            .populate("catagory")
+            // .populate("ratingAndReviews")
+            .populate({
+                path: "courseContent",
+                populate: {
+                    path: "subSection",
+                },
+            })
+            .exec()
+
+        const userProgress = await User.findById(userId).populate({
+            path: "courseProgress",
+            match: { courseID: courseId }
+        });
+
+        let courseProgressCount = null;
+        if (userProgress && userProgress.courseProgress.length > 0) {
+            courseProgressCount = userProgress.courseProgress[0];
+        }
+
+        console.log("courseProgressCount : ", courseProgressCount)
+
+        if (!courseDetails) {
+            return res.status(400).json({
+                success: false,
+                message: `Could not find course with id: ${courseId}`,
+            })
+        }
+
+        // if (courseDetails.status === "Draft") {
+        //   return res.status(403).json({
+        //     success: false,
+        //     message: `Accessing a draft course is forbidden`,
+        //   });
+        // }
+
+        let totalDurationInSeconds = 0
+        courseDetails.courseContent.forEach((content) => {
+            content.subSection.forEach((subSection) => {
+                const timeDurationInSeconds = parseInt(subSection.timeDuration)
+                totalDurationInSeconds += timeDurationInSeconds
+            })
+        })
+
+        const totalDuration = convertSecondsToDuration(totalDurationInSeconds)
+
+        return res.status(200).json({
+            success: true,
+            data: {
+                courseDetails,
+                totalDuration,
+                completedVideos: courseProgressCount?.completedVideos
+                    ? courseProgressCount?.completedVideos
+                    : [],
+            },
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        })
+    }
+}
+
+// Get a list of Course for a given Instructor
+const getInstructorCourses = async (req, res) => {
+    try {
+        // Get the instructor ID from the authenticated user or request body
+        const instructorId = req.user.id
+
+        // Find all courses belonging to the instructor
+        const instructorCourses = await Course.find({
+            instructor: instructorId,
+        }).sort({ createdAt: -1 })
+
+        // Return the instructor's courses
+        res.status(200).json({
+            success: true,
+            data: instructorCourses,
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            success: false,
+            message: "Failed to retrieve instructor courses",
+            error: error.message,
+        })
+    }
+}
+
+const updateCourseProgress = async (req, res) => {
+    const { courseId, subsectionId } = req.body
+    const userId = req.user.id
+
+
+    try {
+        const subsection = await Subsection.findById(subsectionId);
+        if (!subsection) {
+            return res.status(404).json({ error: "Invalid subsection" });
+        }
+
+        // Find the course progress document for the user and course
+        // Since CourseProgress doesn't have userId, we need to find it via User
+        const user = await User.findById(userId).populate("courseProgress");
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        let courseProgress = user.courseProgress.find((cp) => cp.courseID.toString() === courseId);
+
+        if (!courseProgress) {
+            courseProgress = await CourseProgress.create({
+                courseID: courseId,
+                completedVideos: []
+            });
+            user.courseProgress.push(courseProgress._id);
+            await user.save();
+        }
+
+        // Check if the subsection is already completed
+        if (courseProgress.completedVideos.includes(subsectionId)) {
+            // If already completed, remove it (unmark)
+            courseProgress.completedVideos.pull(subsectionId);
+        } else {
+            // If not completed, add it (mark)
+            courseProgress.completedVideos.push(subsectionId);
+        }
+        await courseProgress.save();
+
+        return res.status(200).json({ message: "Course progress updated" })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({ error: "Internal server error" })
+    }
+}
+
+module.exports = { CreateCourse, getAllCourses, GetOneCourseAllDetails, EditCourse, DeleteCourse, getFullCourseDetails, updateCourseProgress };

@@ -4,6 +4,7 @@ const Course = require('../models/Course');
 const CourseProgress = require('../models/CourseProgress');
 const { cloudinary } = require('../config/couldinary');
 const bcrypt = require('bcrypt');
+const { convertSecondsToDuration } = require("../utils/secToDuration");
 const UpdateProfile = async (req, resp) => {
     try {
         const { firstName, lastName, gender, dateOfBirth, about, contact, linkedinProfile } = req.body;
@@ -181,22 +182,74 @@ const GetEnrolledCourses = async (req, resp) => {
     try {
         const userId = req.user.id;
 
-        const user = await User.findById(userId).populate('courses').exec();
+        // Fetch user with courses and courseProgress populated
+        let user = await User.findById(userId)
+            .populate({
+                path: "courses",
+                populate: [
+                    {
+                        path: "courseContent",
+                        populate: {
+                            path: "subSection",
+                        },
+                    },
+                    {
+                        path: "instructor",
+                    }
+                ],
+            })
+            .populate("courseProgress")
+            .exec();
 
         if (!user) {
-            return resp.status(403).json({
+            return resp.status(404).json({
                 success: false,
-                message: "the user does not exist with this id "
+                message: "User not found",
             });
         }
+
+        // Convert to plain object to modify
+        user = user.toObject();
+
+        const enrolledCourses = user.courses.map((course) => {
+            let totalDurationInSeconds = 0;
+            let totalSubsections = 0;
+
+            course.courseContent.forEach((section) => {
+                totalSubsections += section.subSection.length;
+                section.subSection.forEach((sub) => {
+                    totalDurationInSeconds += parseInt(sub.timeDuration || 0);
+                });
+            });
+
+            course.totalDuration = convertSecondsToDuration(totalDurationInSeconds);
+
+            // Find progress for this specific course
+            const courseProgress = user.courseProgress.find(
+                (cp) => cp.courseID.toString() === course._id.toString()
+            );
+
+            const completedVideos = courseProgress ? courseProgress.completedVideos.length : 0;
+
+            if (totalSubsections === 0) {
+                course.progressPercentage = 0; // If no content, progress is 0
+            } else {
+                const multiplier = Math.pow(10, 2);
+                course.progressPercentage =
+                    Math.round((completedVideos / totalSubsections) * 100 * multiplier) / multiplier;
+            }
+
+            return course;
+        });
 
         return resp.status(200).json({
             success: true,
             message: "Enrolled courses fetched successfully",
-            courses: user.courses
+            courses: enrolledCourses
         });
 
     } catch (error) {
+        console.log(error);
         return resp.status(500).json({
             success: false,
             message: "Something went wrong",
