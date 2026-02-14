@@ -7,8 +7,8 @@ import Footer from '../commponents/core/Homepage/Footer'
 
 const ContactUs = () => {
     return (
-        <div className="bg-gradient-to-br from-richblack-900 via-richblack-900 to-richblack-800 min-h-screen pt-14">
-            <div className="mx-auto mt-10 lg:mt-20 flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-richblack-5 lg:flex-row">
+        <div className="bg-gradient-to-br from-richblack-900 via-richblack-900 to-richblack-800 min-h-screen pt-16">
+            <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 mt-10 lg:mt-20 flex flex-col justify-between gap-10 text-richblack-5 lg:flex-row">
                 {/* Contact Details */}
                 <div className="w-full lg:w-[40%]">
                     <div className="flex flex-col gap-6 rounded-xl bg-richblack-800 p-4 lg:p-6">
@@ -61,7 +61,7 @@ const ContactUs = () => {
             </div>
 
             {/* Reviews Section */}
-            <div className="relative mx-auto my-20 flex w-11/12 max-w-maxContent flex-col items-center justify-between gap-8 bg-richblack-900 text-white">
+            <div className="relative w-full px-4 sm:px-6 lg:px-12 xl:px-20 my-20 flex flex-col items-center justify-between gap-8 bg-richblack-900 text-white">
                 <h1 className="text-center text-4xl font-semibold mt-8">
                     Reviews from other learners
                 </h1>

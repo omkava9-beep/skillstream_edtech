@@ -22,21 +22,22 @@ const StarRating = ({ rating }) => {
   );
 };
 
-const ReviewCard = ({ avatar, name, email, review, rating = 5 }) => {
+const ReviewCard = ({ avatar, name, email, review, rating = 5, courseName }) => {
   return (
     <article
       className="
-        bg-[#111827]
+        bg-white/5 backdrop-blur-md
         w-full sm:max-w-sm lg:max-w-md
         p-4 sm:p-6
-        rounded-lg
+        rounded-2xl
         flex flex-col justify-between h-full
-        border border-gray-800
-        shadow-sm
-        m-4
-        hover:border-gray-700
+        border border-white/10
+        shadow-2xl shadow-black/20
+        transition-all duration-500
+        hover:border-yellow-100/30
+        hover:bg-white/10
         hover:scale-[1.02]
-        transition-all duration-300
+        group
       "
     >
       {/* ===== User Info & Review ===== */}
@@ -49,7 +50,7 @@ const ReviewCard = ({ avatar, name, email, review, rating = 5 }) => {
               w-9 h-9 sm:w-10 sm:h-10
               rounded-full
               object-cover
-              border-2 border-gray-700
+               border-2 border-white/20 group-hover:border-yellow-100/50 transition-colors
             "
           />
 
@@ -60,6 +61,11 @@ const ReviewCard = ({ avatar, name, email, review, rating = 5 }) => {
             <span className="text-gray-500 text-xs sm:text-sm text-wrap">
               {email}
             </span>
+            {courseName && (
+              <span className="text-yellow-100/70 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mt-1">
+                {courseName}
+              </span>
+            )}
           </div>
         </header>
 

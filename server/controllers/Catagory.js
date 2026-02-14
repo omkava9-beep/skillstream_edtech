@@ -66,6 +66,9 @@ const getCatgoryPageDetails = async (req, resp) => {
                         populate: {
                             path: "subSection",
                         }
+                    },
+                    {
+                        path: "ratingAndReviews",
                     }
                 ],
             })
@@ -84,9 +87,10 @@ const getCatgoryPageDetails = async (req, resp) => {
             .populate({
                 path: "courses",
                 match: { status: "Published" }, // Only get published courses
-                populate: {
-                    path: "instructor",
-                },
+                populate: [
+                    { path: "instructor" },
+                    { path: "ratingAndReviews" }
+                ],
             })
             .exec()
         let differentCourses = [];
@@ -97,6 +101,7 @@ const getCatgoryPageDetails = async (req, resp) => {
 
         const courses = await Course.find({ status: "Published" }) // Only get published courses
             .populate("instructor")
+            .populate("ratingAndReviews")
             .sort({ studentsEnrolled: -1 })
             .limit(10)
             .exec()

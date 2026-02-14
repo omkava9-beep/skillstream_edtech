@@ -143,7 +143,7 @@ const GetAllRatingAndReviewsOfACourse = async (req, resp) => {
         const filter = courseId ? { course: courseId } : {};
         const allReviews = await RatingAndReviews.find(filter).sort({ rating: "desc" }).populate({
             path: 'user',
-            select: "firstName lastName email imageurl"
+            select: "firstName lastName email image"
         }).populate(
             {
                 path: 'course',

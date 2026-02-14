@@ -17,6 +17,8 @@ const CodeBlocks = ({
   subheading,
   button1,
   button2,
+  linkto1,
+  linkto2,
   codeblock,
   backgroundGradient = "bg-gradient-to-br from-[#8A2BE2] via-[#FFA500] to-[#F8F8FF]",
   codeColor = "text-yellow-100",
@@ -28,7 +30,7 @@ const CodeBlocks = ({
       gsap.from(".code-blocks-text", {
         x: reverse ? 100 : -100,
         opacity: 0,
-        duration: 3,
+        duration: 1,
         ease: "power2.out",
         scrollTrigger: {
           trigger: container.current,
@@ -39,7 +41,7 @@ const CodeBlocks = ({
       gsap.from(".code-blocks-preview", {
         x: reverse ? -100 : 100,
         opacity: 0,
-        duration: 3,
+        duration: 1,
         ease: "power2.out",
         scrollTrigger: {
           trigger: container.current,
@@ -71,8 +73,8 @@ const CodeBlocks = ({
         </p>
 
         <div className="flex flex-row gap-4 mb-7">
-          <YellowButton>{button1}</YellowButton>
-          <DarkButton>{button2}</DarkButton>
+          <YellowButton linkto={linkto1}>{button1}</YellowButton>
+          <DarkButton linkto={linkto2}>{button2}</DarkButton>
         </div>
       </div>
 
@@ -87,9 +89,16 @@ const CodeBlocks = ({
         />
 
         <div className="relative z-10 w-full max-w-[520px]
-          rounded-xl bg-white/10 backdrop-blur-lg
-          border border-white/10 shadow-xl shadow-black/30"
+          rounded-xl bg-richblack-900/40 backdrop-blur-xl
+          border border-white/10 shadow-2xl shadow-black/50 overflow-hidden"
         >
+          {/* Window Header */}
+          <div className="flex items-center gap-2 px-4 py-3 bg-white/5 border-b border-white/10">
+            <div className="w-3 h-3 rounded-full bg-pink-500/80 shadow-[0_0_8px_rgba(236,72,153,0.4)]"></div>
+            <div className="w-3 h-3 rounded-full bg-yellow-500/80 shadow-[0_0_8px_rgba(234,179,8,0.4)]"></div>
+            <div className="w-3 h-3 rounded-full bg-caribbeangreen-200/80 shadow-[0_0_8px_rgba(5,255,191,0.4)]"></div>
+          </div>
+
           <div className="flex">
             <div className="hidden sm:flex flex-col text-richblack-300 font-bold text-center py-4 px-3 border-r border-white/10">
               {Array.from({ length: 12 }).map((_, i) => (

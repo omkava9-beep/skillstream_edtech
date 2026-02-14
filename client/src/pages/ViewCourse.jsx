@@ -64,35 +64,56 @@ export default function ViewCourse() {
 
   return (
     <>
-      <div className="relative flex min-h-[calc(100vh-3.5rem)] pt-14 text-richblack-5">
+      <div className="relative flex min-h-[calc(100vh-3.5rem)] pt-14 text-richblack-5 bg-richblack-900">
+        {/* Background Decorative Element */}
+        <div className="fixed top-0 left-0 w-full h-full pointer-events-none opacity-20">
+            <div className="absolute top-[10%] left-[10%] w-96 h-96 bg-yellow-100 rounded-full blur-[150px]"></div>
+            <div className="absolute bottom-[10%] right-[10%] w-96 h-96 bg-blue-500 rounded-full blur-[150px]"></div>
+        </div>
+
         {/* Mobile Sidebar Overlay */}
         {sidebarOpen && (
           <div
-            className="fixed inset-0 z-50 bg-richblack-900/50 md:hidden"
+            className="fixed inset-0 z-990 bg-black/60 backdrop-blur-sm md:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
 
-        <VideoDetailsSidebar
-          setReviewModal={setReviewModal}
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-        />
+        {/* Sidebar Container */}
+        <div className={`fixed inset-y-0 left-0 z-1000 md:relative md:z-10 bg-richblack-800/60 backdrop-blur-2xl border-r border-richblack-700/50 shadow-2xl transition-all duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
+            <VideoDetailsSidebar
+                setReviewModal={setReviewModal}
+                sidebarOpen={sidebarOpen}
+                setSidebarOpen={setSidebarOpen}
+            />
+        </div>
 
-        <div className="h-[calc(100vh-3.5rem)] flex-1 overflow-auto">
-          <div className="mx-6">
-            {/* Mobile Menu Button */}
-            <div className="md:hidden py-4">
+        {/* Main Content Area */}
+        <div className="flex-1 h-[calc(100vh-3.5rem)] overflow-y-auto overflow-x-hidden relative">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+            {/* Mobile Header Bar */}
+            <div className="md:hidden flex items-center justify-between bg-richblack-800/80 backdrop-blur-md rounded-2xl p-4 mb-6 border border-richblack-700/50">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="text-richblack-5 cursor-pointer flex items-center gap-2"
+                className="flex items-center gap-3 text-richblack-5 group"
               >
-                <AiOutlineMenu size={24} />
-                <span className="font-semibold">Course Content</span>
+                <div className="w-10 h-10 rounded-xl bg-richblack-700 flex items-center justify-center group-active:scale-95 transition-transform">
+                    <AiOutlineMenu className="text-xl" />
+                </div>
+                <div>
+                    <h3 className="text-sm font-bold">Course Modules</h3>
+                    <p className="text-[10px] text-richblack-400 font-bold uppercase tracking-widest leading-none">Tap to Expand</p>
+                </div>
               </button>
+              
+              <div className="px-3 py-1 bg-yellow-100/10 rounded border border-yellow-100/20 text-[10px] font-bold text-yellow-100">
+                LIVE PLAYER
+              </div>
             </div>
 
-            <Outlet />
+            <div className="relative z-10 transition-all duration-500">
+                <Outlet />
+            </div>
           </div>
         </div>
       </div>

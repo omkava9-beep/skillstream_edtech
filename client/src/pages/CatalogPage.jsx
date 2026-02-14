@@ -82,7 +82,7 @@ const CatalogPage = () => {
   const [showAllOther, setShowAllOther] = useState(false);
 
   return (
-    <div className="bg-gradient-to-br from-richblack-900 via-richblack-900 to-richblack-800 text-richblack-5 min-h-screen pt-14">
+    <div className="bg-linear-to-br from-richblack-900 via-richblack-900 to-richblack-800 text-richblack-5 min-h-screen pt-16">
       {loading && <Loader />}
       
       {/* Hero Section */}
@@ -90,7 +90,7 @@ const CatalogPage = () => {
         <div className="absolute top-0 left-0 w-80 h-80 bg-yellow-200 rounded-full mix-blend-screen filter blur-3xl opacity-10"></div>
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500 rounded-full mix-blend-screen filter blur-3xl opacity-10"></div>
         
-        <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6">
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 xl:px-20">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-xs md:text-sm text-richblack-400 mb-6">
             <span className="hover:text-richblack-100 cursor-pointer transition-colors">Home</span>
@@ -102,7 +102,7 @@ const CatalogPage = () => {
 
           {/* Category Title & Description */}
           <div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-yellow-100 to-yellow-300 bg-clip-text text-transparent mb-3 leading-tight">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-linear-to-r from-yellow-100 to-yellow-300 bg-clip-text text-transparent mb-3 leading-tight">
               {catagory}
             </h1>
             <p className="text-richblack-300 text-sm md:text-base leading-relaxed max-w-3xl">
@@ -113,7 +113,7 @@ const CatalogPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 py-12">
         
         {/* Courses to Get Started Section */}
         <div className="mb-16">

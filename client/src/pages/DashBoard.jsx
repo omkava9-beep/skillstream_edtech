@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../commponents/common/Sidebar';
 import Loader from '../commponents/common/Loader';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
@@ -11,6 +11,7 @@ const DashBoard = () => {
   const {loading: profileLoading} = useSelector( (state) => state.profile );
   const {token : token} = useSelector( (state) => state.auth );
   const navigate = useNavigate();
+  const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   if(profileLoading || authLoading) {
@@ -22,13 +23,13 @@ const DashBoard = () => {
 
   return (
     !token? navigate("/login") : 
-    <div className='relative w-full bg-gradient-to-br from-richblack-900 via-richblack-900 to-richblack-800 pt-14 h-screen overflow-hidden'>
+    <div className='relative w-full bg-linear-to-br from-richblack-900 via-richblack-900 to-richblack-800 pt-16 h-screen overflow-hidden'>
         {/* Decorative gradient blobs - fixed background layer */}
-        <div className='fixed inset-0 pointer-events-none z-0 pt-14 overflow-hidden'>
-            <div className='absolute top-10 left-10 w-60 h-60 md:w-96 md:h-96 bg-gradient-to-br from-yellow-400/40 to-yellow-300/20 rounded-full blur-2xl opacity-40'></div>
-            <div className='absolute top-1/4 -right-20 w-72 h-72 md:w-[500px] md:h-[500px] bg-gradient-to-bl from-blue-500/35 to-purple-600/25 rounded-full blur-2xl opacity-40'></div>
-            <div className='absolute bottom-32 left-1/2 w-60 h-60 md:w-96 md:h-96 bg-gradient-to-tr from-pink-500/35 to-orange-400/25 rounded-full blur-2xl opacity-40'></div>
-            <div className='absolute -bottom-20 right-20 w-60 h-60 md:w-80 md:h-80 bg-gradient-to-tl from-cyan-400/35 to-blue-500/25 rounded-full blur-2xl opacity-40'></div>
+        <div className='fixed inset-0 pointer-events-none z-0 pt-16 overflow-hidden'>
+            <div className='absolute top-10 left-10 w-60 h-60 md:w-96 md:h-96 bg-linear-to-br from-yellow-400/40 to-yellow-300/20 rounded-full blur-2xl opacity-40'></div>
+            <div className='absolute top-1/4 -right-20 w-72 h-72 md:w-[500px] md:h-[500px] bg-linear-to-bl from-blue-500/35 to-purple-600/25 rounded-full blur-2xl opacity-40'></div>
+            <div className='absolute bottom-32 left-1/2 w-60 h-60 md:w-96 md:h-96 bg-linear-to-tr from-pink-500/35 to-orange-400/25 rounded-full blur-2xl opacity-40'></div>
+            <div className='absolute -bottom-20 right-20 w-60 h-60 md:w-80 md:h-80 bg-linear-to-tl from-cyan-400/35 to-blue-500/25 rounded-full blur-2xl opacity-40'></div>
         </div>
         
         {/* Main content on top of blobs */}
@@ -36,7 +37,7 @@ const DashBoard = () => {
             {/* Mobile Menu Toggle */}
             <button 
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className='lg:hidden fixed top-[60px] left-4 z-50 px-4 py-2 bg-linear-to-r from-richblack-800 to-richblack-700 border border-richblack-600 rounded-lg text-richblack-5 hover:from-richblack-700 hover:to-richblack-600 hover:border-yellow-400/50 transition-all duration-200 shadow-lg hover:shadow-yellow-400/20 font-semibold flex items-center gap-2'
+                className='lg:hidden fixed top-[64px] left-4 z-50 px-4 py-2 bg-linear-to-r from-richblack-800 to-richblack-700 border border-richblack-600 rounded-lg text-richblack-5 hover:from-richblack-700 hover:to-richblack-600 hover:border-yellow-400/50 transition-all duration-200 shadow-lg hover:shadow-yellow-400/20 font-semibold flex items-center gap-2'
             >
                 {isSidebarOpen ? (
                     <>
@@ -51,7 +52,7 @@ const DashBoard = () => {
                 )}
             </button>
 
-            <div className={`fixed lg:relative top-14 lg:top-0 bottom-0 left-0 z-50 lg:z-10 transition-transform duration-300 h-full ${
+            <div className={`fixed lg:relative top-16 lg:top-0 bottom-0 left-0 z-50 lg:z-10 transition-transform duration-300 h-full ${
                 isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
             }`}>
                 <Sidebar setOpen={setIsSidebarOpen} />
@@ -65,9 +66,8 @@ const DashBoard = () => {
                 ></div>
             )}
 
-            {/* Main Content */}
-            <div className='flex-1 overflow-y-auto h-full w-full lg:w-auto'>
-                <div className='mx-auto w-full md:w-11/12 lg:max-w-[1200px] py-8 md:py-12 px-4 md:px-0 text-richblack-5'>
+            <div className={`flex-1 overflow-y-auto h-full w-full lg:w-auto ${location.pathname.includes('purchase-history') ? 'no-scrollbar' : ''}`}>
+                <div className='w-full py-8 md:py-12 px-4 sm:px-6 lg:px-12 xl:px-20 text-richblack-5'>
                     <Outlet />
                 </div>
             </div>

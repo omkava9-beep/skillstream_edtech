@@ -45,25 +45,27 @@ const Template = ({ title, des1, des2, formtype, imgmain }) => {
     >
       <div
         className="
-          w-full max-w-[1200px]
+          w-full
           flex flex-col-reverse
           md:flex-row
           items-center
           md:items-start
-          gap-10 md:gap-12
+          justify-center
+          gap-10 md:gap-24
+          px-4 sm:px-6 lg:px-12 xl:px-20
         "
       >
 
         {/* ===== FORM SECTION ===== */}
         <div className="left-section w-full max-w-[460px] text-center md:text-left">
-          <h1 className="text-[#F1F2FF] font-semibold text-2xl sm:text-3xl leading-tight">
+          <h1 className="text-richblack-5 font-semibold text-2xl sm:text-3xl leading-tight">
             {title}
           </h1>
 
           <p className="text-base sm:text-lg mt-4">
-            <span className="text-[#AFB2BF]">{des1}</span>
+            <span className="text-richblack-100">{des1}</span>
             <br />
-            <span className="text-[#47A5C5] italic font-semibold">
+            <span className="text-blue-100 italic font-semibold">
               {des2}
             </span>
           </p>
@@ -76,9 +78,9 @@ const Template = ({ title, des1, des2, formtype, imgmain }) => {
 
           {/* OR Divider */}
           <div className="flex items-center my-4 gap-3">
-            <div className="flex-1 h-px bg-[#2C333F]" />
-            <p className="text-[#2C333F] text-sm font-medium">OR</p>
-            <div className="flex-1 h-px bg-[#2C333F]" />
+            <div className="flex-1 h-px bg-richblack-700" />
+            <p className="text-richblack-700 text-sm font-medium">OR</p>
+            <div className="flex-1 h-px bg-richblack-700" />
           </div>
 
           {/* Google Button */}
@@ -87,10 +89,10 @@ const Template = ({ title, des1, des2, formtype, imgmain }) => {
               w-full
               flex justify-center items-center gap-2
               rounded-lg
-              border border-[#2C333F]
+              border border-richblack-700
               px-4 py-2
-              text-[#AFB2BF]
-              hover:bg-[#161D29]
+              text-richblack-100
+              hover:bg-richblack-800
               transition
             "
           >

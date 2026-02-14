@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { updateDisplayPicture } from "../../../services/operations/profileAPI"
 import IconBtn from "../../common/IconBtn"
 import Loader from "../../common/Loader"
+import ImagePreviewModal from "../../common/ImagePreviewModal"
 
 export default function ChangeProfilePicture() {
   const { token } = useSelector((state) => state.auth)
@@ -13,6 +14,7 @@ export default function ChangeProfilePicture() {
   const [loading, setLoading] = useState(false)
   const [imageFile, setImageFile] = useState(null)
   const [previewSource, setPreviewSource] = useState(null)
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
 
   const fileInputRef = useRef(null)
 
@@ -59,13 +61,21 @@ export default function ChangeProfilePicture() {
   return (
     <>
       {loading && <Loader />}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 md:p-8 md:px-12 text-richblack-5 gap-4 md:gap-6">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between rounded-md border border-richblack-700 bg-richblack-800 p-6 md:p-8 md:px-12 text-richblack-5 gap-4 md:gap-6">
         <div className="flex items-center gap-x-4">
-          <img
-            src={previewSource || user?.image}
-            alt={`profile-${user?.firstName}`}
-            className="aspect-square w-[60px] md:w-[78px] rounded-full object-cover"
-          />
+          <div 
+            className="relative group cursor-pointer"
+            onClick={() => setIsPreviewOpen(true)}
+          >
+            <img
+              src={previewSource || user?.image}
+              alt={`profile-${user?.firstName}`}
+              className="aspect-square w-[60px] md:w-[78px] rounded-full object-cover border-2 border-transparent group-hover:border-yellow-100 transition-all duration-200"
+            />
+            <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
+              <span className="text-[10px] md:text-xs text-white font-medium">View</span>
+            </div>
+          </div>
           <div className="space-y-2">
             <p className="text-sm md:text-base">Change Profile Picture</p>
             <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
@@ -79,7 +89,7 @@ export default function ChangeProfilePicture() {
               <button
                 onClick={handleClick}
                 disabled={loading}
-                className="cursor-pointer rounded-md bg-richblack-700 py-2 px-5 font-semibold text-richblack-50"
+                className="cursor-pointer rounded-md bg-richblack-700 py-2 px-5 font-semibold text-richblack-50 hover:bg-richblack-600 transition-all"
               >
                 Select
               </button>
@@ -96,6 +106,14 @@ export default function ChangeProfilePicture() {
           </div>
         </div>
       </div>
+
+      {/* Image Preview Modal */}
+      {isPreviewOpen && (
+        <ImagePreviewModal 
+          imageSrc={previewSource || user?.image}
+          onClose={() => setIsPreviewOpen(false)}
+        />
+      )}
     </>
   )
 }

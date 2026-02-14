@@ -11,7 +11,7 @@ const { isStudent } = require('../middleware/auth');
 router.post('/createrating/:courseId', auth, isStudent, CreateRatingAndReviews);
 router.get('/getallratings/:courseId', auth, GetAllRatingAndReviewsOfACourse);
 router.get('/getaverageRating/:courseId', auth, getAverageRating);
-router.get('/getallratings', auth, GetAllRatingAndReviewsOfACourse);
+router.get('/getallratings', GetAllRatingAndReviewsOfACourse);
 router.post('/createrating', auth, isStudent, CreateRatingAndReviews);
 
 

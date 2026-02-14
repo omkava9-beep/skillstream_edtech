@@ -150,3 +150,19 @@ export const createRating = async (data, token) => {
     toast.dismiss(toastId)
     return success
 }
+// get all ratings
+export const getAllRatings = async () => {
+    let result = []
+    try {
+        const response = await apiConnector("GET", ratingsEndpoints.REVIEW_DETAILS_API)
+        console.log("GET_ALL_RATINGS_API RESPONSE............", response)
+        if (!response?.data?.success) {
+            throw new Error(response?.data?.message)
+        }
+        result = response?.data?.data
+    } catch (error) {
+        console.log("GET_ALL_RATINGS_API ERROR............", error)
+        // toast.error(error.message)
+    }
+    return result
+}

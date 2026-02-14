@@ -120,6 +120,9 @@ const getAllCourses = async (req, resp) => {
                 path: 'catagory',
             })
             .populate({
+                path: 'ratingAndReviews',
+            })
+            .populate({
                 path: 'courseContent',
                 populate: {
                     path: 'subSection'

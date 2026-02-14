@@ -11,7 +11,7 @@ const tabsName = [
   "Free",
   "New to coding",
   "Most popular",
-  "Skill paths",
+  "Skills paths",
   "Career paths",
 ];
 
@@ -56,17 +56,19 @@ const ExploreMore = () => {
     const result = HomePageExplore.find(
       (course) => course.tag === value
     );
-    setCourses(result.courses);
-    setCurrentCard(result.courses[0].heading);
+    if (result) {
+        setCourses(result.courses);
+        setCurrentCard(result.courses[0].heading);
+    }
   };
 
   return (
-    <div className="w-full flex " ref={container}>
+    <div className="w-full flex justify-center" ref={container}>
       <div className="w-full max-w-[1400px] px-4 sm:px-6 md:px-8 py-16 flex flex-col items-center gap-12 ">
 
         {/* ================= TABS ================= */}
-        <div className="w-full flex overflow-x-auto scrollbar-hide explore-tabs">
-          <div className="flex gap-3 bg-richblack-800 border border-richblack-700 rounded-full p-2">
+        <div className="w-full flex md:justify-center overflow-x-auto no-scrollbar explore-tabs">
+          <div className="flex flex-row gap-3 bg-richblack-800 border border-richblack-700 rounded-full p-2">
             {tabsName.map((element, index) => (
               <button
                 key={index}
@@ -85,20 +87,10 @@ const ExploreMore = () => {
         </div>
 
         {/* ================= COURSE CARDS ================= */}
-        <div className="w-full justify-center max-w-6xl">
-          <div
-          className="
-            gap-6
-            sm:md:grid
-            sm:md:grid-cols-2
-            lg:grid-cols-3
-            lg:pb-4
-             lg:mx-2
-          "
-        >
-
+        <div className="w-full max-w-[1300px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-14 px-4">
             {courses.map((element, index) => (
-              <div key={index} className="lg:min-w-[320px] m-8 explore-card">
+              <div key={index} className="explore-card flex justify-center">
                 <CourseCard
                   cardData={element}
                   currentCard={currentCard}

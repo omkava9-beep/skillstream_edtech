@@ -75,7 +75,7 @@ const RequirementsField = ({ label, name, placeholder, errors, setValue, getValu
                 key={index}
                 className="flex items-start gap-3 bg-richblack-800 p-3 rounded border border-richblack-600 group hover:border-caribbeangreen-300 transition-all"
               >
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-caribbeangreen-300 text-richblack-900 flex items-center justify-center text-xs font-bold mt-0.5">
+                <div className="shrink-0 w-6 h-6 rounded-full bg-caribbeangreen-300 text-richblack-900 flex items-center justify-center text-xs font-bold mt-0.5">
                   {index + 1}
                 </div>
                 <p className="flex-1 text-richblack-5 text-sm">{requirement}</p>

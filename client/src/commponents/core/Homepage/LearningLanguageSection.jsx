@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const LearningLanguageSection = ({ img1, img2, img3 }) => {
+const LearningLanguageSection = ({ img1, img2, img3, linkto }) => {
   const container = useRef();
 
   useGSAP(
@@ -28,10 +28,10 @@ const LearningLanguageSection = ({ img1, img2, img3 }) => {
   );
 
   return (
-    <div className="flex flex-col items-center bg-pure-greys-5 gap-10 sm:gap-[52px]" ref={container}>
+    <div className="flex flex-col items-center bg-pure-greys-5 gap-10 sm:gap-[52px] overflow-x-hidden" ref={container}>
 
       {/* ===== Heading ===== */}
-      <div className="w-11/12 text-richblack-900 font-inter flex flex-col items-center mt-16 sm:mt-28 text-center">
+      <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 text-richblack-900 font-inter flex flex-col items-center mt-16 sm:mt-28 text-center">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight tracking-tight">
           Your swiss knife for{" "}
           <HighlightedText text="learning any language" />
@@ -85,7 +85,7 @@ const LearningLanguageSection = ({ img1, img2, img3 }) => {
 
       {/* ===== Button ===== */}
       <div className="h-24 sm:h-36 flex items-center justify-center">
-        <YellowButton>Learn more</YellowButton>
+        <YellowButton linkto={linkto}>Learn more</YellowButton>
       </div>
 
     </div>

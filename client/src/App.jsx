@@ -27,12 +27,15 @@ import MyCourses from './commponents/dashboard/MyCourses'
 import PurchaseHistory from './commponents/dashboard/PurchaseHistory'
 import ViewCourse from '../src/pages/ViewCourse'
 import VideoDetails from './commponents/core/ViewCourse/VideoDetails'
+import ScrollToTop from './commponents/common/ScrollToTop'
+import Categories from './pages/Categories'
 
 
 function App() {
   
   return (
     <div className=' text-white min-h-screen bg-richblack-900 justify-center'>
+      <ScrollToTop />
       <Navbar className="sticky top-0 z-50" />
         <Routes>
           <Route path='/' element={<Home/>}></Route>
@@ -58,6 +61,7 @@ function App() {
           <Route path='/check-email' element={<CheckEmail/>}></Route>
           <Route path='/about' element={<AboutUs/>}></Route>
           <Route path='/contact' element={<ContactUs/>}></Route>
+          <Route path='/categories' element={<Categories />}></Route>
           <Route path='/catalog/:catalogId' element={<Catalog/>}></Route>
           <Route 
             path='/dashboard' 

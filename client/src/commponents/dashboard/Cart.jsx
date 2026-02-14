@@ -55,7 +55,7 @@ const Cart = () => {
             <h2 className="text-2xl font-semibold text-richblack-5 mb-3">Your cart is empty</h2>
             <p className="text-richblack-300 mb-6">Add courses to get started</p>
             <button
-              onClick={() => navigate('/catalog/all')}
+              onClick={() => navigate('/categories')}
               className="flex items-center gap-2 bg-yellow-50 text-richblack-900 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-100 transition-all"
             >
               Browse Courses
@@ -87,7 +87,7 @@ const Cart = () => {
                   <img
                     src={course.thumbnail}
                     alt={course.courseName}
-                    className="w-40 h-24 object-cover rounded-lg flex-shrink-0"
+                    className="w-40 h-24 object-cover rounded-lg shrink-0"
                   />
                   
                   {/* Course Info */}
@@ -145,7 +145,7 @@ const Cart = () => {
               </button>
 
               <button
-                onClick={() => navigate('/catalog/all')}
+                onClick={() => navigate('/categories')}
                 className="w-full bg-richblack-700 hover:bg-richblack-600 text-richblack-5 px-6 py-3 rounded-lg font-semibold transition-all"
               >
                 Continue Shopping

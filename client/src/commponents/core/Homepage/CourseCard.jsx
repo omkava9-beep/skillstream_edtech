@@ -1,71 +1,80 @@
-
-
 import React from "react";
 import { HiUsers } from "react-icons/hi";
 import { ImTree } from "react-icons/im";
+import { TiStarFullOutline } from "react-icons/ti";
 
 const CourseCard = ({ cardData, currentCard, setCurrentCard }) => {
+  const isActive = currentCard === cardData?.heading;
+
   return (
     <div
-      className={`flex flex-col w-full font-medium 
-        max-w-[280px] sm:max-w-[320px] md:max-w-[340px] lg:max-w-[360px] xl:max-w-[380px]
-        min-h-[200px] sm:min-h-[220px] md:min-h-[240px] lg:min-h-[260px]
+      className={`flex flex-col w-full font-medium group transition-all duration-300
+        max-w-[320px] sm:max-w-[350px] md:max-w-[380px] lg:max-w-[400px] xl:max-w-[420px]
+        min-h-[240px] sm:min-h-[260px] md:min-h-[280px] lg:min-h-[300px]
         ${
-        currentCard === cardData?.heading
-          ? "bg-white shadow-[8px_8px_0_0] sm:shadow-[10px_10px_0_0] md:shadow-[12px_12px_0_0] shadow-yellow-100"
-          : "bg-richblack-800"
+          isActive
+          ? "bg-white shadow-[12px_12px_0_0] shadow-yellow-50 lg:scale-105"
+          : "bg-richblack-800 rounded-xl border border-richblack-700 hover:border-yellow-100/50 hover:shadow-[0_0_30px_rgba(255,214,10,0.1)] bg-linear-to-br from-richblack-800 to-richblack-900"
       } 
-        text-richblack-25 rounded-lg overflow-hidden cursor-pointer 
-        transition-all duration-200 hover:scale-[1.02] sm:hover:scale-[1.03] 
-        mx-auto`}
+        text-richblack-25 rounded-xl overflow-hidden cursor-pointer 
+        hover:scale-[1.03] relative z-10 mx-auto`}
       onClick={() => setCurrentCard(cardData?.heading)}
     >
       {/* Main Content */}
-      <div className="border-b-[2px] border-richblack-400 border-dashed 
-        p-3 sm:p-4 md:p-5 lg:p-6 
-        flex flex-col gap-2 sm:gap-3 flex-grow">
+      <div className={`border-b-[2px] border-dashed p-6 sm:p-8 flex flex-col gap-4 grow transition-colors duration-300 ${
+          isActive ? "border-richblack-100" : "border-richblack-600"
+      }`}>
         
-        <div
-          className={`${
-            currentCard === cardData?.heading ? "text-richblack-800" : "text-richblack-5"
-          } 
-            font-semibold 
-            text-lg sm:text-xl md:text-xl lg:text-xl
-            line-clamp-2 leading-tight`}
-        >
-          {cardData?.heading}
+        <div className="flex justify-between items-start">
+            <div
+            className={`font-bold text-xl sm:text-2xl line-clamp-2 leading-tight transition-colors duration-300 ${
+                isActive ? "text-richblack-800" : "text-richblack-5"
+            }`}
+            >
+            {cardData?.heading}
+            </div>
+            
+            {/* Mock Rating for Homepage Cards */}
+            <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold shrink-0 ${
+                isActive ? "bg-richblack-800 text-yellow-50" : "bg-richblack-700 text-yellow-100"
+            }`}>
+                <TiStarFullOutline size={14} />
+                <span>4.8</span>
+            </div>
         </div>
 
-        <div className="text-richblack-400 
-          text-xs sm:text-sm md:text-sm 
-          line-clamp-3 sm:line-clamp-3 md:line-clamp-4
-          leading-relaxed">
+        <div className={`text-sm sm:text-base line-clamp-3 sm:line-clamp-4 leading-relaxed transition-colors duration-300 ${
+            isActive ? "text-richblack-500" : "text-richblack-400"
+        }`}>
           {cardData?.description}
         </div>
       </div>
+
+      {/* Footer Stats */}
       <div
-        className={`flex justify-between items-center
+        className={`flex justify-between items-center transition-colors duration-300
           ${
-          currentCard === cardData?.heading ? "text-blue-300" : "text-richblack-300"
+          isActive ? "text-blue-500" : "text-richblack-300"
         } 
-          px-3 sm:px-4 md:px-5 lg:px-6 
-          py-2 sm:py-3 md:py-3 
-          font-medium`}
+          px-6 sm:px-8 py-4 sm:py-5 font-semibold text-sm sm:text-base`}
       >
         {/* Level Info */}
-        <div className="flex items-center gap-1 sm:gap-2 
-          text-xs sm:text-sm md:text-sm">
-          <HiUsers className="text-sm sm:text-base md:text-base flex-shrink-0" />
-          <p className="truncate">{cardData?.level}</p>
+        <div className="flex items-center gap-2">
+          <HiUsers className={`text-base sm:text-lg ${isActive ? "text-blue-500" : "text-richblack-400"}`} />
+          <p>{cardData?.level}</p>
         </div>
 
         {/* Lessons Info */}
-        <div className="flex items-center gap-1 sm:gap-2 
-          text-xs sm:text-sm md:text-sm">
-          <ImTree className="text-sm sm:text-base md:text-base flex-shrink-0" />
-          <p className="truncate">{cardData?.lessionNumber} Lessons</p>
+        <div className="flex items-center gap-2">
+          <ImTree className={`text-base sm:text-lg ${isActive ? "text-blue-500" : "text-richblack-400"}`} />
+          <p>{cardData?.lessionNumber} Lessons</p>
         </div>
       </div>
+      
+      {/* Hover Background Accent */}
+      {!isActive && (
+          <div className="absolute inset-0 bg-linear-to-br from-yellow-100/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+      )}
     </div>
   );
 };

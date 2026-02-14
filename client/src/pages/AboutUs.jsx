@@ -12,14 +12,14 @@ import Footer from '../commponents/core/Homepage/Footer'
 
 const AboutUs = () => {
   return (
-    <div>
+    <div className='pt-16'>
       {/* section 1: Hero */}
       {/* section 1: Hero */}
       <section className="bg-richblack-900 relative isolate">
         {/* Ambient Gradient Background */}
         <div className="absolute top-0 mt-10 left-[50%] -translate-x-1/2 w-full max-w-[800px] h-[300px] sm:h-[400px] rounded-full bg-richblue-400/20 blur-[80px] sm:blur-[100px] -z-10"></div>
         
-        <div className="relative mx-auto flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-center text-white pt-10 sm:pt-20">
+        <div className="relative w-full px-4 sm:px-6 lg:px-12 xl:px-20 mx-auto flex flex-col justify-between gap-10 text-center text-white pt-10 sm:pt-20">
           <header className="mx-auto py-5 font-bold lg:w-[75%] text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-tight">
             Driving Innovation in Online Education for a
             <h1 className='bg-linear-to-bl text-wrap from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] bg-clip-text tex text-transparent'>Brighter Future</h1>
@@ -45,7 +45,7 @@ const AboutUs = () => {
 
       {/* section 2: Quote */}
       <section className="bg-richblack-900 border-b border-richblack-800 pt-[100px] sm:pt-[150px] pb-10 sm:pb-20">
-        <div className="mx-auto flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-richblack-500 items-center">
+        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 flex flex-col justify-between gap-10 text-richblack-500 items-center">
             <div className="text-center text-xl sm:text-3xl md:text-4xl font-semibold opacity-90 leading-snug">
                  <Quote />
             </div>
@@ -54,16 +54,16 @@ const AboutUs = () => {
 
       {/* section 3: Story, Vision, Mission */}
       <section className="bg-richblack-900 py-16 sm:py-32 relative overflow-hidden">
-        <div className="mx-auto flex w-11/12 max-w-maxContent flex-col justify-between gap-16 sm:gap-24 text-richblack-500">
+        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 flex flex-col justify-between gap-16 sm:gap-24 text-richblack-500 text-center lg:text-left">
           
           {/* Founding Story */}
           <div className="flex flex-col items-center relative gap-10 lg:gap-16 lg:flex-row justify-between ">
              {/* Gradient Blob for Founding Story */}
-            <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-[200px] sm:w-[300px] h-[200px] sm:h-[300px] rounded-full bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] opacity-20 blur-[60px] sm:blur-[90px] -z-10"></div>
+            <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-[200px] sm:w-[300px] h-[200px] sm:h-[300px] rounded-full bg-linear-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] opacity-20 blur-[60px] sm:blur-[90px] -z-10"></div>
             
             {/* Left Box */}
             <div className="flex lg:w-[50%] flex-col gap-6 sm:gap-8 px-2 sm:px-4">
-              <h1 className="bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] bg-clip-text text-3xl sm:text-4xl font-bold text-transparent lg:w-[80%] drop-shadow-sm text-center lg:text-left">
+              <h1 className="bg-linear-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] bg-clip-text text-3xl sm:text-4xl font-bold text-transparent lg:w-[80%] drop-shadow-sm text-center lg:text-left">
                 Our Founding Story
               </h1>
 
@@ -101,14 +101,14 @@ const AboutUs = () => {
           <div className="flex flex-col items-center lg:gap-16 lg:flex-row justify-between relative">
             
             {/* Gradient Blob for Vision (Orange/Red) */}
-            <div className="absolute top-20 left-[10%] w-[150px] sm:w-[250px] h-[150px] sm:h-[250px] rounded-full bg-gradient-to-br from-[#FF512F] to-[#F09819] opacity-20 blur-[60px] sm:blur-[100px] -z-10"></div>
+            <div className="absolute top-20 left-[10%] w-[150px] sm:w-[250px] h-[150px] sm:h-[250px] rounded-full bg-linear-to-br from-[#FF512F] to-[#F09819] opacity-20 blur-[60px] sm:blur-[100px] -z-10"></div>
              {/* Gradient Blob for Mission (Blue/Cyan) */}
-            <div className="absolute bottom-20 right-[10%] w-[150px] sm:w-[250px] h-[150px] sm:h-[250px] rounded-full bg-gradient-to-br from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] opacity-20 blur-[60px] sm:blur-[100px] -z-10"></div>
+            <div className="absolute bottom-20 right-[10%] w-[150px] sm:w-[250px] h-[150px] sm:h-[250px] rounded-full bg-linear-to-br from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] opacity-20 blur-[60px] sm:blur-[100px] -z-10"></div>
 
 
             {/* Vision */}
             <div className="flex lg:w-[40%] flex-col gap-6 sm:gap-8 my-5 sm:my-10 p-6 sm:p-8 rounded-2xl bg-richblack-800/30 border border-richblack-700/50 hover:bg-richblack-800/50 transition-all duration-300 group backdrop-blur-sm z-10 w-full">
-              <h1 className="bg-gradient-to-b from-[#FF512F] to-[#F09819] text-transparent bg-clip-text text-3xl sm:text-4xl font-bold group-hover:scale-105 transition-transform duration-300 origin-left text-center lg:text-left">
+              <h1 className="bg-linear-to-b from-[#FF512F] to-[#F09819] text-transparent bg-clip-text text-3xl sm:text-4xl font-bold group-hover:scale-105 transition-transform duration-300 origin-left text-center lg:text-left">
                 Our Vision
               </h1>
               <p className="text-base font-medium text-richblack-300 leading-relaxed text-center lg:text-left">
@@ -123,7 +123,7 @@ const AboutUs = () => {
 
             {/* Mission */}
             <div className="flex lg:w-[40%] flex-col gap-6 sm:gap-8 my-5 sm:my-10 p-6 sm:p-8 rounded-2xl bg-richblack-800/30 border border-richblack-700/50 hover:bg-richblack-800/50 transition-all duration-300 group backdrop-blur-sm z-10 w-full">
-              <h1 className="bg-gradient-to-b from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] text-transparent bg-clip-text text-3xl sm:text-4xl font-bold group-hover:scale-105 transition-transform duration-300 origin-left text-center lg:text-left">
+              <h1 className="bg-linear-to-b from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] text-transparent bg-clip-text text-3xl sm:text-4xl font-bold group-hover:scale-105 transition-transform duration-300 origin-left text-center lg:text-left">
                 Our Mission
               </h1>
               <p className="text-base font-medium text-richblack-300 leading-relaxed text-center lg:text-left">
@@ -143,12 +143,12 @@ const AboutUs = () => {
       <Stats />
 
       {/* section 5 */}
-      <section className="mx-auto flex max-w-11/12 flex-col items-center justify-between gap-5 mb-[140px]">
+      <section className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 flex flex-col items-center justify-between gap-5 mb-[140px]">
         <LearningGrid />
         <ContactFormSection />
       </section>
 
-      <section className='relative mx-auto my-20 flex w-11/12 max-w-maxContent flex-col items-center justify-between gap-8 bg-richblack-900 text-white'>
+      <section className='relative mx-auto my-20 flex w-full px-4 sm:px-6 lg:px-12 xl:px-20 flex-col items-center justify-between gap-8 bg-richblack-900 text-white'>
         <h1 className='text-center text-4xl font-semibold mt-10'>
           Reviews from other learners
         </h1>

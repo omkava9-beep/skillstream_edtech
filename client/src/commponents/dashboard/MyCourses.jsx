@@ -75,7 +75,7 @@ const MyCourses = () => {
     }
 
     return (
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-10">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 py-10">
             {/* Header section */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
                 <div>
@@ -126,7 +126,7 @@ const MyCourses = () => {
                                     <tr key={course._id} className="hover:bg-richblack-700/30 transition-colors group">
                                         <td className="px-6 py-6">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-24 h-14 rounded-lg overflow-hidden bg-richblack-700 flex-shrink-0">
+                                                <div className="w-24 h-14 rounded-lg overflow-hidden bg-richblack-700 shrink-0">
                                                     <img 
                                                         src={course.thumbnail} 
                                                         alt={course.courseName}

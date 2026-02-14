@@ -10,7 +10,7 @@ const stats = [
 const Stats = () => {
   return (
     <section className="bg-richblack-800 mb-12 border-y border-richblack-700">
-        <div className="flex flex-col gap-10 w-11/12 max-w-maxContent text-white mx-auto ">
+        <div className="flex flex-col gap-10 w-full px-4 sm:px-6 lg:px-12 xl:px-20 text-white mx-auto ">
             <div className="grid grid-cols-2 md:grid-cols-4 text-center">
                 {stats.map((data, index) => {
                     return (

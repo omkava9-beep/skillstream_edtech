@@ -119,19 +119,20 @@ const Navbar = () => {
   }
 
   return (
-    <div className={`fixed bg-richblack-900 md:bg-transparent top-0 z-50 w-full h-14 backdrop-blur-xl bg-linear-to-b from-richblack-900/40 via-richblack-900/20 to-transparent border-b border-richblack-700/10 shadow-lg shadow-richblack-900/20 transition-all duration-500 ${isVisible ? "translate-y-0 opacity-100" : "lg:-translate-y-full lg:opacity-0 translate-y-0 opacity-100"}`}>
-      <div className="absolute inset-0 bg-linear-to-r from-yellow-400/5 via-transparent to-yellow-400/5 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+    <div className={`fixed bg-richblack-900 md:bg-transparent top-0 z-50 w-full h-16 backdrop-blur-xl bg-linear-to-b from-richblack-900/40 via-richblack-900/20 to-transparent border-b border-richblack-700/10 shadow-lg shadow-richblack-900/20 transition-all duration-500 ${isVisible ? "translate-y-0 opacity-100" : "lg:-translate-y-full lg:opacity-0 translate-y-0 opacity-100"}`}>
 
-      <div className={`relative max-w-[1400px] mx-auto px-4 sm:px-6 h-full flex items-center justify-between transition-all duration-200 ${showSearch ? "blur-sm opacity-50 select-none pointer-events-none" : ""}`}>
+      <div className={`relative w-full px-4 sm:px-6 lg:px-12 xl:px-20 h-full flex items-center justify-between transition-all duration-200 ${showSearch ? "blur-sm opacity-50 select-none pointer-events-none" : ""}`}>
 
         {/* ===== Logo ===== */}
         <Link to="/" className="flex items-center gap-2 group" onClick={() => setIsMenuOpen(false)}>
-          <div className="relative overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-yellow-400/50">
+          <div className="relative overflow-hidden rounded-xl transition-all duration-500 group-hover:scale-105">
             <img
               src={logo}
               alt="StudyNotion"
-              className="h-8 object-contain transition-all duration-300"
+              className="h-8 object-contain transition-all duration-500 group-hover:brightness-110"
             />
+            {/* Premium Shine Effect */}
+            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out bg-linear-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg]"></div>
           </div>
         </Link>
 
@@ -201,7 +202,7 @@ const Navbar = () => {
                 <IoCartOutline className="text-2xl text-richblack-5 group-hover:text-yellow-400 transition-colors duration-300 group-hover:scale-110" />
               </div>
               {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-linear-to-br from-yellow-300 to-yellow-500 text-center text-xs font-bold text-richblack-900 animate-bounce shadow-lg shadow-yellow-400/50">
+                <span className="absolute -top-1 -right-1 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-linear-to-br from-yellow-300 to-yellow-500 text-center text-xs font-bold text-richblack-900 animate-bounce shadow-lg shadow-yellow-400/50">
                   {totalItems}
                 </span>
               )}
