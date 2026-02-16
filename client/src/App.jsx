@@ -84,11 +84,7 @@ function App() {
             <Route path='/dashboard/add-course' element={<AddCourse/>}></Route>
             <Route path='/dashboard/my-courses' element={<MyCourses/>}></Route>
             <Route path="/dashboard/settings" element={<Settings/>} />
-            <Route path='/dashboard/cart' element={
-              <StudentPrivate>
-                <Cart />
-              </StudentPrivate>
-            }></Route>
+            <Route path='/dashboard/cart' element={<StudentPrivate type="Student"><Cart /></StudentPrivate>} />
             <Route path="/dashboard/enrolled-courses" element={<EnrolledCourses/>}></Route>
             <Route path="/dashboard/purchase-history" element={<PurchaseHistory />} />
             {/* Add more nested routes as needed based on sidebar-links.js */}
@@ -114,4 +110,4 @@ function App() {
   )
 }
 
-export default App
+export default App 

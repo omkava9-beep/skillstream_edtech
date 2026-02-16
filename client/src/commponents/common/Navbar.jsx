@@ -1,462 +1,217 @@
-import { Link, useLocation, matchPath, useNavigate, matchRoutes } from "react-router-dom";
+import { Link, useLocation, matchPath, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { useSelector, useDispatch } from "react-redux";
 import { NavbarLinks } from "../../data/navbar-links";
 import { IoCartOutline } from "react-icons/io5";
 import { IoMdSearch } from "react-icons/io";
-import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
-import { VscDashboard, VscSignOut } from "react-icons/vsc";
+import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
+import { VscDashboard } from "react-icons/vsc";
 import logo from "../../assets/Logo/Logo-Full-Light.png"
 import { apiConnector } from "../../../services/apiConnector";
 import { catagories, courseEndpoints } from "../../../services/apis";
 import { useEffect, useState, useRef } from "react";
-import { deleteToken } from "../../redux/slices/authReducer";
-
 
 const Navbar = () => {
   const { token } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.profile);
   const { totalItems } = useSelector((state) => state.cart);
   const location = useLocation();
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [subLinks, setSubLinks] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const prevScrollY = useRef(window.scrollY);
-  const isInitialMount = useRef(true);
-  
-
-  const fetchSublinks = async () => {
-    try {
-      const result = await apiConnector("GET", catagories.CATAGORIES_API);
-      setSubLinks(result.data.data);
-    } catch (error) {
-      console.log("Could not fetch the category list");
-    }
-  }
-  
-  // Handle scroll event for hide/show navbar
-  useEffect(() => {
-    // Ensure navbar is visible on initial mount
-    fetchSublinks();
-    setIsVisible(true);
-    
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Don't hide navbar on mobile/tablet screens
-      if (window.innerWidth < 1024) {
-        setIsVisible(true);
-        prevScrollY.current = currentScrollY;
-        return;
-      }
-      
-      // Only hide/show after user has scrolled from initial position
-      if (!isInitialMount.current) {
-        if (currentScrollY > prevScrollY.current) {
-          // Scrolling down - hide navbar
-          setIsVisible(false);
-        } else if (currentScrollY < prevScrollY.current) {
-          // Scrolling up - show navbar
-          setIsVisible(true);
-        }
-      }
-      
-      prevScrollY.current = currentScrollY;
-      isInitialMount.current = false;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-  
-
-  // Search States
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [allCourses, setAllCourses] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  
+  const prevScrollY = useRef(0);
 
   useEffect(() => {
-    
-    // Debounce search or filter effect could go here, 
-    // but for now we filter immediately on render or input change 
-    if (searchQuery.trim() === "") {
-        setSearchResults([]);
-        return;
-    }
-    const results = allCourses.filter(course => 
-        course.courseName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (course.instructor?.firstName + " " + course.instructor?.lastName).toLowerCase().includes(searchQuery.toLowerCase())
-    );
-     setSearchResults(results);
-  }, [searchQuery, allCourses]);
-
-  useEffect(() => {
+    const fetchSublinks = async () => {
+      try {
+        const result = await apiConnector("GET", catagories.CATAGORIES_API);
+        setSubLinks(result.data.data);
+      } catch (error) { console.log("Category fetch error"); }
+    };
     fetchSublinks();
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      // Show if at top, hide if scrolling down, show if scrolling up
+      if (currentScrollY < 50) setIsVisible(true);
+      else if (currentScrollY > prevScrollY.current) setIsVisible(false);
+      else setIsVisible(true);
+      prevScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSearchClick = async () => {
-    setShowSearch(true);
-    if (allCourses.length === 0) {
-        try {
-            const { data } = await apiConnector("GET", courseEndpoints.GET_ALL_COURSE_API);
-            if (data.success) {
-                setAllCourses(data.data);
-            }
-        } catch (error) {
-            console.log("Could not fetch courses for search", error);
-        }
-    }
-  }
-
-  const matchRoute = (route) => {
-    return matchPath({ path: route }, location.pathname);
-  }
+  const matchRoute = (route) => matchPath({ path: route }, location.pathname);
 
   return (
-    <div className={`fixed bg-richblack-900 md:bg-transparent top-0 z-50 w-full h-16 backdrop-blur-xl bg-linear-to-b from-richblack-900/40 via-richblack-900/20 to-transparent border-b border-richblack-700/10 shadow-lg shadow-richblack-900/20 transition-all duration-500 ${isVisible ? "translate-y-0 opacity-100" : "lg:-translate-y-full lg:opacity-0 translate-y-0 opacity-100"}`}>
+    <div className={`fixed top-0 left-0 right-0 z-[100] flex justify-center py-4 sm:py-6 px-4 pointer-events-none transition-all duration-700 ease-in-out ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"}`}>
+      
+      <nav className={`
+        pointer-events-auto
+        flex items-center justify-between
+        w-[98%] max-w-[1400px] /* Spans almost full width but stays floating */
+        h-16 sm:h-20
+        px-6 sm:px-10
+        rounded-[2rem]
+        bg-richblack-900/70 backdrop-blur-2xl
+        border border-white/10
+        shadow-[0_8px_32px_0_rgba(0,0,0,0.8)]
+        hover:border-yellow-100/20 hover:shadow-yellow-100/5
+        transition-all duration-500
+        ${showSearch ? "scale-95 blur-md" : "scale-100 blur-0"}
+      `}>
 
-      <div className={`relative w-full px-4 sm:px-6 lg:px-12 xl:px-20 h-full flex items-center justify-between transition-all duration-200 ${showSearch ? "blur-sm opacity-50 select-none pointer-events-none" : ""}`}>
-
-        {/* ===== Logo ===== */}
-        <Link to="/" className="flex items-center gap-2 group" onClick={() => setIsMenuOpen(false)}>
-          <div className="relative overflow-hidden rounded-xl transition-all duration-500 group-hover:scale-105">
-            <img
-              src={logo}
-              alt="StudyNotion"
-              className="h-8 object-contain transition-all duration-500 group-hover:brightness-110"
-            />
-            {/* Premium Shine Effect */}
-            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out bg-linear-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg]"></div>
+        {/* --- Logo Section --- */}
+        <Link to="/" className="flex items-center group">
+          <div className="relative">
+            <img src={logo} alt="Logo" className="h-8 sm:h-10 object-contain transition-all duration-500 group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
           </div>
         </Link>
 
-        {/* ===== Nav Links (Desktop) ===== */}
-        <ul className="hidden lg:flex items-center gap-8">
-          {NavbarLinks.map((link, index) => {
-            return (
-              <li key={index} className="h-full flex items-center">
-                {
-                  link.title === "Catalog" ? (
-                    <div className="relative flex items-center gap-2 group cursor-pointer h-full py-2">
-                       <p className={`font-semibold transition-all duration-300 ${matchRoute("/catalog/:catalogId") ? "text-yellow-100" : "text-richblack-5 group-hover:text-yellow-100"}`}>
-                        {link.title}
-                      </p>
-                      <IoIosArrowDropdown className={`text-lg transition-all duration-300 ${matchRoute("/catalog/:catalogId") ? "text-yellow-100" : "text-richblack-5 group-hover:text-yellow-100"} group-hover:rotate-180`} />
-
-                      <div className="invisible absolute left-[50%] top-[140%] z-50 flex w-[200px] translate-x-[-50%] translate-y-[1em] flex-col rounded-xl bg-linear-to-br from-richblack-700 to-richblack-800 p-4 text-richblack-50 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-[0.5em] group-hover:opacity-100 lg:w-[300px] shadow-2xl border border-richblack-600/50 backdrop-blur-xl">
-                        <div className="absolute left-[50%] top-0 -z-10 h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-richblack-700"></div>
-                        {
-                          subLinks?.length > 0 ? (
-                            <div className="flex flex-col gap-1">
-                              {
-                                subLinks.slice(0, 5).map((subLink, index) => (
-                                  <Link 
-                                    to={`/catalog/${subLink._id}`} 
-                                    key={index} 
-                                    className="rounded-lg bg-transparent py-2.5 pl-4 hover:bg-yellow-400/10 hover:text-yellow-100 hover:translate-x-1 transition-all duration-200 font-medium border-l-2 border-transparent hover:border-yellow-100 text-sm"
-                                  >
-                                    <p>{subLink.name}</p>
-                                  </Link>
-                                ))
-                              }
-                              {
-                                subLinks.length > 5 && (
-                                  <Link 
-                                    to="/categories"
-                                    className="mt-2 text-center py-2 text-xs font-bold text-yellow-100 hover:text-yellow-50 bg-yellow-400/10 rounded-lg transition-all duration-200 border border-yellow-100/20 hover:border-yellow-100/40"
-                                  >
-                                    Show More
-                                  </Link>
-                                )
-                              }
-                            </div>
-                          ) : (<div className="text-center py-2 text-richblack-400 italic">No Categories Found</div>)
-                        }
-                      </div>
-                      
-                      {/* Active Indicator for Catalog */}
-                      <span className={`absolute -bottom-1 left-0 h-1 bg-linear-to-r from-yellow-100 to-yellow-400 rounded-full transition-all duration-300 ${matchRoute("/catalog/:catalogId") ? "w-full" : "w-0 group-hover:w-full"}`}></span>
-                    </div>
-                  ) : (
-                    <Link to={link?.path} className="relative group">
-                      <p className={`font-semibold transition-all duration-300 ${matchRoute(link?.path) ? "text-yellow-100" : "text-richblack-5 group-hover:text-yellow-100"}`}>
-                        {link.title}
-                      </p>
-                      {/* Hover/Active Indicator */}
-                      <span className={`absolute -bottom-1 left-0 h-1 bg-linear-to-r from-yellow-100 to-yellow-400 rounded-full transition-all duration-300 ${matchRoute(link?.path) ? "w-full" : "w-0 group-hover:w-full"}`}></span>
-                    </Link>
-                  )
-                }
-              </li>
-            );
-          })}
+        {/* --- Navigation Links (Desktop) --- */}
+        <ul className="hidden lg:flex items-center gap-x-10">
+          {NavbarLinks.map((link, index) => (
+            <li key={index} className="relative group">
+              {link.title === "Catalog" ? (
+                <div className="flex items-center gap-1 cursor-pointer py-2 text-richblack-25 font-medium group-hover:text-yellow-100 transition-colors">
+                  <p>{link.title}</p>
+                  <IoIosArrowDropdown className="transition-transform duration-300 group-hover:rotate-180" />
+                  
+                  {/* Mega Dropdown / Catalog */}
+                  <div className="invisible absolute top-[120%] left-1/2 -translate-x-1/2 w-[260px] flex flex-col rounded-2xl bg-richblack-800/95 backdrop-blur-xl p-3 opacity-0 group-hover:visible group-hover:opacity-100 group-hover:translate-y-2 transition-all duration-300 border border-white/10 shadow-2xl z-50">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 w-4 h-4 bg-richblack-800 rotate-45 border-l border-t border-white/10" />
+                    {subLinks?.length > 0 ? (
+                      subLinks.map((sub, i) => (
+                        <Link key={i} to={`/catalog/${sub._id}`} className="px-4 py-3 rounded-xl hover:bg-yellow-100/10 hover:text-yellow-100 transition-all font-medium text-sm">
+                          {sub.name}
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="p-4 text-center animate-pulse text-richblack-400">Fetching Categories...</div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <Link to={link.path} className={`text-base font-medium transition-all duration-300 py-2 block ${matchRoute(link.path) ? "text-yellow-100" : "text-richblack-25 hover:text-yellow-100"}`}>
+                  {link.title}
+                  {/* Indicator Dot */}
+                  <span className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-yellow-100 rounded-full transition-all duration-300 ${matchRoute(link.path) ? "opacity-100 scale-100" : "opacity-0 scale-0 group-hover:opacity-50 group-hover:scale-100"}`} />
+                </Link>
+              )}
+            </li>
+          ))}
         </ul>
 
-        {/* ===== Right Section ===== */}
-        <div className="flex items-center gap-4">
-
-          {/* Search (Desktop) */}
-          <button
-            onClick={handleSearchClick}
-            className="hidden lg:block p-2.5 rounded-full text-richblack-5 hover:text-yellow-400 hover:bg-yellow-400/10 transition-all duration-300 group border border-richblack-600/50 hover:border-yellow-400/50"
+        {/* --- Action Buttons (Right) --- */}
+        <div className="flex items-center gap-2 sm:gap-4">
+          
+          {/* Search Icon */}
+          <button 
+            onClick={() => { setShowSearch(true); if(allCourses.length === 0) {/* Fetch logic */} }} 
+            className="p-2.5 rounded-full text-richblack-100 hover:bg-white/10 hover:text-yellow-100 transition-all group active:scale-90"
           >
-            <IoMdSearch size={22} className="group-hover:scale-110 transition-transform duration-300" />
+            <IoMdSearch size={24} className="group-hover:scale-110 transition-transform" />
           </button>
 
-          {/* Cart */}
-          {token !== null && user.accountType !== "Instructor" && (
-            <Link to="/dashboard/cart" className="relative mr-2 lg:mr-0 group" onClick={() => setIsMenuOpen(false)}>
-              <div className="p-2.5 rounded-full border border-richblack-600/50 group-hover:border-yellow-400/50 transition-all duration-300 group-hover:bg-yellow-400/10">
-                <IoCartOutline className="text-2xl text-richblack-5 group-hover:text-yellow-400 transition-colors duration-300 group-hover:scale-110" />
-              </div>
+          {/* Cart Section */}
+          {token && user?.accountType !== "Instructor" && (
+            <Link to="/dashboard/cart" className="relative p-2.5 rounded-full text-richblack-100 hover:bg-white/10 transition-all group">
+              <IoCartOutline size={26} className="group-hover:rotate-12 transition-transform" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-linear-to-br from-yellow-300 to-yellow-500 text-center text-xs font-bold text-richblack-900 animate-bounce shadow-lg shadow-yellow-400/50">
+                <span className="absolute top-0 right-0 h-5 w-5 rounded-full bg-linear-to-tr from-yellow-100 to-yellow-400 text-[11px] font-black text-richblack-900 flex items-center justify-center shadow-[0_0_10px_rgba(255,214,10,0.5)]">
                   {totalItems}
                 </span>
               )}
             </Link>
           )}
 
-          {/* Profile Image (Always visible if logged in) */}
-          {token !== null && user?.image && (
-            <div className="relative group cursor-pointer lg:block hidden">
-              <div className="h-9 w-9 rounded-full overflow-hidden border-2 border-richblack-600/50 group-hover:border-yellow-400 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-yellow-400/30 group-hover:scale-110">
-                <img src={user?.image} alt="User" className="w-full h-full object-cover" />
-              </div>
-
-              {/* Dropdown Menu */}
-              <div className="invisible absolute top-[120%] right-0 z-50 flex flex-col rounded-xl bg-linear-to-br from-richblack-700 to-richblack-800 p-2 text-richblack-5 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100 min-w-[170px] shadow-2xl border border-richblack-600/50 backdrop-blur-xl group-hover:translate-y-1">
-                <div className="absolute -top-1.5 right-3 h-4 w-4 rotate-45 border-t border-l border-richblack-600 bg-richblack-700"></div>
-                <Link
-                  to="/dashboard"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex w-full gap-x-2 items-center py-3 px-4 hover:bg-yellow-400/10 hover:text-yellow-100 rounded-lg transition-all duration-200 font-medium border border-transparent hover:border-yellow-400/30 hover:translate-x-1"
-                >
-                  <VscDashboard className="text-lg" />
-                  <span>Dashboard</span>
-                </Link>
-                <div 
-                  onClick={() => {
-                    dispatch(deleteToken());
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("user");
-                    navigate("/login");
-                  }}
-                  className="flex w-full gap-x-2 items-center py-3 px-4 hover:bg-pink-500/10 hover:text-pink-300 rounded-lg transition-all duration-200 text-pink-300 font-medium border border-transparent hover:border-pink-500/30 hover:translate-x-1 cursor-pointer"
-                >
-                  <VscSignOut className="text-lg" />
-                  <span>Logout</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Auth / Dashboard (Desktop) */}
-          <div className="hidden lg:flex items-center gap-3">
-            {token === null ? (
+          {/* User Profile / Auth */}
+          <div className="hidden sm:flex items-center gap-4 ml-2">
+            {!token ? (
               <>
-                <Link to="/login" className="px-5 py-2 rounded-lg border-2 border-richblack-600 text-richblack-5 hover:border-yellow-400 hover:text-yellow-400 hover:bg-yellow-400/5 transition-all duration-300 font-medium">
-                  Login
-                </Link>
-                <Link to="/signup" className="px-5 py-2 rounded-lg bg-linear-to-r from-yellow-100 to-yellow-300 text-richblack-900 font-bold hover:shadow-lg hover:shadow-yellow-400/50 hover:scale-105 transition-all duration-300">
+                <Link to="/login" className="text-richblack-25 font-semibold hover:text-white px-4 py-2 transition-all">Login</Link>
+                <Link to="/signup" className="bg-linear-to-r from-yellow-50 to-yellow-200 text-richblack-900 font-bold px-6 py-2.5 rounded-full hover:shadow-[0_0_20px_rgba(255,214,10,0.3)] hover:scale-105 transition-all">
                   Sign Up
                 </Link>
               </>
-            ) : null}
+            ) : (
+              <div 
+                className="flex items-center gap-2 p-1 pr-3 rounded-full bg-white/5 border border-white/10 hover:border-yellow-100/50 cursor-pointer transition-all"
+                onClick={() => navigate("/dashboard")}
+              >
+                <img src={user?.image} alt="User" className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover border border-white/20" />
+                <span className="text-sm font-medium text-richblack-50 hidden md:block">Profile</span>
+              </div>
+            )}
           </div>
 
-          {/* Mobile Menu Toggle Button */}
-          <button
-            className="lg:hidden text-richblack-5 p-2.5 hover:bg-yellow-400/10 hover:text-yellow-400 rounded-lg transition-all duration-300 border border-richblack-600/50 hover:border-yellow-400/50"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
+          {/* Mobile Toggle */}
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="lg:hidden p-2 text-richblack-100 active:scale-90 transition-transform">
+            {isMenuOpen ? <AiOutlineClose size={28} /> : <AiOutlineMenu size={28} />}
           </button>
         </div>
-      </div>
+      </nav>
 
-       {/* ===== Search Overlay (Desktop) ===== */}
-       {/* ===== Search Overlay (Desktop) - Portal to Body ===== */}
-        {showSearch && createPortal(
-            <div className="fixed inset-0 z-50 flex justify-center items-start pt-3 pointer-events-none">
-                {/* Backdrop to catch clicks */}
-                <div 
-                    className="absolute inset-0 bg-transparent pointer-events-auto cursor-default" 
-                    onClick={() => { setShowSearch(false); setSearchQuery(""); }}
-                />
-
-                {/* Search Box Container - Matches Navbar alignment */}
-                <div className="relative w-full max-w-[600px] pointer-events-auto z-50">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search for courses, instructors..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            autoFocus
-                            className="w-full bg-richblack-800 text-richblack-5 rounded-full py-2 pl-10 pr-10 border border-richblack-700 focus:border-yellow-50 focus:outline-none transition-all shadow-xl"
-                        />
-                        <IoMdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-richblack-200 text-xl" />
-                        <button 
-                            onClick={() => { setShowSearch(false); setSearchQuery(""); }}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-richblack-200 hover:text-richblack-50"
-                        >
-                            <AiOutlineClose />
-                        </button>
-                    </div>
-
-                    {/* Suggestions Dropdown */}
-                    {searchQuery && searchResults.length > 0 && (
-                        <div className="absolute top-[120%] left-0 w-full bg-richblack-800 rounded-lg border border-richblack-700 shadow-xl overflow-hidden max-h-[300px] overflow-y-auto">
-                            {searchResults.map((course) => (
-                                <Link 
-                                    to={`/courses/${course._id}`} 
-                                    key={course._id} 
-                                    className="block px-4 py-3 hover:bg-richblack-700 transition-colors border-b border-richblack-700 last:border-0"
-                                    onClick={() => { setShowSearch(false); setSearchQuery(""); }}
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <img src={course.thumbnail} alt="" className="w-10 h-10 rounded object-cover" />
-                                        <div>
-                                            <p className="text-richblack-5 font-medium text-sm line-clamp-1">{course.courseName}</p>
-                                            <p className="text-richblack-300 text-xs">
-                                                {course.instructor?.firstName} {course.instructor?.lastName}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                    {searchQuery && searchResults.length === 0 && (
-                         <div className="absolute top-[120%] left-0 w-full bg-richblack-800 rounded-lg border border-richblack-700 shadow-xl p-4 text-center text-richblack-200">
-                             No results found
-                         </div>
-                    )}
+      {/* --- Mobile Full-Screen Menu Overlay --- */}
+      {isMenuOpen && createPortal(
+        <div className="fixed inset-0 z-[110] bg-richblack-900 flex flex-col p-8 animate-in fade-in slide-in-from-bottom-5 duration-300">
+           <div className="flex justify-between items-center mb-12">
+              <img src={logo} alt="Logo" className="h-8" />
+              <button onClick={() => setIsMenuOpen(false)}><AiOutlineClose size={32} className="text-richblack-50" /></button>
+           </div>
+           <div className="flex flex-col gap-8">
+              {NavbarLinks.map((link, i) => (
+                <Link 
+                  key={i} 
+                  to={link.path} 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-3xl font-bold text-richblack-50 hover:text-yellow-100"
+                >
+                  {link.title}
+                </Link>
+              ))}
+              {!token && (
+                <div className="flex flex-col gap-4 mt-8">
+                  <Link to="/login" onClick={() => setIsMenuOpen(false)} className="text-2xl text-center py-4 rounded-2xl border border-white/10 text-white">Login</Link>
+                  <Link to="/signup" onClick={() => setIsMenuOpen(false)} className="text-2xl text-center py-4 rounded-2xl bg-yellow-100 text-richblack-900 font-bold">Sign Up</Link>
                 </div>
-            </div>,
-            document.body
-        )}
-
-      {/* ===== Mobile Menu Overlay ===== */}
-      {isMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full bg-richblack-900/98 backdrop-blur-xl border-b border-richblack-700 py-8 px-6 shadow-2xl animate-in slide-in-from-top duration-300">
-          <ul className="flex flex-col gap-y-6">
-            {NavbarLinks.map((link, index) => (
-              <li key={index} className="border-b border-richblack-800 pb-4 last:border-0">
-                {link.title === "Catalog" ? (
-                  <div className="flex flex-col gap-2">
-                    <div 
-                      className="flex items-center justify-between cursor-pointer group"
-                      onClick={() => setIsCatalogOpen(!isCatalogOpen)}
-                    >
-                      <p className={`font-semibold text-lg transition-colors ${matchRoute("/catalog/:catalogId") ? "text-yellow-25" : "text-richblack-50 group-hover:text-yellow-25"}`}>Catalog</p>
-                      <IoIosArrowDropdown className={`text-xl transition-transform duration-300 ${matchRoute("/catalog/:catalogId") ? "text-yellow-25" : "text-richblack-50"} ${isCatalogOpen ? "rotate-180 text-yellow-25" : ""}`} />
-                    </div>
-                    
-                    {isCatalogOpen && (
-                      <div className="pl-4 flex flex-col gap-4 pt-4 pb-2 animate-in fade-in slide-in-from-top-4 duration-300 border-l border-richblack-700 ml-1">
-                        {subLinks?.length > 0 ? (
-                          <>
-                            {
-                              subLinks.slice(0, 5).map((subLink, idx) => (
-                                <Link
-                                  key={idx}
-                                  to={`/catalog/${subLink._id}`}
-                                  onClick={() => {
-                                    setIsMenuOpen(false);
-                                    setIsCatalogOpen(false);
-                                  }}
-                                  className="text-richblack-200 hover:text-yellow-50 text-base font-medium transition-colors"
-                                >
-                                  {subLink.name}
-                                </Link>
-                              ))
-                            }
-                            {
-                              subLinks.length > 5 && (
-                                <Link
-                                  to="/categories"
-                                  onClick={() => {
-                                    setIsMenuOpen(false);
-                                    setIsCatalogOpen(false);
-                                  }}
-                                  className="text-yellow-100 hover:text-yellow-50 text-base font-bold transition-colors mt-2"
-                                >
-                                  Show More...
-                                </Link>
-                              )
-                            }
-                          </>
-                        ) : (
-                          <p className="text-richblack-400 text-sm italic">No Categories found</p>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <Link
-                    to={link?.path}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`${matchRoute(link?.path) ? "text-yellow-25" : "text-richblack-50 hover:text-yellow-25"} font-semibold text-lg block w-full transition-colors`}
-                  >
-                    {link.title}
-                  </Link>
-                )}
-              </li>
-            ))}
-
-            {/* Mobile Auth Actions */}
-            <div className="flex flex-col gap-4 mt-4 pt-6 border-t border-richblack-800">
-              {token === null ? (
-                <>
-                  <Link
-                    to="/login"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="w-full py-3 text-center rounded-lg border border-richblack-600 text-richblack-100 bg-richblack-800 hover:bg-richblack-700 transition-all font-medium"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/signup"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="w-full py-3 text-center rounded-lg bg-yellow-50 text-richblack-900 font-bold hover:bg-yellow-100 transition-all shadow-md active:scale-95"
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="w-full py-3 text-center rounded-lg bg-richblack-800 text-richblack-50 border border-richblack-700 font-medium hover:bg-richblack-700 transition-all"
-                  >
-                    Dashboard
-                    
-                  </Link>
-                  <button
-                    onClick={() => {
-                      dispatch(deleteToken());
-                      localStorage.removeItem("token");
-                      localStorage.removeItem("user");
-                      setIsMenuOpen(false);
-                      navigate("/login");
-                    }}
-                    className="w-full py-3 text-center rounded-lg bg-pink-700/20 text-pink-400 border border-pink-700/50 font-bold hover:bg-pink-700 hover:text-white transition-all active:scale-95 mt-2"
-                  >
-                    Logout
-                  </button>
-                </>
               )}
-            </div>
-          </ul>
-        </div>
+           </div>
+        </div>,
+        document.body
+      )}
+
+      {/* --- Search Overlay --- */}
+      {showSearch && createPortal(
+        <div className="fixed inset-0 z-[200] flex justify-center items-start pt-20 px-4">
+          <div className="absolute inset-0 bg-richblack-900/90 backdrop-blur-xl transition-all" onClick={() => setShowSearch(false)} />
+          <div className="relative w-full max-w-3xl animate-in zoom-in-95 duration-300">
+             <div className="flex items-center bg-richblack-800 rounded-3xl border border-white/20 px-6 py-4 shadow-3xl">
+                <IoMdSearch className="text-richblack-400 text-3xl" />
+                <input 
+                  autoFocus
+                  placeholder="What do you want to learn today?"
+                  className="flex-1 bg-transparent border-none outline-none px-4 text-xl text-white placeholder:text-richblack-500"
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button onClick={() => setShowSearch(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                  <AiOutlineClose size={24} className="text-richblack-200" />
+                </button>
+             </div>
+             {/* Search results would map here */}
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );

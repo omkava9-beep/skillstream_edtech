@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 
-// Internal helper to render stars
 const StarRating = ({ rating }) => {
-  
-
   return (
     <div className="flex gap-1">
       {[...Array(5)].map((_, index) => {
@@ -24,8 +21,13 @@ const StarRating = ({ rating }) => {
   );
 };
 
-const ReviewCard = ({ avatar, name, email, review, rating = 5, courseName }) => {
-  const [shown , setShown] = useState(false);
+const ReviewCard = ({ avatar, name, email, review = "", rating = 5, courseName }) => {
+  const [shown, setShown] = useState(false);
+  
+  // Define truncation limit
+  const maxLength = 100;
+  const isLongReview = review.length > maxLength;
+
   return (
     <article
       className="
@@ -33,7 +35,8 @@ const ReviewCard = ({ avatar, name, email, review, rating = 5, courseName }) => 
         w-full sm:max-w-sm lg:max-w-md
         p-4 sm:p-6
         rounded-2xl
-        flex flex-col justify-between h-[200px]
+        flex flex-col justify-between 
+        min-h-[200px] h-fit
         border border-white/10
         shadow-2xl shadow-black/20
         transition-all duration-500
@@ -43,25 +46,18 @@ const ReviewCard = ({ avatar, name, email, review, rating = 5, courseName }) => 
         group
       "
     >
-      {/* ===== User Info & Review ===== */}
-      
+      <div>
         <header className="flex items-center gap-3 mb-3 sm:mb-4">
           <img
             src={avatar}
             alt={name}
-            className="
-              w-9 h-9 sm:w-10 sm:h-10
-              rounded-full
-              object-cover
-               border-2 border-white/20 group-hover:border-yellow-100/50 transition-colors
-            "
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-white/20 group-hover:border-yellow-100/50 transition-colors"
           />
-
           <div className="flex flex-col">
             <h3 className="text-white font-medium text-sm sm:text-base leading-tight">
               {name}
             </h3>
-            <span className="text-gray-500 text-xs sm:text-sm text-wrap">
+            <span className="text-gray-500 text-xs sm:text-sm truncate max-w-[150px] sm:max-w-[200px]">
               {email}
             </span>
             {courseName && (
@@ -72,13 +68,22 @@ const ReviewCard = ({ avatar, name, email, review, rating = 5, courseName }) => 
           </div>
         </header>
 
-        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
-          <span className="text-100/70 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mt-1" >{review.length >= 200 ?  <span onClick={() => setShown(!shown)} className="text-yellow-100/70 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mt-1" > {review.substring(0,100)+ <span className="" onClick={() => setShown(!shown)}>...more</span> }</span> : <span onClick={() => setShown(!shown)} className="text-yellow-100/70 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mt-1" > {review.substring(0,100)+ <span className="" onClick={() => setShown(!shown)}>...less</span> }</span>}</span>
+        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-4">
+          {/* Main Review Logic */}
+          {shown ? review : `${review.substring(0, maxLength)}`}
+          
+          {isLongReview && (
+            <button
+              onClick={() => setShown(!shown)}
+              className="ml-1 text-yellow-100/70 hover:text-yellow-100 font-bold uppercase text-[10px] transition-colors"
+            >
+              {shown ? " Show Less" : "... Read More"}
+            </button>
+          )}
         </p>
-      
+      </div>
 
-      {/* ===== Rating ===== */}
-      <footer className="flex items-center gap-2 mt-auto">
+      <footer className="flex items-center gap-2 mt-4">
         <span className="text-[#FBBF24] font-bold text-sm sm:text-base">
           {rating}
         </span>
