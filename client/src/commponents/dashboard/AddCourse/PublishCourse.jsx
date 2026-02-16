@@ -112,7 +112,8 @@ const PublishCourse = ({
                 subSectionData.append('sectionId', createdSection._id);
                 subSectionData.append('title', subSection.title);
                 subSectionData.append('description', subSection.description);
-                subSectionData.append('timeDuration', '0'); // Backend requires this
+                // Allow backend to calculate duration if frontend doesn't provide one
+                subSectionData.append('timeDuration', subSection.duration || '0'); 
 
                 if (subSection.video instanceof File) {
                   subSectionData.append('videoUpload', subSection.video);

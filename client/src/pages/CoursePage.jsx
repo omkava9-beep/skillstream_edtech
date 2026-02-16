@@ -61,6 +61,20 @@ const CoursePage = () => {
 
     const avgReview = GetAvgRating(courseData?.ratingAndReviews);
 
+    const formatDuration = (time) => {
+        if (!time) return "N/A";
+        const totalSeconds = parseInt(time);
+        if (isNaN(totalSeconds)) return time;
+        
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        
+        if (minutes > 0) {
+            return `${minutes}m ${seconds > 0 ? `${seconds}s` : ""}`;
+        }
+        return `${seconds}s`;
+    };
+
     return (
         <div className="relative w-full bg-linear-to-br from-richblack-900 via-richblack-900 to-richblack-800 text-richblack-5 min-h-screen pt-16">
             {/* Hero Section with Gradient Background */}
@@ -287,7 +301,7 @@ const CoursePage = () => {
                                                 <div className="flex items-center gap-3 mt-1.5">
                                                     <span className="flex items-center gap-1.5 text-richblack-400 text-[10px] uppercase font-bold tracking-widest">
                                                         <FiClock className="text-yellow-100 text-xs"/>
-                                                        {subsection.timeDuration ? `${subsection.timeDuration} Min` : 'N/A'}
+                                                        {formatDuration(subsection.timeDuration)} ms
                                                     </span>
                                                 </div>
                                             </div>

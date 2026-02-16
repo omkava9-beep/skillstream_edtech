@@ -148,12 +148,7 @@ const AboutUs = () => {
         <ContactFormSection />
       </section>
 
-      <section className='relative mx-auto my-20 flex w-full px-4 sm:px-6 lg:px-12 xl:px-20 flex-col items-center justify-between gap-8 bg-richblack-900 text-white'>
-        <h1 className='text-center text-4xl font-semibold mt-10'>
-          Reviews from other learners
-        </h1>
-        {/* <ReviewSlider /> */}
-      </section>
+      
 
       <Footer />
     </div>

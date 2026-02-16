@@ -234,7 +234,7 @@ const Home = () => {
                   <h1 className="text-2xl md:text-[36px] font-semibold text-richblack-900 leading-tight">
                     Get the Skills you need for a{" "}
                   </h1>
-                  <HighlightedText text="Job that is in demand." />
+                  <HighlightedText text="Job that is in demand." className=" text-4xl" />
                 </div>
 
                 {/* Right */}

@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
 // Internal helper to render stars
 const StarRating = ({ rating }) => {
+  
+
   return (
     <div className="flex gap-1">
       {[...Array(5)].map((_, index) => {
@@ -23,6 +25,7 @@ const StarRating = ({ rating }) => {
 };
 
 const ReviewCard = ({ avatar, name, email, review, rating = 5, courseName }) => {
+  const [shown , setShown] = useState(false);
   return (
     <article
       className="
@@ -30,7 +33,7 @@ const ReviewCard = ({ avatar, name, email, review, rating = 5, courseName }) => 
         w-full sm:max-w-sm lg:max-w-md
         p-4 sm:p-6
         rounded-2xl
-        flex flex-col justify-between h-full
+        flex flex-col justify-between h-[200px]
         border border-white/10
         shadow-2xl shadow-black/20
         transition-all duration-500
@@ -70,7 +73,7 @@ const ReviewCard = ({ avatar, name, email, review, rating = 5, courseName }) => 
         </header>
 
         <p className="text-gray-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6">
-          {review}
+          <span className="text-100/70 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mt-1" >{review.length >= 200 ?  <span onClick={() => setShown(!shown)} className="text-yellow-100/70 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mt-1" > {review.substring(0,100)+ <span className="" onClick={() => setShown(!shown)}>...more</span> }</span> : <span onClick={() => setShown(!shown)} className="text-yellow-100/70 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mt-1" > {review.substring(0,100)+ <span className="" onClick={() => setShown(!shown)}>...less</span> }</span>}</span>
         </p>
       
 

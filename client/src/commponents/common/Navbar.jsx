@@ -153,15 +153,29 @@ const Navbar = () => {
                         <div className="absolute left-[50%] top-0 -z-10 h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-richblack-700"></div>
                         {
                           subLinks?.length > 0 ? (
-                            subLinks.map((subLink, index) => (
-                              <Link 
-                                to={`/catalog/${subLink._id}`} 
-                                key={index} 
-                                className="rounded-lg bg-transparent py-3 pl-4 hover:bg-yellow-400/10 hover:text-yellow-100 hover:translate-x-1 transition-all duration-200 font-medium border-l-2 border-transparent hover:border-yellow-100"
-                              >
-                                <p>{subLink.name}</p>
-                              </Link>
-                            ))
+                            <div className="flex flex-col gap-1">
+                              {
+                                subLinks.slice(0, 5).map((subLink, index) => (
+                                  <Link 
+                                    to={`/catalog/${subLink._id}`} 
+                                    key={index} 
+                                    className="rounded-lg bg-transparent py-2.5 pl-4 hover:bg-yellow-400/10 hover:text-yellow-100 hover:translate-x-1 transition-all duration-200 font-medium border-l-2 border-transparent hover:border-yellow-100 text-sm"
+                                  >
+                                    <p>{subLink.name}</p>
+                                  </Link>
+                                ))
+                              }
+                              {
+                                subLinks.length > 5 && (
+                                  <Link 
+                                    to="/categories"
+                                    className="mt-2 text-center py-2 text-xs font-bold text-yellow-100 hover:text-yellow-50 bg-yellow-400/10 rounded-lg transition-all duration-200 border border-yellow-100/20 hover:border-yellow-100/40"
+                                  >
+                                    Show More
+                                  </Link>
+                                )
+                              }
+                            </div>
                           ) : (<div className="text-center py-2 text-richblack-400 italic">No Categories Found</div>)
                         }
                       </div>
@@ -196,7 +210,7 @@ const Navbar = () => {
           </button>
 
           {/* Cart */}
-          {token !== null && (
+          {token !== null && user.accountType !== "Instructor" && (
             <Link to="/dashboard/cart" className="relative mr-2 lg:mr-0 group" onClick={() => setIsMenuOpen(false)}>
               <div className="p-2.5 rounded-full border border-richblack-600/50 group-hover:border-yellow-400/50 transition-all duration-300 group-hover:bg-yellow-400/10">
                 <IoCartOutline className="text-2xl text-richblack-5 group-hover:text-yellow-400 transition-colors duration-300 group-hover:scale-110" />
@@ -262,7 +276,6 @@ const Navbar = () => {
             className="lg:hidden text-richblack-5 p-2.5 hover:bg-yellow-400/10 hover:text-yellow-400 rounded-lg transition-all duration-300 border border-richblack-600/50 hover:border-yellow-400/50"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <AiOutlineClose size={24} className="transition-transform duration-300" /> : <AiOutlineMenu size={24} className="transition-transform duration-300" />}
           </button>
         </div>
       </div>
@@ -349,19 +362,37 @@ const Navbar = () => {
                     {isCatalogOpen && (
                       <div className="pl-4 flex flex-col gap-4 pt-4 pb-2 animate-in fade-in slide-in-from-top-4 duration-300 border-l border-richblack-700 ml-1">
                         {subLinks?.length > 0 ? (
-                          subLinks.map((subLink, idx) => (
-                            <Link
-                              key={idx}
-                              to={`/catalog/${subLink._id}`}
-                              onClick={() => {
-                                setIsMenuOpen(false);
-                                setIsCatalogOpen(false);
-                              }}
-                              className="text-richblack-200 hover:text-yellow-50 text-base font-medium transition-colors"
-                            >
-                              {subLink.name}
-                            </Link>
-                          ))
+                          <>
+                            {
+                              subLinks.slice(0, 5).map((subLink, idx) => (
+                                <Link
+                                  key={idx}
+                                  to={`/catalog/${subLink._id}`}
+                                  onClick={() => {
+                                    setIsMenuOpen(false);
+                                    setIsCatalogOpen(false);
+                                  }}
+                                  className="text-richblack-200 hover:text-yellow-50 text-base font-medium transition-colors"
+                                >
+                                  {subLink.name}
+                                </Link>
+                              ))
+                            }
+                            {
+                              subLinks.length > 5 && (
+                                <Link
+                                  to="/categories"
+                                  onClick={() => {
+                                    setIsMenuOpen(false);
+                                    setIsCatalogOpen(false);
+                                  }}
+                                  className="text-yellow-100 hover:text-yellow-50 text-base font-bold transition-colors mt-2"
+                                >
+                                  Show More...
+                                </Link>
+                              )
+                            }
+                          </>
                         ) : (
                           <p className="text-richblack-400 text-sm italic">No Categories found</p>
                         )}

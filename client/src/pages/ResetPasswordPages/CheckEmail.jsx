@@ -1,10 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import { BiArrowBack } from "react-icons/bi"
 import { Link, useLocation } from "react-router-dom"
 import { apiConnector } from "../../../services/apiConnector"
 import { auth } from "../../../services/apis"
 import toast from "react-hot-toast"
 import Loader from "../../commponents/common/Loader"
+
 
 const CheckEmail = () => {
   const [loading, setLoading] = useState(false)

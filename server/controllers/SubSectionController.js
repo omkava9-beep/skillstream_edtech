@@ -17,10 +17,13 @@ const CreateSubSection = async (req, res) => {
         }
         const cloudinaryUploadedVideo = await imageUploder(video.tempFilePath, process.env.COURSE_THUMBNAIL_FOLDER_NAME);
 
+        // If timeDuration is not provided or is '0', use the duration from Cloudinary
+        const duration = (timeDuration && timeDuration !== '0') ? timeDuration : `${Math.round(cloudinaryUploadedVideo.duration)}`;
+
         const newCreatedSubSection = await Subsection.create({
             sectionId,
             title,
-            timeDuration,
+            timeDuration: duration,
             description,
             videoUrl: cloudinaryUploadedVideo.secure_url,
         })
@@ -68,6 +71,10 @@ const UpdateSubSection = async (req, resp) => {
             const uploadVideo = req.files.videoUpload;
             const uploadedVideo = await imageUploder(uploadVideo.tempFilePath, process.env.COURSE_THUMBNAIL_FOLDER_NAME);
             subSection.videoUrl = uploadedVideo.secure_url;
+            // update duration if new video is uploaded and no explicit duration provided
+            if (!timeDuration) {
+                subSection.timeDuration = `${Math.round(uploadedVideo.duration)}`;
+            }
         }
 
         if (timeDuration) {

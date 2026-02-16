@@ -9,6 +9,7 @@ import Dashboard from './pages/DashBoard'
 import PrivateRoute from './commponents/auth/PrivateRoute'
 import VerifyEmail from './pages/VerifyEmail'
 import ResetPassword from './pages/ResetPasswordPages/ResetPassword'
+import ResetComplete from './pages/ResetPasswordPages/ResetComplete'
 import ForgotPassword from './pages/ResetPasswordPages/ForgotPassword'
 import CheckEmail from './pages/ResetPasswordPages/CheckEmail'
 import OpenRoute from './commponents/common/OpenRoute'
@@ -29,6 +30,10 @@ import ViewCourse from '../src/pages/ViewCourse'
 import VideoDetails from './commponents/core/ViewCourse/VideoDetails'
 import ScrollToTop from './commponents/common/ScrollToTop'
 import Categories from './pages/Categories'
+import StudentPrivate from './commponents/auth/StudentPrivate'
+import NotFound from './pages/NotFound'
+
+
 
 
 function App() {
@@ -57,6 +62,7 @@ function App() {
         />
           <Route path='/verify-email' element={<VerifyEmail />}></Route>
           <Route path='/reset-password/:token' element={<ResetPassword/>}></Route>
+          <Route path='/reset-complete' element={<ResetComplete/>}></Route>
           <Route path='/forgot-password' element={<ForgotPassword/>}></Route>
           <Route path='/check-email' element={<CheckEmail/>}></Route>
           <Route path='/about' element={<AboutUs/>}></Route>
@@ -78,11 +84,17 @@ function App() {
             <Route path='/dashboard/add-course' element={<AddCourse/>}></Route>
             <Route path='/dashboard/my-courses' element={<MyCourses/>}></Route>
             <Route path="/dashboard/settings" element={<Settings/>} />
-            <Route path="/dashboard/cart" element={<Cart/>} />
+            <Route path='/dashboard/cart' element={
+              <StudentPrivate>
+                <Cart />
+              </StudentPrivate>
+            }></Route>
             <Route path="/dashboard/enrolled-courses" element={<EnrolledCourses/>}></Route>
             <Route path="/dashboard/purchase-history" element={<PurchaseHistory />} />
             {/* Add more nested routes as needed based on sidebar-links.js */}
           </Route>
+
+          
           <Route path="/courses/:courseid" element={<CoursePage></CoursePage>}></Route>
           <Route 
             path='/view-course/:courseId' 
@@ -94,6 +106,8 @@ function App() {
           >
             <Route path="section/:sectionId/sub-section/:subSectionId" element={<VideoDetails />} />
           </Route>
+
+          <Route path="*" element={<NotFound />} />
           
         </Routes>
     </div>
