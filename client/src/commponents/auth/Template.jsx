@@ -38,34 +38,33 @@ const Template = ({ title, des1, des2, formtype, imgmain }) => {
         bg-richblack-900
         flex items-center justify-center
         px-4 sm:px-6 lg:px-10
-        py-10
-        pt-20
-        overflow-hidden
+        /* FIX: Increased top padding (pt-32) to ensure content starts below the Navbar */
+        pt-32 pb-12
+        overflow-x-hidden
       "
     >
       <div
         className="
           w-full
+          max-w-[1160px]
           flex flex-col-reverse
           md:flex-row
           items-center
           md:items-start
-          justify-center
-          gap-10 md:gap-24
-          px-4 sm:px-6 lg:px-12 xl:px-20
+          justify-between
+          gap-y-12 md:gap-x-12
         "
       >
-
         {/* ===== FORM SECTION ===== */}
-        <div className="left-section w-full max-w-[460px] text-center md:text-left">
+        <div className="left-section relative z-20 w-full max-w-[450px] text-center md:text-left">
           <h1 className="text-richblack-5 font-semibold text-2xl sm:text-3xl leading-tight">
             {title}
           </h1>
 
-          <p className="text-base sm:text-lg mt-4">
+          <p className="text-base sm:text-lg mt-4 leading-[1.625rem]">
             <span className="text-richblack-100">{des1}</span>
             <br />
-            <span className="text-blue-100 italic font-semibold">
+            <span className="text-blue-100 italic font-semibold font-edu-sa">
               {des2}
             </span>
           </p>
@@ -77,7 +76,7 @@ const Template = ({ title, des1, des2, formtype, imgmain }) => {
           )}
 
           {/* OR Divider */}
-          <div className="flex items-center my-4 gap-3">
+          <div className="flex items-center my-6 gap-3">
             <div className="flex-1 h-px bg-richblack-700" />
             <p className="text-richblack-700 text-sm font-medium">OR</p>
             <div className="flex-1 h-px bg-richblack-700" />
@@ -90,29 +89,33 @@ const Template = ({ title, des1, des2, formtype, imgmain }) => {
               flex justify-center items-center gap-2
               rounded-lg
               border border-richblack-700
-              px-4 py-2
+              px-4 py-3
               text-richblack-100
               hover:bg-richblack-800
-              transition
+              transition-all duration-200
+              active:scale-95
             "
           >
-            <FcGoogle className="text-lg" />
+            <FcGoogle className="text-xl" />
             <span>Sign in with Google</span>
           </button>
         </div>
 
         {/* ===== IMAGE SECTION ===== */}
-        <div className="right-section relative w-full max-w-[480px] flex justify-center">
+        <div className="right-section relative w-full max-w-[450px] flex justify-center mt-8 md:mt-0">
           {/* Background Frame */}
           <img
             src={bgimage}
             alt="pattern"
             loading="lazy"
+            width={558}
+            height={504}
             className="
               absolute
-              top-4 right-4
-              w-[85%] sm:w-[90%]
-              max-w-[420px]
+              /* Offset to create the shadow frame effect */
+              top-4 left-4
+              w-full
+              object-cover
             "
           />
 
@@ -121,16 +124,17 @@ const Template = ({ title, des1, des2, formtype, imgmain }) => {
             src={imgmain}
             alt="students"
             loading="lazy"
+            width={558}
+            height={504}
             className="
               relative z-10
-              w-[85%] sm:w-[90%]
-              max-w-[450px]
-              hover:scale-[1.03]
+              w-full
+              object-cover
+              hover:scale-[1.02]
               transition-transform duration-300
             "
           />
         </div>
-
       </div>
     </div>
   );

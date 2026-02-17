@@ -20,7 +20,7 @@ app.use(require('cookie-parser')());
 
 app.use(
     cors({
-        origin: ["https://edtech-frontend-zznw.onrender.com", "https://edtech-frontend-9i9r.onrender.com"],
+        origin: ["https://edtech-frontend-zznw.onrender.com", "https://edtech-frontend-9i9r.onrender.com", "http://localhost:5173"],
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true,
     })
