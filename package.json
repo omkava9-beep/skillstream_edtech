@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",
-    "install-all": "npm install && cd client && npm install && cd ../server && npm install"
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && node server.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.2",

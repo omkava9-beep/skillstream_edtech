@@ -41,12 +41,12 @@ app.use('/api/v1/rating', ratingRoute);
 
 
 // Serve static files from the client/dist directory
-app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use(express.static(path.resolve(__dirname, '..', 'client', 'dist')));
 
 // Fallback route for SPA - serves index.html for any unknown requests
 // Using app.use() instead of app.get('*') to avoid Express 5 path-to-regexp parsing issues
 app.use((req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    res.sendFile(path.resolve(__dirname, '..', 'client', 'dist', 'index.html'));
 });
 
 const port = process.env.PORT || 4000
