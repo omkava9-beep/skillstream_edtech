@@ -40,20 +40,16 @@ app.use('/api/v1/profile', profileRoute);
 app.use('/api/v1/rating', ratingRoute);
 
 
-const port = process.env.PORT || 3000
-app.listen(port, () => {
-    console.log(`app listening to port number ${port}`);
-})
-
 // Serve static files from the client/dist directory
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-app.get('/', (req, resp) => {
-    resp.status(200).send('welcome to e-learning platform server');
-})
-
 // Fallback route for SPA - serves index.html for any unknown requests
-// Compatible with Express 5 path matching
-app.get('/:path*', (req, res) => {
+// In Express 5, all parameters must be named. /:path(.*) matches any path.
+app.get('/:path(.*)', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
+
+const port = process.env.PORT || 4000
+app.listen(port, () => {
+    console.log(`app listening to port number ${port}`);
+})
