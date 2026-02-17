@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 const dbConnect = require('./config/database');
 const userRoute = require('./routes/User')
@@ -44,6 +45,15 @@ app.listen(port, () => {
     console.log(`app listening to port number ${port}`);
 })
 
+// Serve static files from the client/dist directory
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
 app.get('/', (req, resp) => {
     resp.status(200).send('welcome to e-learning platform server');
 })
+
+// Fallback route for SPA - serves index.html for any unknown requests
+// Compatible with Express 5 path matching
+app.get('/:path*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
