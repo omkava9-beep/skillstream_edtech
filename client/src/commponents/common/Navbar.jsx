@@ -2,7 +2,8 @@ import { Link, useLocation, matchPath, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { useSelector } from "react-redux";
-import { NavbarLinks } from "../../data/NavbarLinks";
+// FIXED: Case-sensitivity for Linux/Render
+import { NavbarLinks } from "../../data/navbar-links";
 import { IoCartOutline } from "react-icons/io5";
 import { IoMdSearch } from "react-icons/io";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
@@ -26,7 +27,6 @@ const Navbar = () => {
   const [allCourses, setAllCourses] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   
-  // New state for mobile catalog accordion
   const [mobileCatalogOpen, setMobileCatalogOpen] = useState(false);
 
   const prevScrollY = useRef(0);
@@ -96,7 +96,7 @@ const Navbar = () => {
           <img src={logo} alt="Logo" className="h-8 sm:h-10 object-contain transition-all group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" />
         </Link>
 
-        {/* Desktop Navigation (Unchanged) */}
+        {/* Desktop Navigation */}
         <ul className="hidden lg:flex items-center gap-x-10">
           {NavbarLinks.map((link, index) => (
             <li key={index} className="relative group">
@@ -164,125 +164,42 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* --- Premium Mobile Menu with Catalog Accordion --- */}
-      {createPortal(
-        <div 
-          className={`fixed inset-0 z-[1000] bg-richblack-900 flex flex-col transition-all duration-500 ease-in-out ${
-            isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-          }`}
-        >
-          {/* Header */}
-          <div className={`flex justify-between items-center px-8 py-8 transition-transform duration-500 ${isMenuOpen ? "translate-y-0" : "-translate-y-10"}`}>
+      {/* Mobile Menu */}
+      {isMenuOpen && createPortal(
+        <div className="fixed inset-0 z-[1000] bg-richblack-900 flex flex-col transition-all duration-500 opacity-100">
+          <div className="flex justify-between items-center px-8 py-8">
             <img src={logo} alt="Logo" className="h-8" />
-            <button 
-              onClick={() => { setIsMenuOpen(false); setMobileCatalogOpen(false); }} 
-              className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-full border border-white/10"
-            >
+            <button onClick={() => { setIsMenuOpen(false); setMobileCatalogOpen(false); }} className="w-12 h-12 flex items-center justify-center bg-white/5 rounded-full border border-white/10">
               <AiOutlineClose size={24} className="text-white" />
             </button>
           </div>
 
-          {/* Navigation Links */}
-          <div className="flex-1 px-8 py-4 overflow-y-auto no-scrollbar">
+          <div className="flex-1 px-8 py-4 overflow-y-auto">
             <div className="flex flex-col gap-y-6">
               {NavbarLinks.map((link, i) => (
                 <div key={i}>
                   {link.title === "Catalog" ? (
-                    <div className={`transition-all duration-500 delay-[${(i+1)*100}ms] ${isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"}`}>
-                      {/* Catalog Toggle Button */}
-                      <button 
-                        onClick={() => setMobileCatalogOpen(!mobileCatalogOpen)}
-                        className="flex items-center justify-between w-full text-5xl font-black tracking-tighter text-richblack-200 active:text-yellow-100"
-                      >
+                    <div>
+                      <button onClick={() => setMobileCatalogOpen(!mobileCatalogOpen)} className="flex items-center justify-between w-full text-5xl font-black tracking-tighter text-richblack-200">
                         <span>{link.title}</span>
-                        <IoIosArrowDropdown className={`text-3xl transition-transform duration-500 ${mobileCatalogOpen ? "rotate-180 text-yellow-100" : "rotate-0"}`} />
+                        <IoIosArrowDropdown className={`transition-transform duration-500 ${mobileCatalogOpen ? "rotate-180 text-yellow-100" : "rotate-0"}`} />
                       </button>
-                      
-                      {/* Mobile Accordion Content */}
-                      <div className={`grid transition-all duration-500 ease-in-out ${mobileCatalogOpen ? "grid-rows-[1fr] opacity-100 mt-6" : "grid-rows-[0fr] opacity-0"}`}>
-                        <div className="overflow-hidden flex flex-col gap-4 pl-4 border-l-2 border-yellow-100/30">
-                          {subLinks?.length > 0 ? (
-                            subLinks.map((sub, idx) => (
-                              <Link 
-                                key={idx} 
-                                to={`/catalog/${sub._id}`} 
-                                onClick={() => setIsMenuOpen(false)}
-                                className="text-2xl font-bold text-richblack-50 hover:text-yellow-100 active:scale-95 transition-all"
-                              >
-                                {sub.name}
-                              </Link>
-                            ))
-                          ) : (
-                            <p className="text-richblack-400">Loading...</p>
-                          )}
+                      {mobileCatalogOpen && (
+                        <div className="mt-6 flex flex-col gap-4 pl-4 border-l-2 border-yellow-100/30">
+                          {subLinks?.map((sub, idx) => (
+                            <Link key={idx} to={`/catalog/${sub._id}`} onClick={() => setIsMenuOpen(false)} className="text-2xl font-bold text-richblack-50">{sub.name}</Link>
+                          ))}
                         </div>
-                      </div>
+                      )}
                     </div>
                   ) : (
-                    <Link 
-                      to={link.path || "#"} 
-                      onClick={() => setIsMenuOpen(false)}
-                      className={`text-5xl font-black tracking-tighter block transition-all duration-500 ${
-                        isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
-                      } ${matchRoute(link.path) ? "text-yellow-100" : "text-richblack-200 hover:text-white"}`}
-                      style={{ transitionDelay: isMenuOpen ? `${(i + 1) * 100}ms` : "0ms" }}
-                    >
+                    <Link to={link.path || "#"} onClick={() => setIsMenuOpen(false)} className={`text-5xl font-black tracking-tighter block ${matchRoute(link.path) ? "text-yellow-100" : "text-richblack-200"}`}>
                       {link.title}
                     </Link>
                   )}
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Bottom Bar */}
-          {!token && (
-            <div className={`p-8 grid grid-cols-2 gap-4 bg-richblack-800/50 backdrop-blur-xl border-t border-white/5 transition-transform duration-500 ${isMenuOpen ? "translate-y-0" : "translate-y-full"}`}>
-                <Link to="/login" onClick={() => setIsMenuOpen(false)} className="py-4 text-center text-white font-bold border border-white/10 rounded-2xl">Login</Link>
-                <Link to="/signup" onClick={() => setIsMenuOpen(false)} className="py-4 text-center bg-yellow-100 text-richblack-900 font-bold rounded-2xl">Sign Up</Link>
-            </div>
-          )}
-        </div>,
-        document.body
-      )}
-
-      {/* --- Search Overlay (Unchanged) --- */}
-      {showSearch && createPortal(
-        <div className="fixed inset-0 z-[1000] flex justify-center items-start pt-10 sm:pt-20 px-4">
-          <div className="absolute inset-0 bg-richblack-900/95 backdrop-blur-2xl transition-opacity animate-in fade-in duration-300" onClick={() => setShowSearch(false)} />
-          <div className="relative w-full max-w-3xl flex flex-col gap-4 animate-in zoom-in-95 duration-300">
-             <div className="flex items-center bg-richblack-800 rounded-3xl border border-white/20 px-6 py-4 shadow-3xl">
-                <IoMdSearch className="text-yellow-100 text-3xl" />
-                <input 
-                  autoFocus placeholder="Search courses..."
-                  className="flex-1 bg-transparent border-none outline-none px-4 text-xl text-white placeholder:text-richblack-500"
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button onClick={() => setShowSearch(false)} className="p-2 hover:bg-white/10 rounded-full">
-                  <AiOutlineClose size={24} className="text-richblack-200" />
-                </button>
-             </div>
-             {searchQuery && (
-                <div className="bg-richblack-800 rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
-                    {searchResults.length > 0 ? (
-                        searchResults.map((course) => (
-                            <Link 
-                                key={course._id} to={`/courses/${course._id}`}
-                                onClick={() => setShowSearch(false)}
-                                className="flex items-center gap-4 p-4 hover:bg-white/5 border-b border-white/5 last:border-0"
-                            >
-                                <img src={course.thumbnail} className="h-12 w-20 rounded-lg object-cover bg-richblack-700" alt="" />
-                                <div>
-                                    <p className="text-white font-bold">{course.courseName}</p>
-                                    <p className="text-xs text-richblack-400 line-clamp-1">{course.courseDescription}</p>
-                                </div>
-                            </Link>
-                        ))
-                    ) : (
-                        <div className="p-8 text-center text-richblack-400 font-medium">No results for "{searchQuery}"</div>
-                    )}
-                </div>
-             )}
           </div>
         </div>,
         document.body
