@@ -24,7 +24,7 @@ import img3 from '../assets/Images/Compare_with_others.svg'
 import instructor from '../assets/Images/Instructor.png'
 import ReviewCard from "../commponents/core/Homepage/ReviewCard";
 import Footer from "../commponents/core/Homepage/Footer";
-import ExploreMore from "../commponents/core/Homepage/Exploremore";
+import ExploreMore from "../commponents/core/Homepage/ExploreMore";
 import { getAllRatings } from "../services/operations/courseAPI";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, FreeMode, Pagination } from "swiper/modules";
