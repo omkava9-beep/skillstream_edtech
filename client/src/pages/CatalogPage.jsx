@@ -82,144 +82,156 @@ const CatalogPage = () => {
   const [showAllOther, setShowAllOther] = useState(false);
 
   return (
-    <div className="bg-linear-to-br from-richblack-900 via-richblack-900 to-richblack-800 text-richblack-5 min-h-screen pt-16">
+    <div className="relative bg-linear-to-br from-richblack-900 via-richblack-900 to-richblack-800 text-richblack-5 min-h-screen pt-16 overflow-hidden">
       {loading && <Loader />}
       
-      {/* Hero Section */}
-      <div className="relative overflow-hidden py-12 border-b border-richblack-700">
-        <div className="absolute top-0 left-0 w-80 h-80 bg-yellow-200 rounded-full mix-blend-screen filter blur-3xl opacity-10"></div>
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500 rounded-full mix-blend-screen filter blur-3xl opacity-10"></div>
-        
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 xl:px-20">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-xs md:text-sm text-richblack-400 mb-6">
-            <span className="hover:text-richblack-100 cursor-pointer transition-colors">Home</span>
-            <span className="text-richblack-600">/</span>
-            <span className="hover:text-richblack-100 cursor-pointer transition-colors">Catalog</span>
-            <span className="text-richblack-600">/</span>
-            <span className="text-yellow-100 font-semibold">{catagory}</span>
-          </nav>
+      {/* --- The Big Gradient Ball (Center) --- */}
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                   w-[800px] h-[800px] rounded-full opacity-20 pointer-events-none z-0"
+        style={{
+          background: "radial-gradient(circle, rgba(255,214,10,0.4) 0%, rgba(3,151,171,0.2) 50%, transparent 70%)",
+          filter: "blur(100px)"
+        }}
+      />
 
-          {/* Category Title & Description */}
-          <div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-linear-to-r from-yellow-100 to-yellow-300 bg-clip-text text-transparent mb-3 leading-tight">
-              {catagory}
-            </h1>
-            <p className="text-richblack-300 text-sm md:text-base leading-relaxed max-w-3xl">
-              {description}
-            </p>
+      {/* Wrapping content in a relative container to stay above the ball */}
+      <div className="relative z-10">
+        {/* Hero Section */}
+        <div className="relative overflow-hidden py-12 border-b border-richblack-700">
+          <div className="absolute top-0 left-0 w-80 h-80 bg-yellow-200 rounded-full mix-blend-screen filter blur-3xl opacity-10"></div>
+          <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500 rounded-full mix-blend-screen filter blur-3xl opacity-10"></div>
+          
+          <div className="relative z-10 w-full px-4 sm:px-6 lg:px-12 xl:px-20">
+            {/* Breadcrumb */}
+            <nav className="flex items-center gap-2 text-xs md:text-sm text-richblack-400 mb-6">
+              <span className="hover:text-richblack-100 cursor-pointer transition-colors">Home</span>
+              <span className="text-richblack-600">/</span>
+              <span className="hover:text-richblack-100 cursor-pointer transition-colors">Catalog</span>
+              <span className="text-richblack-600">/</span>
+              <span className="text-yellow-100 font-semibold">{catagory}</span>
+            </nav>
+
+            {/* Category Title & Description */}
+            <div>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-linear-to-r from-yellow-100 to-yellow-300 bg-clip-text text-transparent mb-3 leading-tight">
+                {catagory}
+              </h1>
+              <p className="text-richblack-300 text-sm md:text-base leading-relaxed max-w-3xl">
+                {description}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 py-12">
-        
-        {/* Courses to Get Started Section */}
-        <div className="mb-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-richblack-5 mb-6">Courses to get you started</h2>
+        {/* Main Content */}
+        <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 py-12">
+          
+          {/* Courses to Get Started Section */}
+          <div className="mb-16">
+            <h2 className="text-2xl md:text-3xl font-bold text-richblack-5 mb-6">Courses to get you started</h2>
 
-          {/* Search Input */}
-          <div className="relative w-full md:w-96 mb-8">
-            <input
-              type="text"
-              placeholder="Search courses or instructors..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-richblack-800 text-richblack-5 rounded-lg py-3 pl-11 pr-4 border border-richblack-700 focus:border-yellow-100 focus:outline-none transition-colors text-sm"
-            />
-            <IoIosSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-richblack-400 text-lg" />
-          </div>
-
-          {/* Filter Tabs & Show All Button */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-richblack-700">
-            <div className="flex gap-6 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
-              {["Most Popular", "Newest", "Trending"].map((type) => (
-                <div
-                  key={type}
-                  onClick={() => handleFilterType(type)}
-                  className="cursor-pointer min-w-max transition-all duration-300"
-                >
-                  <p className={`text-sm font-medium pb-2 ${filterType === type ? "text-yellow-100" : "text-richblack-300"}`}>
-                    {type}
-                  </p>
-                  <div
-                    className={`h-1 transition-colors duration-300 ${
-                      filterType === type ? "bg-yellow-100" : "bg-richblack-700"
-                    } w-full`}
-                  ></div>
-                </div>
-              ))}
+            {/* Search Input */}
+            <div className="relative w-full md:w-96 mb-8">
+              <input
+                type="text"
+                placeholder="Search courses or instructors..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-richblack-800 text-richblack-5 rounded-lg py-3 pl-11 pr-4 border border-richblack-700 focus:border-yellow-100 focus:outline-none transition-colors text-sm"
+              />
+              <IoIosSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-richblack-400 text-lg" />
             </div>
 
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="text-yellow-100 flex items-center gap-2 hover:scale-105 transition-all duration-200 cursor-pointer whitespace-nowrap text-sm font-semibold"
-            >
-              {showAll ? "Show Less" : "Show All"}
-              {showAll ? <IoIosArrowUp /> : <IoIosArrowDown />}
-            </button>
+            {/* Filter Tabs & Show All Button */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-6 border-b border-richblack-700">
+              <div className="flex gap-6 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
+                {["Most Popular", "Newest", "Trending"].map((type) => (
+                  <div
+                    key={type}
+                    onClick={() => handleFilterType(type)}
+                    className="cursor-pointer min-w-max transition-all duration-300"
+                  >
+                    <p className={`text-sm font-medium pb-2 ${filterType === type ? "text-yellow-100" : "text-richblack-300"}`}>
+                      {type}
+                    </p>
+                    <div
+                      className={`h-1 transition-colors duration-300 ${
+                        filterType === type ? "bg-yellow-100" : "bg-richblack-700"
+                      } w-full`}
+                    ></div>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="text-yellow-100 flex items-center gap-2 hover:scale-105 transition-all duration-200 cursor-pointer whitespace-nowrap text-sm font-semibold"
+              >
+                {showAll ? "Show Less" : "Show All"}
+                {showAll ? <IoIosArrowUp /> : <IoIosArrowDown />}
+              </button>
+            </div>
+
+            {/* Courses Grid */}
+            {activeCourses?.length === 0 ? (
+              <p className="text-base text-richblack-300 py-8">No courses available for this category</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {activeCourses
+                  ?.slice(0, showAll ? activeCourses.length : 3)
+                  .map((course) => (
+                    <CourseCard course={course} key={course._id} Height="h-60" />
+                  ))}
+              </div>
+            )}
           </div>
 
-          {/* Courses Grid */}
-          {activeCourses?.length === 0 ? (
-            <p className="text-base text-richblack-300 py-8">No courses available for this category</p>
-          ) : (
+          {/* Top Selling Section */}
+          <div className="mb-16">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-richblack-5">Top Selling Courses</h2>
+              <button
+                onClick={() => setShowAllTopSelling(!showAllTopSelling)}
+                className="text-yellow-100 flex items-center gap-2 hover:scale-105 transition-all duration-200 cursor-pointer whitespace-nowrap text-sm font-semibold"
+              >
+                {showAllTopSelling ? "Show Less" : "Show All"}
+                {showAllTopSelling ? <IoIosArrowUp /> : <IoIosArrowDown />}
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {activeCourses
-                ?.slice(0, showAll ? activeCourses.length : 3)
+              {topsellings?.slice(0, showAllTopSelling ? topsellings.length : 3).map((course) => (
+                <CourseCard course={course} key={course._id} Height="h-60" />
+              ))}
+            </div>
+          </div>
+
+          {/* Other Categories Section */}
+          <div className="mb-16">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-richblack-5">Other Categories Courses</h2>
+              <button
+                onClick={() => setShowAllOther(!showAllOther)}
+                className="text-yellow-100 flex items-center gap-2 hover:scale-105 transition-all duration-200 cursor-pointer whitespace-nowrap text-sm font-semibold"
+              >
+                {showAllOther ? "Show Less" : "Show All"}
+                {showAllOther ? <IoIosArrowUp /> : <IoIosArrowDown />}
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {expectSelected
+                ?.flatMap((category) => category.courses)
+                ?.slice(0, showAllOther ? 20 : 3)
                 .map((course) => (
                   <CourseCard course={course} key={course._id} Height="h-60" />
                 ))}
             </div>
-          )}
+          </div>
+
         </div>
 
-        {/* Top Selling Section */}
-        <div className="mb-16">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-richblack-5">Top Selling Courses</h2>
-            <button
-              onClick={() => setShowAllTopSelling(!showAllTopSelling)}
-              className="text-yellow-100 flex items-center gap-2 hover:scale-105 transition-all duration-200 cursor-pointer whitespace-nowrap text-sm font-semibold"
-            >
-              {showAllTopSelling ? "Show Less" : "Show All"}
-              {showAllTopSelling ? <IoIosArrowUp /> : <IoIosArrowDown />}
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {topsellings?.slice(0, showAllTopSelling ? topsellings.length : 3).map((course) => (
-              <CourseCard course={course} key={course._id} Height="h-60" />
-            ))}
-          </div>
-        </div>
-
-        {/* Other Categories Section */}
-        <div className="mb-16">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-richblack-5">Other Categories Courses</h2>
-            <button
-              onClick={() => setShowAllOther(!showAllOther)}
-              className="text-yellow-100 flex items-center gap-2 hover:scale-105 transition-all duration-200 cursor-pointer whitespace-nowrap text-sm font-semibold"
-            >
-              {showAllOther ? "Show Less" : "Show All"}
-              {showAllOther ? <IoIosArrowUp /> : <IoIosArrowDown />}
-            </button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {expectSelected
-              ?.flatMap((category) => category.courses)
-              ?.slice(0, showAllOther ? 20 : 3)
-              .map((course) => (
-                <CourseCard course={course} key={course._id} Height="h-60" />
-              ))}
-          </div>
-        </div>
-
+        <Footer />
       </div>
-
-      {/* Footer */}
-      <Footer />
     </div>
   )
 }

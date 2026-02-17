@@ -62,8 +62,18 @@ const CoursePage = () => {
     };
 
     return (
-        <div className="relative w-full bg-linear-to-br from-richblack-900 via-richblack-900 to-richblack-800 text-richblack-5 min-h-screen pt-16">
-            <div className="relative overflow-hidden">
+        <div className="relative w-full bg-linear-to-br from-richblack-900 via-richblack-900 to-richblack-800 text-richblack-5 min-h-screen pt-24 overflow-hidden">
+            {/* --- The Big Gradient Ball (Center) --- */}
+            <div 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                        w-[800px] h-[800px] rounded-full opacity-20 pointer-events-none z-0"
+                style={{
+                background: "radial-gradient(circle, rgba(255,214,10,0.4) 0%, rgba(3,151,171,0.2) 50%, transparent 70%)",
+                filter: "blur(100px)"
+                }}
+            />
+
+            <div className="relative z-10 overflow-hidden">
                 <div className='absolute bottom-0 left-100 w-96 h-96 bg-yellow-200 rounded-full mix-blend-screen filter blur-3xl opacity-10'></div>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[500px] bg-linear-to-br from-yellow-200/5 via-blue-500/5 to-transparent blur-3xl rounded-full"></div>
                 <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500 rounded-full mix-blend-screen filter blur-3xl opacity-10"></div>
@@ -84,7 +94,6 @@ const CoursePage = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                         <div className="lg:col-span-2 space-y-6">
                             <div className="flex items-center gap-2 flex-wrap">
-                                <span className="px-3 py-1 bg-yellow-100/15 text-yellow-100 rounded-full text-[10px] sm:text-xs font-bold border border-yellow-100/30 uppercase tracking-wider">Premium Course</span>
                                 <span className="px-3 py-1 bg-blue-500/15 text-blue-200 rounded-full text-[10px] sm:text-xs font-bold border border-blue-500/30 uppercase tracking-wider">{courseData?.catagory?.name || 'Category'}</span>
                             </div>
 
@@ -186,7 +195,7 @@ const CoursePage = () => {
                 </div>
             </div>
 
-            <div className="py-10 bg-richblack-800/50">
+            <div className="py-10 bg-richblack-800/50 relative z-10">
                 <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20">
                     <h2 className="text-2xl font-bold mb-6">What You'll Learn</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -200,7 +209,7 @@ const CoursePage = () => {
                 </div>
             </div>
 
-            <div className="py-10">
+            <div className="py-10 relative z-10">
                 <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20">
                     <h2 className="text-2xl font-bold mb-6">📚 Course Curriculum</h2>
                     <div className="space-y-4">
@@ -243,7 +252,7 @@ const CoursePage = () => {
             </div>
 
             {courseData?.tag?.length > 0 && (
-                <div className="py-16 bg-richblack-800/40 border-y border-richblack-700/50">
+                <div className="py-16 bg-richblack-800/40 border-y border-richblack-700/50 relative z-10">
                     <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20 text-center">
                         <h2 className="text-2xl md:text-3xl font-bold mb-8 italic"><span className="text-yellow-100">🎯 Skills</span> You'll Master</h2>
                         <div className="flex flex-wrap justify-center gap-4">
@@ -260,7 +269,7 @@ const CoursePage = () => {
             )}
 
             {courseData?.ratingAndReviews?.length > 0 && (
-                <div className="py-20 w-full px-4 sm:px-6 lg:px-12 xl:px-20">
+                <div className="py-20 w-full px-4 sm:px-6 lg:px-12 xl:px-20 relative z-10">
                     <div className="flex flex-col items-center mb-10 text-center">
                         <h2 className="text-3xl md:text-4xl font-black text-white mb-2 italic">Student Experiences</h2>
                         <p className="text-richblack-400 text-sm italic">Join {courseData?.studentsEnrolled?.length.toLocaleString()}+ students already learning this course</p>
@@ -282,7 +291,7 @@ const CoursePage = () => {
                 </div>
             )}
 
-            <div className="py-20 bg-linear-to-b from-transparent to-richblack-900 w-full px-4 sm:px-6 lg:px-12 xl:px-20">
+            <div className="py-20 bg-linear-to-b from-transparent to-richblack-900 w-full px-4 sm:px-6 lg:px-12 xl:px-20 relative z-10">
                 <div className="relative group overflow-hidden rounded-4xl border border-richblack-700/50 bg-richblack-800 p-1">
                     <div className="absolute -inset-1 bg-linear-to-r from-yellow-100 to-blue-500 opacity-20 blur-2xl transition duration-1000"></div>
                     <div className="relative flex flex-col items-center text-center py-16 px-8 rounded-[1.95rem] bg-richblack-900">
@@ -294,7 +303,7 @@ const CoursePage = () => {
                 </div>
             </div>
 
-            <div className="py-10 border-t border-richblack-700/50 w-full px-4 sm:px-6 lg:px-12 xl:px-20">
+            <div className="py-10 border-t border-richblack-700/50 w-full px-4 sm:px-6 lg:px-12 xl:px-20 relative z-10">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                     <div className="group transition"><p className="text-yellow-100 text-xl font-bold">{courseData?.courseContent?.length}</p><p className="text-richblack-400 text-xs">Sections</p></div>
                     <div className="group transition"><p className="text-yellow-100 text-xl font-bold">{courseData?.studentsEnrolled?.length}</p><p className="text-richblack-400 text-xs">Students</p></div>

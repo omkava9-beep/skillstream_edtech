@@ -26,12 +26,16 @@ const Categories = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-richblack-900 pt-20">
+    /* 1. Added 'flex flex-col' to ensure Footer stays at bottom
+       2. Adjusted 'pt-24' (96px) to ensure content starts below the floating h-20 navbar 
+    */
+    <div className="min-h-screen bg-richblack-900 pt-24 md:pt-32 flex flex-col">
       {loading && <Loader />}
       
       {/* Hero Section */}
-      <div className="relative py-16 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[300px] bg-yellow-200 rounded-full mix-blend-screen filter blur-[120px] opacity-10"></div>
+      <div className="relative py-12 md:py-16 overflow-hidden">
+        {/* Adjusted Z-index to ensure decorative blurs stay behind navbar (which is z-100) */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[300px] bg-yellow-200 rounded-full mix-blend-screen filter blur-[120px] opacity-10 z-0"></div>
         
         <div className="relative z-10 max-w-[1200px] mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-richblack-5 mb-6">
@@ -43,8 +47,8 @@ const Categories = () => {
         </div>
       </div>
 
-      {/* Categories Grid */}
-      <div className="max-w-[1200px] mx-auto px-4 py-12">
+      {/* Categories Grid - flex-1 ensures this area expands so footer is pushed down */}
+      <div className="max-w-[1200px] mx-auto px-4 py-12 flex-1">
         {categoriesList?.length === 0 && !loading ? (
           <div className="text-center py-20">
             <h2 className="text-2xl text-richblack-400 italic">No categories available at the moment.</h2>
@@ -57,7 +61,6 @@ const Categories = () => {
                 onClick={() => navigate(`/catalog/${category._id}`)}
                 className="group relative bg-richblack-800 border border-richblack-700 rounded-2xl p-8 cursor-pointer transition-all duration-300 hover:border-yellow-100 hover:shadow-[0_0_30px_rgba(255,214,10,0.1)] hover:-translate-y-2 overflow-hidden"
               >
-                {/* Background Decor */}
                 <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-yellow-200 rounded-full opacity-5 group-hover:opacity-10 transition-opacity duration-500 blur-2xl"></div>
                 
                 <h3 className="text-2xl font-bold text-richblack-5 mb-4 group-hover:text-yellow-100 transition-colors">
@@ -72,7 +75,6 @@ const Categories = () => {
                   <IoIosArrowForward />
                 </div>
 
-                {/* Glassy border effect on hover */}
                 <div className="absolute inset-0 border-2 border-transparent group-hover:border-yellow-100/20 rounded-2xl transition-all duration-300"></div>
               </div>
             ))}

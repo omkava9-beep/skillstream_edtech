@@ -3,7 +3,7 @@ import RatingStars from '../../commponents/common/RatingStars'
 import GetAvgRating from '../../utils/avgRating.js'
 import { Link, useNavigate } from 'react-router-dom'
 import { HiUsers } from 'react-icons/hi'
-import { FiShoppingCart } from 'react-icons/fi'
+import { FiShoppingCart, FiArrowRight } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToCart } from '../../redux/slices/cartReducer'
 
@@ -19,7 +19,7 @@ const CourseCard = ({course, Height}) => {
     },[course])
 
     const handleAddToCart = (e) => {
-        e.preventDefault(); // Prevent navigating to course detail
+        e.preventDefault();
         if(!token) {
             navigate("/login");
             return;
@@ -27,91 +27,92 @@ const CourseCard = ({course, Height}) => {
         dispatch(addToCart(course));
     }
 
-    // Logistic for bestseller badge
-    const isBestseller = course?.studentsEnrolled?.length > 5;
-    
-  return (
-    <div className="group relative">
-      <Link to={`/courses/${course._id}`}>
-        <div className="flex flex-col gap-4 rounded-2xl p-4 transition-all duration-300
-                        bg-richblack-800/40 backdrop-blur-md border border-richblack-700/50
-                        hover:bg-richblack-800/60 hover:border-richblack-600 hover:shadow-[0_0_20px_rgba(255,214,10,0.1)]
-                        hover:-translate-y-1 w-full min-h-[420px]">  
-          
-          {/* Thumbnail Container */}
-          <div className="relative rounded-xl overflow-hidden aspect-video">
-            <img
-              src={course?.thumbnail}
-              alt="course thumbnail"
-              className={`${Height || 'h-full'} w-full object-cover transition-transform duration-500 group-hover:scale-110`}
-            />
-            
-            {/* Overlay Gradient */}
-            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-richblack-900 via-richblack-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+    return (
+        <div className="group relative p-[1px] rounded-2xl overflow-hidden transition-all duration-500 hover:scale-[1.01]">
+            {/* 1. SUBTLE BORDER GRADIENT */}
+            <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-white/5 opacity-100" />
 
-            {/* Bestseller Badge */}
-            {isBestseller && (
-                <div className="absolute top-3 left-3 bg-yellow-100 text-richblack-900 px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
-                    <span className="w-2 h-2 bg-richblack-900 rounded-full animate-pulse"></span>
-                    BESTSELLER
-                </div>
-            )}
+            {/* 2. THE MAIN GLASSY CARD */}
+            <div className="relative flex flex-col gap-4 rounded-2xl p-4 h-full
+                            bg-white/[0.02] backdrop-blur-xl border border-white/5
+                            shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7)]
+                            overflow-hidden">
+                
+                {/* 3. LIGHTER GRADIENT BALLS (Reduced Opacity & Size) */}
+                <div className="absolute -top-12 -right-12 w-24 h-24 bg-yellow-100/10 blur-[40px] rounded-full group-hover:bg-yellow-100/20 transition-all duration-700" />
+                <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-blue-500/5 blur-[50px] rounded-full group-hover:bg-blue-500/10 transition-all duration-700" />
 
-            {/* Quick Add to Cart - Visible on Hover */}
-            <button 
-                onClick={handleAddToCart}
-                className="absolute bottom-3 right-3 p-3 bg-yellow-100 text-richblack-900 rounded-xl shadow-xl 
-                           translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 
-                           transition-all duration-300 hover:scale-110 active:scale-95 z-20"
-                title="Add to Cart"
-            >
-                <FiShoppingCart size={20} />
-            </button>
-          </div>
+                {/* 4. THUMBNAIL CONTAINER */}
+                <div className="relative rounded-xl overflow-hidden z-10 shadow-lg">
+                    <img
+                        src={course?.thumbnail}
+                        alt="course thumbnail"
+                        className={`${Height || 'h-full'} w-full object-cover transition-transform duration-700 group-hover:scale-105`}
+                    />
 
-          {/* Content */}
-          <div className="flex flex-col gap-3 flex-grow">
-            <div className="flex flex-col gap-1">
-                <h3 className="text-xl font-bold text-richblack-5 line-clamp-2 leading-snug group-hover:text-yellow-50 transition-colors">
-                    {course?.courseName}
-                </h3>
-                <p className="text-sm text-richblack-300 font-medium">
-                    By <span className="text-richblack-100">{course?.instructor?.firstName} {course?.instructor?.lastName}</span>
-                </p>
-            </div>
-
-            {/* Rating & Stats */}
-            <div className="flex flex-col gap-2 mt-auto">
-                <div className="flex items-center gap-2">
-                    <span className="text-yellow-100 font-bold text-lg">{avgReviewCount || 0}</span>
-                    <RatingStars Review_Count={avgReviewCount} Star_Size={18} />
-                    <span className="text-richblack-400 text-sm">
-                        ({course?.ratingAndReviews?.length || 0} Reviews)
-                    </span>
+                    {/* Quick Action Button */}
+                    <button 
+                        onClick={handleAddToCart}
+                        className="absolute bottom-3 right-3 p-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white rounded-xl
+                                   translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 
+                                   transition-all duration-500 hover:bg-yellow-100 hover:text-richblack-900"
+                    >
+                        <FiShoppingCart size={18} />
+                    </button>
                 </div>
 
-                <div className="flex items-center justify-between mt-2">
-                    <div className="grow flex items-center gap-1.5 text-richblack-200 text-sm bg-richblack-700/50 px-3 py-1 rounded-lg">
-                        <HiUsers className="text-yellow-100" />
-                        <span>{course?.studentsEnrolled?.length || 0} Students</span>
+                {/* 5. CONTENT AREA */}
+                <div className="flex flex-col gap-2.5 flex-grow z-10 px-0.5">
+                    {/* Category Tag */}
+                    <div className="flex">
+                         <span className="text-[9px] font-bold text-yellow-100/60 uppercase tracking-widest px-2 py-0.5 bg-white/5 rounded-md border border-white/5">
+                            {course?.category?.name || "Development"}
+                         </span>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-white leading-tight line-clamp-2">
+                        {course?.courseName}
+                    </h3>
+                    
+                    <p className="text-xs text-richblack-400 font-medium">
+                        By <span className="text-richblack-100">{course?.instructor?.firstName} {course?.instructor?.lastName}</span>
+                    </p>
+
+                    {/* Stats & Rating */}
+                    <div className="flex items-center gap-3 mt-1">
+                        <div className="flex items-center gap-1 text-richblack-200 text-[11px]">
+                            <HiUsers className="text-yellow-100/80" />
+                            <span>{course?.studentsEnrolled?.length || 0}</span>
+                        </div>
+                        <div className="h-3 w-[1px] bg-white/10" />
+                        <div className="flex items-center gap-1.5">
+                            <span className="text-yellow-100/90 font-bold text-xs">{avgReviewCount || 0}</span>
+                            <RatingStars Review_Count={avgReviewCount} Star_Size={12} />
+                        </div>
+                    </div>
+
+                    {/* 6. PRICE & ACTION FOOTER */}
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                        <div className="flex flex-col">
+                            <span className="text-[9px] text-richblack-500 font-bold uppercase tracking-wider">Price</span>
+                            <p className="text-xl font-bold text-white">
+                                ₹{course?.price?.toLocaleString('en-IN')}
+                            </p>
+                        </div>
+
+                        <Link 
+                            to={`/courses/${course._id}`}
+                            className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 
+                                       text-white transition-all duration-300 hover:w-28 hover:bg-yellow-100 hover:text-black group/btn overflow-hidden"
+                        >
+                            <span className="hidden group-hover/btn:block text-xs font-bold whitespace-nowrap mr-2 pl-3">Explore</span>
+                            <FiArrowRight size={18} className="shrink-0" />
+                        </Link>
                     </div>
                 </div>
             </div>
-
-            {/* Price section */}
-            <div className="flex items-center justify-between border-t border-richblack-700/50 pt-4 mt-1">
-                <p className="text-2xl font-black text-richblack-5">
-                    ₹{course?.price?.toLocaleString('en-IN')}
-                </p>
-                <div className="text-xs text-yellow-100 font-bold tracking-widest uppercase">
-                    Course
-                </div>
-            </div>
-          </div>
         </div>
-      </Link>
-    </div>
-  )
+    )
 }
 
 export default CourseCard
