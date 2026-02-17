@@ -2,7 +2,7 @@ import { Link, useLocation, matchPath, useNavigate } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { useSelector } from "react-redux";
-import { NavbarLinks } from "../../data/navbar-links";
+import { NavbarLinks } from "../../data/NavbarLinks";
 import { IoCartOutline } from "react-icons/io5";
 import { IoMdSearch } from "react-icons/io";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
