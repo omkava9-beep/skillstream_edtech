@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = "https://skillstream-edtech.onrender.com";
 
 export const catagories = {
     CATAGORIES_API: `${BASE_URL}/api/v1/course/showallcatagories`,
