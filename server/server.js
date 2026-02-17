@@ -44,8 +44,8 @@ app.use('/api/v1/rating', ratingRoute);
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Fallback route for SPA - serves index.html for any unknown requests
-// In Express 5, all parameters must be named. /:path(.*) matches any path.
-app.get('/:path(.*)', (req, res) => {
+// Using app.use() instead of app.get('*') to avoid Express 5 path-to-regexp parsing issues
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
