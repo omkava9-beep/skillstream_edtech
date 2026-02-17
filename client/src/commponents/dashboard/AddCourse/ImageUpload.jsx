@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { FiUploadCloud, FiX, FiImage } from 'react-icons/fi';
 
 const ImageUpload = ({ thumbnail, setThumbnail }) => {
@@ -7,7 +7,14 @@ const ImageUpload = ({ thumbnail, setThumbnail }) => {
   const fileInputRef = useRef(null);
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
   const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
+
+  useEffect(() => {
+    if (thumbnail && typeof thumbnail === 'string') {
+        setPreview(thumbnail);
+    }
+  }, [thumbnail]);
 
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -140,7 +147,7 @@ const ImageUpload = ({ thumbnail, setThumbnail }) => {
         <div className="border-2 border-richblack-600 rounded-xl p-4 bg-richblack-700">
           <div className="flex items-start gap-4">
             {/* Image Preview */}
-            <div className="w-32 h-32 rounded-lg overflow-hidden bg-richblack-600 flex-shrink-0 relative">
+            <div className="w-32 h-32 rounded-lg overflow-hidden bg-richblack-600 shrink-0 relative">
               {preview ? (
                 <img
                   src={preview}
@@ -160,13 +167,13 @@ const ImageUpload = ({ thumbnail, setThumbnail }) => {
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
-                    <FiImage className="text-caribbeangreen-200 flex-shrink-0" size={18} />
+                    <FiImage className="text-caribbeangreen-200 shrink-0" size={18} />
                     <p className="text-richblack-5 font-medium truncate">
-                      {thumbnail?.name}
+                      {thumbnail?.name || "Course Thumbnail"}
                     </p>
                   </div>
                   <p className="text-richblack-400 text-sm">
-                    {(thumbnail?.size / 1024).toFixed(2)} KB
+                    {thumbnail?.size ? (thumbnail.size / 1024).toFixed(2) + " KB" : ""}
                   </p>
                 </div>
 

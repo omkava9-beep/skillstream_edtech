@@ -8,7 +8,7 @@ import { FiChevronRight } from 'react-icons/fi';
 import ChipInput from '../../common/ChipInput';
 import RequirementsField from './RequirementsField';
 
-const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, saveDraft }) => {
+const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, saveDraft, editCourse }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -37,6 +37,8 @@ const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, save
     fetchCategories();
   }, []);
 
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCourseInfo((prev) => ({
@@ -50,6 +52,17 @@ const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, save
   };
 
 
+
+  const handleSetValue = React.useCallback(
+    (name, value) => {
+      setValue(name, value);
+      setCourseInfo((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    },
+    [setValue, setCourseInfo]
+  );
 
   const handleThumbnailChange = (file) => {
     setCourseInfo((prev) => ({
@@ -160,10 +173,7 @@ const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, save
         name="whatYouWillLearn"
         placeholder="Enter a learning outcome"
         errors={errors}
-        setValue={(name, value) => {
-          setValue(name, value);
-          setCourseInfo(prev => ({ ...prev, [name]: value }));
-        }}
+        setValue={handleSetValue}
         getValues={getValues}
       />
 
@@ -225,10 +235,7 @@ const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, save
         placeholder="Enter a tag and press Enter"
         register={() => {}}
         errors={errors}
-        setValue={(name, value) => {
-          setValue(name, value);
-          setCourseInfo(prev => ({ ...prev, [name]: value }));
-        }}
+        setValue={handleSetValue}
         getValues={getValues}
       />
 
@@ -248,7 +255,7 @@ const CourseInformationForm = ({ courseInfo, setCourseInfo, setCurrentStep, save
           onClick={handleNext}
           className="flex items-center gap-2 bg-yellow-50 text-richblack-900 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-100 transition-all duration-200 hover:scale-105"
         >
-          Next
+          {editCourse ? "Save Changes" : "Next"}
           <FiChevronRight size={20} />
         </button>
       </div>

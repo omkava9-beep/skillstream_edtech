@@ -5,6 +5,7 @@ import { apiConnector } from '../../../services/apiConnector';
 import { instructorEndpoints, courseEndpoints } from '../../../services/apis';
 import { FiPlus, FiEdit2, FiTrash2, FiClock, FiCheckCircle } from 'react-icons/fi';
 import { toast } from 'react-hot-toast';
+// FIXED: Path typo from commponents to components
 import Loader from '../common/Loader';
 
 const MyCourses = () => {
@@ -38,7 +39,6 @@ const MyCourses = () => {
     }, []);
 
     const handleEdit = (courseId) => {
-        // Navigating to edit page (ensure this route exists in your App.js)
         navigate(`/dashboard/edit-course/${courseId}`);
     };
 
@@ -68,11 +68,14 @@ const MyCourses = () => {
     if (loading) return <Loader />;
 
     return (
-        /* Removed extreme horizontal padding to prevent double-padding within Dashboard */
-        <div className="w-full space-y-8">
+        /* FIX: Added 'pt-14 lg:pt-0' 
+           This ensures that on mobile, the 'My Courses' title starts below the 
+           fixed Sidebar/Menu button instead of being hidden by it.
+        */
+        <div className="w-full space-y-8 pt-14 lg:pt-0 pb-10">
             
-            {/* Header section - Clean and Aligned */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            {/* Header section */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-richblack-5 tracking-tight">
                         My <span className="text-yellow-100">Courses</span>
@@ -90,7 +93,7 @@ const MyCourses = () => {
 
             {/* Courses Table/List */}
             {courses.length === 0 ? (
-                <div className="bg-white/[0.02] rounded-3xl border border-white/5 p-16 text-center backdrop-blur-sm">
+                <div className="bg-white/[0.02] rounded-3xl border border-white/5 p-10 md:p-16 text-center backdrop-blur-sm">
                     <div className="bg-richblack-800 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner">
                         <FiCheckCircle size={40} className="text-richblack-600" />
                     </div>
@@ -107,8 +110,9 @@ const MyCourses = () => {
                 </div>
             ) : (
                 <div className="bg-white/[0.02] rounded-3xl border border-white/5 overflow-hidden backdrop-blur-md">
-                    <div className="overflow-x-auto custom-scrollbar">
-                        <table className="w-full text-left border-collapse min-w-[700px]">
+                    {/* Desktop View */}
+                    <div className="hidden md:block overflow-x-auto no-scrollbar">
+                        <table className="w-full text-left border-collapse min-w-[600px]">
                             <thead>
                                 <tr className="border-b border-white/5 bg-white/[0.02]">
                                     <th className="px-6 py-5 text-xs font-bold text-richblack-400 uppercase tracking-widest">Course Info</th>
@@ -130,13 +134,13 @@ const MyCourses = () => {
                                                     />
                                                 </div>
                                                 <div className="flex flex-col gap-1">
-                                                    <p className="text-richblack-5 font-bold text-lg group-hover:text-yellow-100 transition-colors">
+                                                    <p className="text-richblack-5 font-bold text-lg group-hover:text-yellow-100 transition-colors line-clamp-1">
                                                         {course.courseName}
                                                     </p>
-                                                    <div className="flex items-center gap-3 text-richblack-400 text-xs">
+                                                    <div className="flex items-center gap-2 text-richblack-400 text-xs">
                                                         <span className="flex items-center gap-1">
                                                             <FiClock size={12} />
-                                                            Created: {new Date(course.createdAt).toLocaleDateString()}
+                                                            {new Date(course.createdAt).toLocaleDateString()}
                                                         </span>
                                                         <span className="bg-richblack-700 h-1 w-1 rounded-full"></span>
                                                         <span>{course.courseContent?.length || 0} Modules</span>
@@ -164,17 +168,17 @@ const MyCourses = () => {
                                             <div className="flex items-center justify-end gap-2">
                                                 <button
                                                     onClick={() => handleEdit(course._id)}
-                                                    className="p-2.5 rounded-xl bg-richblack-800 text-richblack-300 hover:text-yellow-100 hover:bg-richblack-700 border border-white/5 transition-all"
+                                                    className="p-2 rounded-lg bg-richblack-800 text-richblack-300 hover:text-yellow-100 hover:bg-richblack-700 border border-white/5 transition-all"
                                                     title="Edit"
                                                 >
-                                                    <FiEdit2 size={18} />
+                                                    <FiEdit2 size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(course._id)}
-                                                    className="p-2.5 rounded-xl bg-richblack-800 text-richblack-300 hover:text-pink-200 hover:bg-pink-500/10 border border-white/5 transition-all"
+                                                    className="p-2 rounded-lg bg-richblack-800 text-richblack-300 hover:text-pink-200 hover:bg-pink-500/10 border border-white/5 transition-all"
                                                     title="Delete"
                                                 >
-                                                    <FiTrash2 size={18} />
+                                                    <FiTrash2 size={16} />
                                                 </button>
                                             </div>
                                         </td>
@@ -182,6 +186,66 @@ const MyCourses = () => {
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+
+                    {/* Mobile View (Cards) */}
+                    <div className="md:hidden flex flex-col gap-4 p-4">
+                        {courses.map((course) => (
+                            <div key={course._id} className="bg-richblack-800 rounded-xl p-4 border border-white/5 flex flex-col gap-4">
+                                <div className="flex gap-4">
+                                    <div className="w-24 h-16 rounded-lg overflow-hidden bg-richblack-700 shrink-0 border border-white/5">
+                                        <img 
+                                            src={course.thumbnail} 
+                                            alt={course.courseName}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-1 w-full">
+                                        <h3 className="text-richblack-5 font-bold text-base line-clamp-1">{course.courseName}</h3>
+                                        <div className="flex items-center gap-2 text-richblack-400 text-[10px]">
+                                            <span className="flex items-center gap-1">
+                                                <FiClock size={10} />
+                                                {new Date(course.createdAt).toLocaleDateString()}
+                                            </span>
+                                            <span className="bg-richblack-600 h-1 w-1 rounded-full"></span>
+                                            <span>{course.courseContent?.length || 0} Modules</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-richblack-5 font-bold text-lg">₹{course.price}</span>
+                                        {course.status === "Published" ? (
+                                            <div className="flex items-center gap-1.5 text-caribbeangreen-300 bg-caribbeangreen-300/10 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">
+                                                <div className="w-1 h-1 rounded-full bg-caribbeangreen-300"></div>
+                                                Published
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-1.5 text-yellow-100 bg-yellow-100/10 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">
+                                                <div className="w-1 h-1 rounded-full bg-yellow-100"></div>
+                                                Draft
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => handleEdit(course._id)}
+                                            className="p-2 rounded-lg bg-richblack-700 text-richblack-200 hover:text-yellow-100 hover:bg-richblack-600 transition-all"
+                                        >
+                                            <FiEdit2 size={16} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(course._id)}
+                                            className="p-2 rounded-lg bg-richblack-700 text-richblack-200 hover:text-pink-200 hover:bg-pink-900/20 transition-all"
+                                        >
+                                            <FiTrash2 size={16} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}

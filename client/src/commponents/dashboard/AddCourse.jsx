@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import RenderSteps from './AddCourse/RenderSteps';
 import ProgressBar from './AddCourse/ProgressBar';
 import { FiSave, FiAlertCircle } from 'react-icons/fi';
+import { getFullDetailsOfCourse } from '../../services/operations/courseAPI';
+import Loader from '../common/Loader';
 
 const DRAFT_KEY = 'courseBuilderDraft';
 
@@ -101,12 +103,67 @@ const AddCourse = () => {
     }
   };
 
+  // Create a loading state
+  const [loading, setLoading] = useState(false);
+  const { courseId } = useParams();
+
+  useEffect(() => {
+    const populateCourseDetails = async () => {
+      setLoading(true);
+      try {
+        const result = await getFullDetailsOfCourse(courseId, token);
+        if (result?.courseDetails) {
+            // Assume the API returns structure compatible with our state.
+            // We might need to transform it.
+            // For now, let's just create an edit flag and maybe log it.
+            // But wait, the form fields use `courseInfo`.
+            // We need to map result.courseDetails to courseInfo.
+             const course = result.courseDetails;
+             setCourseInfo({
+                courseName: course.courseName,
+                courseDescription: course.courseDescription,
+                whatYouWillLearn: course.whatYouWillLearn,
+                price: course.price,
+                category: course.catagory?._id, // Backend uses 'catagory'
+                tags: course.tag, // API might return 'tag' or 'tags'
+                thumbnail: course.thumbnail,
+                instructions: course.instructions,
+             });
+             setCourseBuilder({
+                sections: course.courseContent.map(section => ({
+                    ...section,
+                    subSections: section.subSection || [],
+                })),
+             });
+             setPublishSettings({
+                status: course.status,
+             });
+        }
+      } catch (error) {
+        console.error("Could not fetch course details", error);
+      }
+      setLoading(false);
+    };
+
+    if (courseId) {
+        populateCourseDetails();
+    }
+  }, [courseId]);
+
   // Auto-save when moving between steps
   useEffect(() => {
-    if (currentStep > 1 || courseInfo.courseName) {
+    if ((currentStep > 1 || courseInfo.courseName) && !courseId) { // Don't auto-save draft in edit mode to avoid overwriting with partial data, or handle differently
       saveDraft();
     }
-  }, [currentStep]);
+  }, [currentStep, courseInfo.courseName]); // added dependency
+
+  if (loading) {
+    return (
+        <div className="grid flex-1 place-items-center">
+            <Loader />
+        </div>
+    )
+  }
 
   return (
     <div className="max-w-[1200px] mx-auto px-4 sm:px-6 py-10">
@@ -159,6 +216,7 @@ const AddCourse = () => {
           clearDraft={clearDraft}
           token={token}
           navigate={navigate}
+          editCourse={!!courseId}
         />
       </div>
 

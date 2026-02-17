@@ -49,14 +49,14 @@ const Sidebar = ({ setOpen }) => {
 
     if(profileLoading || authLoading) {
         return (
-            <div className='grid min-w-[220px] items-center border-r border-r-richblack-700/50 bg-gradient-to-b from-richblack-800 to-richblack-900 shadow-xl h-full'>
+            <div className='grid min-w-[220px] items-center border-r border-r-richblack-700/50 bg-linear-to-b from-richblack-800 to-richblack-900 shadow-xl h-full'>
                 <div className='spinner'></div>
             </div>
         )
     }
 
   return (
-    <div className='flex min-w-[220px] flex-col border-r border-r-richblack-700/50 bg-gradient-to-b from-richblack-800 to-richblack-900 py-10 overflow-y-auto shadow-xl h-full'>
+    <div className='flex min-w-[220px] flex-col border-r border-r-richblack-700/50 bg-linear-to-b from-richblack-800 to-richblack-900 py-10 overflow-y-auto no-scrollbar shadow-xl h-full'>
 
         <div className='flex flex-col'>
             {
@@ -68,7 +68,7 @@ const Sidebar = ({ setOpen }) => {
                 })
             }
         </div>
-        <div className='mx-auto mt-8 mb-8 h-px w-10/12 bg-gradient-to-r from-transparent via-richblack-600 to-transparent'></div>
+        <div className='mx-auto mt-8 mb-8 h-px w-10/12 bg-linear-to-r from-transparent via-richblack-600 to-transparent'></div>
 
         <div className='flex flex-col gap-2 px-2'>
             <SidebarLink 

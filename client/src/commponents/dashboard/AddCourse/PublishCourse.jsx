@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { FiChevronLeft, FiUpload, FiCheckCircle } from 'react-icons/fi';
 import { apiConnector } from '../../../../services/apiConnector';
@@ -13,7 +14,9 @@ const PublishCourse = ({
   clearDraft,
   token,
   navigate,
+  editCourse,
 }) => {
+  const { courseId } = useParams();
   const [loading, setLoading] = useState(false);
 
   const handleBack = () => {
@@ -23,120 +26,226 @@ const PublishCourse = ({
 
   const handlePublish = async () => {
     try {
-      // Validation: Ensure thumbnail is a valid file (not just a draft object)
-      if (!courseInfo.thumbnail || !(courseInfo.thumbnail instanceof File || courseInfo.thumbnail instanceof Blob)) {
-        toast.error('Thumbnail file is missing. Please re-upload it in Step 1 (resumed drafts require re-selecting files).');
-        setCurrentStep(1);
+      // 1. Validation for Thumbnail
+      if (!courseInfo.thumbnail && !editCourse) {
+        toast.error('Thumbnail is required');
         return;
       }
+      if ((courseInfo.thumbnail && !(courseInfo.thumbnail instanceof File || courseInfo.thumbnail instanceof Blob)) && !editCourse) {
+           toast.error('Thumbnail must be a valid file for new courses');
+           return;
+      }
 
-      // Validation: Ensure all subsections have valid video files
+      // 2. Validation for Sections/Subsections
+      if (courseBuilder.sections.length === 0) {
+          toast.error("Please add at least one section");
+          return;
+      }
+      
       let missingVideo = false;
       for (const section of courseBuilder.sections) {
         for (const subSection of section.subSections) {
-          if (!subSection.video || !(subSection.video instanceof File || subSection.video instanceof Blob)) {
-            missingVideo = true;
-            break;
-          }
+           const hasVideoFile = subSection.video instanceof File || subSection.video instanceof Blob;
+           const hasVideoUrl = subSection.videoUrl; // Assuming AddCourse maps this or it exists on object
+           
+           if (!hasVideoFile && (!editCourse || !hasVideoUrl)) {
+             missingVideo = true;
+             break;
+           }
         }
         if (missingVideo) break;
       }
 
       if (missingVideo) {
-        toast.error('Some lecture videos are missing. Please re-upload them in Step 2 (resumed drafts require re-selecting files).');
+        toast.error('Some lecture videos are missing.');
         setCurrentStep(2);
         return;
       }
 
       setLoading(true);
-      const toastId = toast.loading('Creating your course...');
+      const toastId = toast.loading(editCourse ? 'Updating course...' : 'Creating your course...');
 
-      // Step 1: Create the course
-      const formData = new FormData();
-      formData.append('name', courseInfo.courseName);
-      formData.append('description', courseInfo.courseDescription);
-      formData.append('whatYouWillLearn', courseInfo.whatYouWillLearn);
-      formData.append('price', courseInfo.price);
-      formData.append('catagory', courseInfo.category);
-      formData.append('tag', JSON.stringify(courseInfo.tags));
-      formData.append('thumbnailImage', courseInfo.thumbnail);
-      formData.append('status', publishSettings.status);
+      let courseIdToUse = courseId;
 
-      const courseResponse = await apiConnector(
-        'POST',
-        courseEndpoints.CREATE_COURSE_API,
-        formData,
-        {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        }
-      );
+      // --- EDIT MODE ---
+      if (editCourse) {
+          // 1. Update Course Details
+          const formData = new FormData();
+          formData.append('courseId', courseId);
+          formData.append('name', courseInfo.courseName);
+          formData.append('description', courseInfo.courseDescription);
+          formData.append('whatYouWillLearn', courseInfo.whatYouWillLearn);
+          formData.append('price', courseInfo.price);
+          formData.append('catagory', courseInfo.category);
+          formData.append('tag', JSON.stringify(courseInfo.tags));
+          formData.append('status', publishSettings.status);
+          
+          if (courseInfo.thumbnail instanceof File) {
+              formData.append('thumbnailImage', courseInfo.thumbnail);
+          }
 
-      if (!courseResponse.data.success) {
-        throw new Error(courseResponse.data.message || 'Failed to create course');
-      }
+          const courseResponse = await apiConnector(
+            'POST', 
+            courseEndpoints.EDIT_COURSE_API, 
+            formData, 
+            {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            }
+          );
+          
+          if (!courseResponse.data.success) {
+             throw new Error("Failed to update course details");
+          }
+          toast.success("Course details updated");
 
-      const createdCourse = courseResponse.data.data;
-      toast.success('Course created successfully!', { id: toastId });
+          // 2. Update/Create Sections & Subsections
+           for (const section of courseBuilder.sections) {
+               let sectionId = section._id;
+               // If it's a new section (temp id), create it
+               if (!sectionId || sectionId.toString().startsWith("temp-")) { 
+                   const sectionRes = await apiConnector(
+                       "POST", 
+                       courseEndpoints.CREATE_SECTION_API,
+                       { sectionName: section.sectionName, courseId },
+                       { Authorization: `Bearer ${token}` }
+                   );
+                   sectionId = sectionRes.data.data._id;
+               } else {
+                   // Update existing section
+                   await apiConnector(
+                       "PUT",
+                       `${courseEndpoints.UPDATE_SECTION_API}/${sectionId}`,
+                       { sectionName: section.sectionName, sectionId },
+                       { Authorization: `Bearer ${token}` }
+                   );
+               }
 
-      // Step 2: Create sections and subsections
-      if (courseBuilder.sections.length > 0) {
-        toast.loading('Adding sections and lectures...', { id: toastId });
+               // Subsections
+               for (const sub of section.subSections) {
+                   const subData = new FormData();
+                   subData.append('title', sub.title);
+                   subData.append('description', sub.description);
+                   subData.append('timeDuration', sub.duration || '0');
+                   
+                   if (sub.video instanceof File) {
+                       subData.append('videoUpload', sub.video);
+                   }
 
-        for (const section of courseBuilder.sections) {
-          // Create section
-          const sectionResponse = await apiConnector(
+                   let subId = sub._id;
+                   if (!subId || subId.toString().startsWith("temp-")) {
+                       // Create SubSection
+                       subData.append('sectionId', sectionId);
+                       await apiConnector(
+                           "POST",
+                           courseEndpoints.CREATE_SUBSECTION_API,
+                           subData,
+                           { Authorization: `Bearer ${token}` } // multipart handled by axios based on formData? apiConnector sets it?
+                       );
+                   } else {
+                       // Update SubSection
+                       subData.append('subSectionId', subId);
+                       // We need to pass subId in body AND URL? Controller checks body.
+                       await apiConnector(
+                           "PUT",
+                           `${courseEndpoints.UPDATE_SUBSECTION_API}/${subId}`,
+                           subData,
+                           { Authorization: `Bearer ${token}` }
+                       );
+                   }
+               }
+           }
+           toast.success("Course updated successfully!", { id: toastId });
+
+      } else {
+          // --- CREATE MODE ---
+          // Step 1: Create the course
+          const formData = new FormData();
+          formData.append('name', courseInfo.courseName);
+          formData.append('description', courseInfo.courseDescription);
+          formData.append('whatYouWillLearn', courseInfo.whatYouWillLearn);
+          formData.append('price', courseInfo.price);
+          formData.append('catagory', courseInfo.category);
+          formData.append('tag', JSON.stringify(courseInfo.tags));
+          formData.append('thumbnailImage', courseInfo.thumbnail);
+          formData.append('status', publishSettings.status);
+
+          const courseResponse = await apiConnector(
             'POST',
-            courseEndpoints.CREATE_SECTION_API,
+            courseEndpoints.CREATE_COURSE_API,
+            formData,
             {
-              sectionName: section.sectionName,
-              courseId: createdCourse._id,
-            },
-            {
+              'Content-Type': 'multipart/form-data',
               Authorization: `Bearer ${token}`,
             }
           );
 
-          if (!sectionResponse.data.success) {
-            console.error('Failed to create section:', section.sectionName);
-            continue;
+          if (!courseResponse.data.success) {
+            throw new Error(courseResponse.data.message || 'Failed to create course');
           }
 
-          const createdSection = sectionResponse.data.data;
+          const createdCourse = courseResponse.data.data;
+          courseIdToUse = createdCourse._id; 
+          toast.success('Course created successfully!', { id: toastId });
 
-          // Create subsections for this section
-          if (section.subSections.length > 0) {
-            for (const subSection of section.subSections) {
-              try {
-                const subSectionData = new FormData();
-                subSectionData.append('sectionId', createdSection._id);
-                subSectionData.append('title', subSection.title);
-                subSectionData.append('description', subSection.description);
-                // Allow backend to calculate duration if frontend doesn't provide one
-                subSectionData.append('timeDuration', subSection.duration || '0'); 
+          // Step 2: Create sections and subsections
+          if (courseBuilder.sections.length > 0) {
+            toast.loading('Adding sections and lectures...', { id: toastId });
 
-                if (subSection.video instanceof File) {
-                  subSectionData.append('videoUpload', subSection.video);
+            for (const section of courseBuilder.sections) {
+              // Create section
+              const sectionResponse = await apiConnector(
+                'POST',
+                courseEndpoints.CREATE_SECTION_API,
+                {
+                  sectionName: section.sectionName,
+                  courseId: createdCourse._id,
+                },
+                {
+                  Authorization: `Bearer ${token}`,
                 }
+              );
 
-                await apiConnector(
-                  'POST',
-                  courseEndpoints.CREATE_SUBSECTION_API,
-                  subSectionData,
-                  {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${token}`,
+              if (!sectionResponse.data.success) {
+                console.error('Failed to create section:', section.sectionName);
+                continue;
+              }
+
+              const createdSection = sectionResponse.data.data;
+
+              // Create subsections for this section
+              if (section.subSections.length > 0) {
+                for (const subSection of section.subSections) {
+                  try {
+                    const subSectionData = new FormData();
+                    subSectionData.append('sectionId', createdSection._id);
+                    subSectionData.append('title', subSection.title);
+                    subSectionData.append('description', subSection.description);
+                    // Allow backend to calculate duration if frontend doesn't provide one
+                    subSectionData.append('timeDuration', subSection.duration || '0'); 
+
+                    if (subSection.video instanceof File) {
+                      subSectionData.append('videoUpload', subSection.video);
+                    }
+
+                    await apiConnector(
+                      'POST',
+                      courseEndpoints.CREATE_SUBSECTION_API,
+                      subSectionData,
+                      {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`,
+                      }
+                    );
+                  } catch (error) {
+                    console.error('Failed to create subsection:', subSection.title, error);
                   }
-                );
-              } catch (error) {
-                console.error('Failed to create subsection:', subSection.title, error);
+                }
               }
             }
           }
-        }
+           toast.success('Course published successfully!', { id: toastId });
       }
-
-      toast.success('Course published successfully!', { id: toastId });
 
       // Clear draft and redirect
       clearDraft();

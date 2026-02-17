@@ -95,7 +95,7 @@ export default function VideoDetailsSidebar({ setReviewModal, sidebarOpen, setSi
                 <span>Course Completion</span>
                 <span className="text-yellow-100">{Math.round((completedLectures?.length / totalNoOfLectures) * 100) || 0}%</span>
               </div>
-              <div className="h-1.5 w-full bg-richblack-700 rounded-full overflow-hidden p-[1px]">
+              <div className="h-1.5 w-full bg-richblack-700 rounded-full overflow-hidden p-px">
                 <div 
                     className="h-full bg-linear-to-r from-yellow-100 to-yellow-400 rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(255,214,10,0.4)]"
                     style={{ width: `${(completedLectures?.length / totalNoOfLectures) * 100}%` }}
@@ -109,7 +109,7 @@ export default function VideoDetailsSidebar({ setReviewModal, sidebarOpen, setSi
         </div>
 
         {/* Course Content Sections */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar pt-4 pb-12 px-2">
+        <div className="flex-1 overflow-y-auto no-scrollbar pt-4 pb-12 px-2">
           {courseSectionData.map((section, index) => (
             <div key={index} className="mb-2 group/sec">
               {/* Section Header */}

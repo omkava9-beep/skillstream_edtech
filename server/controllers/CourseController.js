@@ -160,7 +160,7 @@ const EditCourse = async (req, res) => {
         }
 
         for (const key in updates) {
-            if (updates.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(updates, key)) {
                 if (key === "courseId" || key === "instructor") continue;
                 if (key === "tag" || key === "instructions") {
                     try { course[key] = JSON.parse(updates[key]) } catch (e) { course[key] = updates[key] }

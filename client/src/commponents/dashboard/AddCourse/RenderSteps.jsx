@@ -16,6 +16,7 @@ const RenderSteps = ({
   clearDraft,
   token,
   navigate,
+  editCourse,
 }) => {
   switch (currentStep) {
     case 1:
@@ -25,6 +26,7 @@ const RenderSteps = ({
           setCourseInfo={setCourseInfo}
           setCurrentStep={setCurrentStep}
           saveDraft={saveDraft}
+          editCourse={editCourse}
         />
       );
     case 2:
@@ -34,6 +36,7 @@ const RenderSteps = ({
           setCourseBuilder={setCourseBuilder}
           setCurrentStep={setCurrentStep}
           saveDraft={saveDraft}
+          editCourse={editCourse}
         />
       );
     case 3:
@@ -47,6 +50,7 @@ const RenderSteps = ({
           clearDraft={clearDraft}
           token={token}
           navigate={navigate}
+          editCourse={editCourse}
         />
       );
     default:

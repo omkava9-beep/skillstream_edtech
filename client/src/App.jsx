@@ -25,6 +25,7 @@ import CoursePage from './pages/CoursePage'
 import InstructorDashBoard from './pages/InstructorDashBoard'
 import AddCourse from './pages/AddCourse'
 import MyCourses from './commponents/dashboard/MyCourses'
+import EditCourse from './pages/EditCourse'
 import PurchaseHistory from './commponents/dashboard/PurchaseHistory'
 import ViewCourse from '../src/pages/ViewCourse'
 import VideoDetails from './commponents/core/ViewCourse/VideoDetails'
@@ -84,6 +85,7 @@ function App() {
             <Route path='/dashboard/add-course' element={<AddCourse/>}></Route>
             <Route path='/dashboard/my-courses' element={<MyCourses/>}></Route>
             <Route path="/dashboard/settings" element={<Settings/>} />
+            <Route path="/dashboard/edit-course/:courseId" element={<EditCourse />} />
             <Route path='/dashboard/cart' element={<StudentPrivate type="Student"><Cart /></StudentPrivate>} />
             <Route path="/dashboard/enrolled-courses" element={<EnrolledCourses/>}></Route>
             <Route path="/dashboard/purchase-history" element={<PurchaseHistory />} />

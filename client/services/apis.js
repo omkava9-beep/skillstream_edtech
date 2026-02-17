@@ -1,4 +1,4 @@
-const BASE_URL = "https://skillstream-edtech.onrender.com";
+const BASE_URL = "http://localhost:4000";
 
 export const catagories = {
     CATAGORIES_API: `${BASE_URL}/api/v1/course/showallcatagories`,
@@ -14,6 +14,8 @@ export const courseEndpoints = {
     EDIT_COURSE_API: `${BASE_URL}/api/v1/course/editcourse`,
     GET_FULL_COURSE_DETAILS_AUTHENTICATED: `${BASE_URL}/api/v1/course/getFullCourseDetails`,
     LECTURE_COMPLETION_API: `${BASE_URL}/api/v1/course/updateCourseProgress`,
+    UPDATE_SECTION_API: `${BASE_URL}/api/v1/course/updatesection`,
+    UPDATE_SUBSECTION_API: `${BASE_URL}/api/v1/course/updatesubsection`,
 }
 
 export const instructorEndpoints = {

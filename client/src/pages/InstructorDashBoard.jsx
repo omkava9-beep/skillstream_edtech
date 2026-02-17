@@ -23,13 +23,10 @@ const InstructorDashBoard = () => {
             }
             setLoading(false);
         };
-
         fetchInstructorData();
     }, [token]);
 
-    if (loading) {
-        return <Loader />;
-    }
+    if (loading) return <Loader />;
 
     const totalStudents = instructorData?.totalStudents || 0;
     const totalCourses = instructorData?.totalCourses || 0;
@@ -37,9 +34,14 @@ const InstructorDashBoard = () => {
     const courses = instructorData?.courses || [];
 
     return (
-        <div className="space-y-6">
+        /* FIX: Added 'pt-16' on mobile (lg:pt-0) 
+           This creates an empty space at the top so the 'Menu' button 
+           doesn't sit on top of your 'Hi User' text.
+        */
+        <div className="space-y-6 pb-14 pt-16 lg:pt-0">
+            
             {/* Welcome Section */}
-            <div className="bg-gradient-to-r from-richblack-800 to-richblack-900 border border-richblack-700 rounded-lg p-4 shadow-lg flex items-center justify-between">
+            <div className="bg-gradient-to-r from-richblack-800 to-richblack-900 border border-richblack-700 rounded-lg p-6 shadow-lg flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-richblack-5 mb-1">
                         Hi {user?.firstName} 👋
@@ -51,108 +53,64 @@ const InstructorDashBoard = () => {
             </div>
 
             {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Total Courses Card */}
-                <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/30 rounded-lg p-4 shadow-lg hover:shadow-blue-400/20 transition-all duration-300 hover:scale-105">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-500/30 rounded-lg p-5 shadow-lg">
                     <div className="flex items-center justify-between mb-3">
                         <div className="p-2 bg-blue-500/20 rounded-md">
                             <BiBook className="text-blue-400 text-xl" />
                         </div>
-                        <span className="text-blue-400 text-xs font-semibold">COURSES</span>
+                        <span className="text-blue-400 text-xs font-semibold uppercase">Courses</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-richblack-5 mb-1">{totalCourses}</h3>
-                    <p className="text-richblack-300 text-xs">Total Courses</p>
+                    <h3 className="text-3xl font-bold text-richblack-5 mb-1">{totalCourses}</h3>
                 </div>
 
-                {/* Total Students Card */}
-                <div className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border border-purple-500/30 rounded-lg p-4 shadow-lg hover:shadow-purple-400/20 transition-all duration-300 hover:scale-105">
+                <div className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border border-purple-500/30 rounded-lg p-5 shadow-lg">
                     <div className="flex items-center justify-between mb-3">
                         <div className="p-2 bg-purple-500/20 rounded-md">
                             <HiUsers className="text-purple-400 text-xl" />
                         </div>
-                        <span className="text-purple-400 text-xs font-semibold">STUDENTS</span>
+                        <span className="text-purple-400 text-xs font-semibold uppercase">Students</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-richblack-5 mb-1">{totalStudents}</h3>
-                    <p className="text-richblack-300 text-xs">Total Students</p>
+                    <h3 className="text-3xl font-bold text-richblack-5 mb-1">{totalStudents}</h3>
                 </div>
 
-                {/* Total Revenue Card */}
-                <div className="bg-gradient-to-br from-green-500/10 to-green-600/5 border border-green-500/30 rounded-lg p-4 shadow-lg hover:shadow-green-400/20 transition-all duration-300 hover:scale-105">
+                <div className="bg-gradient-to-br from-green-500/10 to-green-600/5 border border-green-500/30 rounded-lg p-5 shadow-lg sm:col-span-2 lg:col-span-1">
                     <div className="flex items-center justify-between mb-3">
                         <div className="p-2 bg-green-500/20 rounded-md">
                             <BiRupee className="text-green-400 text-xl" />
                         </div>
-                        <span className="text-green-400 text-xs font-semibold">REVENUE</span>
+                        <span className="text-green-400 text-xs font-semibold uppercase">Revenue</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-richblack-5 mb-1">
+                    <h3 className="text-3xl font-bold text-richblack-5 mb-1">
                         ₹{totalRevenue.toLocaleString()}
                     </h3>
-                    <p className="text-richblack-300 text-xs">Total Revenue</p>
                 </div>
             </div>
 
-            {/* Chart Section */}
+            {/* Main Content (Charts & Table) */}
             {courses.length > 0 ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <InstructorChart courses={courses} />
-                    
-                    {/* Quick Actions */}
-                    <div className="bg-gradient-to-br from-richblack-800 to-richblack-900 border border-richblack-700 rounded-lg p-4 shadow-lg hover:shadow-yellow-400/10 transition-all duration-300">
-                        <h2 className="text-lg font-bold text-richblack-5 mb-4">Quick Actions</h2>
-                        <div className="space-y-3">
-                            <Link
-                                to="/dashboard/add-course"
-                                className="block w-full p-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-richblack-900 rounded-lg font-semibold hover:scale-105 transition-all duration-200 shadow-md shadow-yellow-400/20 text-center text-sm"
-                            >
-                                <span className="flex items-center justify-center gap-2">
-                                     Create New Course
-                                </span>
-                            </Link>
-                            <Link
-                                to="/dashboard/my-courses"
-                                className="block w-full p-3 bg-richblack-700 text-richblack-5 rounded-lg font-semibold hover:bg-richblack-600 transition-all duration-200 border border-richblack-600 text-center text-sm"
-                            >
-                                Manage Courses
-                            </Link>
-                            <Link
-                                to="/dashboard/settings"
-                                className="block w-full p-3 bg-richblack-700 text-richblack-5 rounded-lg font-semibold hover:bg-richblack-600 transition-all duration-200 border border-richblack-600 text-center text-sm"
-                            >
-                                Account Settings
-                            </Link>
+                <div className="flex flex-col gap-y-6">
+                    <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+                        <div className="xl:col-span-8">
+                            <InstructorChart courses={courses} />
                         </div>
-
-                        {/* Tips Section */}
-                        <div className="mt-6 p-3 bg-richblack-700/50 border border-richblack-600 rounded-lg">
-                            <h3 className="text-sm font-semibold text-yellow-400 mb-2">💡 Pro Tip</h3>
-                             <p className="text-richblack-300 text-xs">
-                                Engage with students regularly to boost course ratings and specific feedback.
-                             </p>
+                        <div className="xl:col-span-4 bg-richblack-800 border border-richblack-700 rounded-lg p-6">
+                            <h2 className="text-lg font-bold text-richblack-5 mb-6">Quick Actions</h2>
+                            <div className="flex flex-col gap-4">
+                                <Link to="/dashboard/add-course" className="bg-yellow-50 text-richblack-900 p-3 rounded-lg text-center font-bold">Create Course</Link>
+                                <Link to="/dashboard/my-courses" className="bg-richblack-700 text-richblack-5 p-3 rounded-lg text-center border border-richblack-600">Manage Courses</Link>
+                            </div>
                         </div>
                     </div>
+                    {/* Courses Table */}
+                    <InstructorCourses courses={courses} />
                 </div>
             ) : (
-                <div className="bg-gradient-to-br from-richblack-800 to-richblack-900 border border-richblack-700 rounded-lg p-8 text-center shadow-lg">
-                    <div className="max-w-md mx-auto">
-                        <BiBook className="text-5xl text-richblack-400 mx-auto mb-3" />
-                        <h3 className="text-xl font-bold text-richblack-5 mb-2">
-                            No Courses Yet
-                        </h3>
-                        <p className="text-richblack-300 mb-4 text-sm">
-                            Start your teaching journey by creating your first course
-                        </p>
-                        <Link
-                            to="/dashboard/add-course"
-                            className="inline-block px-6 py-2.5 bg-gradient-to-r from-yellow-400 to-yellow-500 text-richblack-900 rounded-lg font-semibold hover:scale-105 transition-all duration-200 shadow-lg shadow-yellow-400/30 text-sm"
-                        >
-                            Create Your First Course
-                        </Link>
-                    </div>
+                <div className="bg-richblack-800 border border-richblack-700 rounded-lg p-12 text-center">
+                    <p className="text-richblack-300">No courses yet.</p>
+                    <Link to="/dashboard/add-course" className="text-yellow-50 mt-4 block">Create your first course</Link>
                 </div>
             )}
-
-            {/* Courses Table */}
-            {courses.length > 0 && <InstructorCourses courses={courses} />}
         </div>
     );
 };
