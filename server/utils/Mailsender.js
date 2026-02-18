@@ -3,15 +3,23 @@ const nodemailer = require('nodemailer');
 
 const MailSender = async (email, title, body) => {
     try {
+        // Diagnostic check (don't log the password!)
+        if (!process.env.MAIL_USER || !process.env.MAIL_PASS) {
+            console.error("Mail Error: Missing MAIL_USER or MAIL_PASS environment variables");
+            throw new Error("SMTP Credentials missing");
+        }
+
         let transporter = nodemailer.createTransport({
-            host: process.env.MAIL_HOST,
-            port: 465,
-            secure: true,
+            service: 'gmail', // Use service instead of host/port for Gmail
             auth: {
                 user: process.env.MAIL_USER,
                 pass: process.env.MAIL_PASS
-            }
+            },
+            connectionTimeout: 15000, // 15 seconds
+            greetingTimeout: 10000,   // 10 seconds
         })
+
+        console.log("Attempting to send email to:", email);
 
         let info = await transporter.sendMail({
             from: `"StudyNotion" <${process.env.MAIL_USER}>`,
@@ -20,11 +28,11 @@ const MailSender = async (email, title, body) => {
             html: `${body}`
         })
 
-        console.log("Email info: ", info);
+        console.log("Email sent successfully: ", info.messageId);
         return info;
     } catch (e) {
-        console.error("Error in MailSender:", e.message);
-        throw e; // Throw error so Otp.create fails and Auth.js catches it
+        console.error("Detailed MailSender Error:", e);
+        throw e;
     }
 }
 
