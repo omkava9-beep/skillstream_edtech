@@ -3,23 +3,28 @@ const nodemailer = require('nodemailer');
 
 const MailSender = async (email, title, body) => {
     try {
-        // Diagnostic check (don't log the password!)
-        if (!process.env.MAIL_USER || !process.env.MAIL_PASS) {
-            console.error("Mail Error: Missing MAIL_USER or MAIL_PASS environment variables");
-            throw new Error("SMTP Credentials missing");
-        }
+        // Diagnostic check: This will show up in Render logs if variables are missing
+        if (!process.env.MAIL_USER) console.error("MAIL_USER is missing in environment");
+        if (!process.env.MAIL_PASS) console.error("MAIL_PASS is missing in environment");
 
         let transporter = nodemailer.createTransport({
-            service: 'gmail', // Use service instead of host/port for Gmail
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
             auth: {
                 user: process.env.MAIL_USER,
                 pass: process.env.MAIL_PASS
             },
-            connectionTimeout: 15000, // 15 seconds
-            greetingTimeout: 10000,   // 10 seconds
+            tls: {
+                // This helps if Render's network uses a proxy or has cert issues
+                rejectUnauthorized: false
+            },
+            connectionTimeout: 20000, // Increase to 20s for cloud starts
+            debug: true,              // Enable debug output in logs
+            logger: true              // Log every interaction
         })
 
-        console.log("Attempting to send email to:", email);
+        console.log("Attempting to send email via port 465 to:", email);
 
         let info = await transporter.sendMail({
             from: `"StudyNotion" <${process.env.MAIL_USER}>`,
@@ -28,10 +33,10 @@ const MailSender = async (email, title, body) => {
             html: `${body}`
         })
 
-        console.log("Email sent successfully: ", info.messageId);
+        console.log("Email sent successfully! MessageID:", info.messageId);
         return info;
     } catch (e) {
-        console.error("Detailed MailSender Error:", e);
+        console.error("Detailed MailSender Error (including stack):", e);
         throw e;
     }
 }
