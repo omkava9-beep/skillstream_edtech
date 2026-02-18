@@ -5,6 +5,8 @@ const MailSender = async (email, title, body) => {
     try {
         let transporter = nodemailer.createTransport({
             host: process.env.MAIL_HOST,
+            port: 587,
+            secure: false, // true for 465, false for other ports
             auth: {
                 user: process.env.MAIL_USER,
                 pass: process.env.MAIL_PASS
@@ -12,7 +14,7 @@ const MailSender = async (email, title, body) => {
         })
 
         let info = await transporter.sendMail({
-            from: 'StudyNotion',
+            from: `"StudyNotion" <${process.env.MAIL_USER}>`,
             to: `${email}`,
             subject: `${title}`,
             html: `${body}`
@@ -20,8 +22,8 @@ const MailSender = async (email, title, body) => {
 
         return info;
     } catch (e) {
-        console.log(e.message);
-        return null;
+        console.error("Error in MailSender:", e.message);
+        throw e; // Throw error so Otp.create fails and Auth.js catches it
     }
 }
 

@@ -24,6 +24,7 @@ app.use(
             "https://edtech-frontend-zznw.onrender.com",
             "https://edtech-frontend-9i9r.onrender.com",
             "https://edtech-frontend-9i92.onrender.com",
+            "http://localhost:5175",
         ],
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true,

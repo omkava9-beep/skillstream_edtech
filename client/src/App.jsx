@@ -3,7 +3,7 @@ import './App.css'
 import { Route , Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import SignUp from './pages/SignUp'
+
 import Navbar from './commponents/common/Navbar'
 import Dashboard from './pages/DashBoard'
 import PrivateRoute from './commponents/auth/PrivateRoute'
@@ -27,12 +27,13 @@ import AddCourse from './pages/AddCourse'
 import MyCourses from './commponents/dashboard/MyCourses'
 import EditCourse from './pages/EditCourse'
 import PurchaseHistory from './commponents/dashboard/PurchaseHistory'
-import ViewCourse from '../src/pages/ViewCourse'
+import ViewCourse from './pages/ViewCourse'
 import VideoDetails from './commponents/core/ViewCourse/VideoDetails'
 import ScrollToTop from './commponents/common/ScrollToTop'
 import Categories from './pages/Categories'
 import StudentPrivate from './commponents/auth/StudentPrivate'
 import NotFound from './pages/NotFound'
+import SignUp from '../src/pages/Signup'
 
 
 
