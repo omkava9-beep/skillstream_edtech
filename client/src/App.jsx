@@ -33,7 +33,7 @@ import ScrollToTop from './commponents/common/ScrollToTop'
 import Categories from './pages/Categories'
 import StudentPrivate from './commponents/auth/StudentPrivate'
 import NotFound from './pages/NotFound'
-import SignUp from '../src/pages/Signup'
+import SignUp from './pages/SignUp'
 
 
 
