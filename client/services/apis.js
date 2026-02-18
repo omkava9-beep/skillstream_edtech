@@ -1,4 +1,7 @@
-const BASE_URL = "https://skillstream-edtech.onrender.com";
+const BASE_URL =    "https://skillstream-edtech-e9sb.vercel.app"  ||  "http://localhost:4000" ;
+
+// const dev = "https://skillstream-edtech.onrender.com";
+
 
 export const catagories = {
     CATAGORIES_API: `${BASE_URL}/api/v1/course/showallcatagories`,
