@@ -197,11 +197,11 @@ const VideoDetails = () => {
                     
                     {/* Glassmorphic Overlay when Video Ends */}
                     {videoEnded && (
-                        <div className="absolute inset-0 z-100 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md p-2 sm:p-4 md:p-6">
-                            <div className="relative group/overlay flex flex-col items-center gap-3 sm:gap-6 md:gap-8 max-w-[260px] sm:max-w-sm w-full text-center">
+                        <div className="absolute inset-0 z-100 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md p-2 sm:p-4 md:p-6 overflow-y-auto no-scrollbar">
+                            <div className="relative group/overlay flex flex-col items-center gap-2 sm:gap-6 md:gap-8 max-w-[260px] sm:max-w-sm w-full text-center py-4">
                                 {/* Success Icon/Badge */}
-                                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-caribbeangreen-500/10 border border-caribbeangreen-500/20 flex items-center justify-center text-caribbeangreen-100 shadow-[0_0_30px_rgba(5,173,161,0.2)]">
-                                    <MdCheckCircle className="text-3xl sm:text-5xl" />
+                                <div className="w-10 h-10 sm:w-20 sm:h-20 rounded-lg sm:rounded-2xl bg-caribbeangreen-500/10 border border-caribbeangreen-500/20 flex items-center justify-center text-caribbeangreen-100 shadow-[0_0_30px_rgba(5,173,161,0.2)]">
+                                    <MdCheckCircle className="text-2xl sm:text-5xl" />
                                 </div>
 
                                 <div className="space-y-4">
@@ -209,7 +209,7 @@ const VideoDetails = () => {
                                     <p className="text-xs sm:text-sm text-richblack-400 leading-relaxed italic">You've completed this section of the course. Ready for the next challenge?</p>
                                 </div>
 
-                                <div className="grid grid-cols-1 gap-3 w-full">
+                                <div className="grid grid-cols-1 gap-2 sm:gap-3 w-full">
                                     {!completedLectures.includes(subSectionId) && (
                                         <button
                                             disabled={loading}
