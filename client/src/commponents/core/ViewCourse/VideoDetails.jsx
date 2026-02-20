@@ -197,8 +197,8 @@ const VideoDetails = () => {
                     
                     {/* Glassmorphic Overlay when Video Ends */}
                     {videoEnded && (
-                        <div className="absolute inset-0 z-100 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-6">
-                            <div className="relative group/overlay flex flex-col items-center gap-4 sm:gap-6 md:gap-8 max-w-[280px] sm:max-w-sm w-full text-center">
+                        <div className="absolute inset-0 z-100 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md p-2 sm:p-4 md:p-6">
+                            <div className="relative group/overlay flex flex-col items-center gap-3 sm:gap-6 md:gap-8 max-w-[260px] sm:max-w-sm w-full text-center">
                                 {/* Success Icon/Badge */}
                                 <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-caribbeangreen-500/10 border border-caribbeangreen-500/20 flex items-center justify-center text-caribbeangreen-100 shadow-[0_0_30px_rgba(5,173,161,0.2)]">
                                     <MdCheckCircle className="text-3xl sm:text-5xl" />
@@ -264,10 +264,10 @@ const VideoDetails = () => {
 
       {/* Video Info Section */}
       <div className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 py-4 sm:py-6 border-b border-richblack-800">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 sm:py-6 border-b border-richblack-800">
             <div className="space-y-2">
                 <span className="px-2 py-0.5 sm:px-3 sm:py-1 bg-yellow-100/10 text-yellow-100 border border-yellow-100/20 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em]">Learning in Progress</span>
-                <h1 className="text-base sm:text-xl md:text-2xl font-black tracking-tight bg-linear-to-r from-yellow-100 to-yellow-400 bg-clip-text text-transparent italic">
+                <h1 className="text-base sm:text-xl md:text-2xl font-black tracking-tight bg-linear-to-r from-yellow-100 to-yellow-400 bg-clip-text text-transparent italic leading-tight">
                     {videoData?.title}
                 </h1>
             </div>
@@ -282,9 +282,9 @@ const VideoDetails = () => {
             </div>
         </div>
 
-        <div className="bg-richblack-800/40 border border-richblack-700/50 rounded-2xl sm:rounded-3xl md:rounded-4xl p-4 sm:p-6 md:p-8">
-            <h3 className="text-xs sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-yellow-100 mb-3 sm:mb-4 opacity-70">About this Module</h3>
-            <p className="text-richblack-300 text-sm sm:text-base md:text-lg leading-relaxed italic opacity-90 max-w-4xl">
+        <div className="bg-richblack-800/40 border border-richblack-700/50 rounded-xl sm:rounded-3xl md:rounded-4xl p-3 sm:p-6 md:p-8">
+            <h3 className="text-[10px] sm:text-sm font-black uppercase tracking-widest sm:tracking-[0.2em] text-yellow-100 mb-2 sm:mb-4 opacity-70">About this Module</h3>
+            <p className="text-richblack-300 text-xs sm:text-base md:text-lg leading-relaxed italic opacity-90 max-w-4xl">
                 {videoData?.description}
             </p>
         </div>
