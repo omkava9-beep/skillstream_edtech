@@ -47,17 +47,17 @@ export default function CourseReviewModal({ setReviewModal }) {
 
   return (
     <div className="fixed inset-0 z-[1000] !mt-0 grid h-screen w-screen place-items-center overflow-auto bg-richblack-900 bg-opacity-50 backdrop-blur-sm">
-      <div className="my-10 w-11/12 max-w-[700px] rounded-lg border border-richblack-400 bg-richblack-800">
+      <div className="my-4 sm:my-10 w-[95%] sm:w-11/12 max-w-[700px] rounded-lg border border-richblack-400 bg-richblack-800">
         {/* Modal Header */}
-        <div className="flex items-center justify-between rounded-t-lg bg-richblack-700 p-5">
-          <p className="text-xl font-semibold text-richblack-5">Add Review</p>
+        <div className="flex items-center justify-between rounded-t-lg bg-richblack-700 p-3 sm:p-5">
+          <p className="text-base sm:text-xl font-semibold text-richblack-5">Add Review</p>
           <button onClick={() => setReviewModal(false)}>
             <RxCross2 className="text-2xl text-richblack-5" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
           <div className="flex items-center justify-center gap-x-4">
             <img
               src={user?.image}
@@ -100,7 +100,7 @@ export default function CourseReviewModal({ setReviewModal }) {
                 id="courseExperience"
                 placeholder="Add Your Experience"
                 {...register("courseExperience", { required: true })}
-                className="form-style resize-x-none min-h-[130px] w-full rounded-lg bg-richblack-600 p-2 text-richblack-5"
+                className="form-style resize-x-none min-h-[90px] sm:min-h-[130px] w-full rounded-lg bg-richblack-600 p-2 text-sm sm:text-base text-richblack-5"
               />
               {errors.courseExperience && (
                 <span className="ml-2 text-xs tracking-wide text-pink-200">

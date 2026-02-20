@@ -164,7 +164,7 @@ const VideoDetails = () => {
   }
 
   return (
-    <div className="flex flex-col gap-8 text-white animate-in fade-in duration-700">
+    <div className="flex flex-col gap-4 sm:gap-6 md:gap-8 text-white animate-in fade-in duration-700">
       {/* Video Player Container */}
       <div className="relative group rounded-2xl overflow-hidden bg-richblack-800 border border-richblack-700 shadow-2xl shadow-black/50">
         {!videoData ? (
@@ -197,16 +197,16 @@ const VideoDetails = () => {
                     
                     {/* Glassmorphic Overlay when Video Ends */}
                     {videoEnded && (
-                        <div className="absolute inset-0 z-100 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md p-6">
-                            <div className="relative group/overlay flex flex-col items-center gap-8 max-w-sm w-full text-center">
+                        <div className="absolute inset-0 z-100 flex flex-col items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-6">
+                            <div className="relative group/overlay flex flex-col items-center gap-4 sm:gap-6 md:gap-8 max-w-[280px] sm:max-w-sm w-full text-center">
                                 {/* Success Icon/Badge */}
-                                <div className="w-20 h-20 rounded-2xl bg-caribbeangreen-500/10 border border-caribbeangreen-500/20 flex items-center justify-center text-caribbeangreen-100 shadow-[0_0_30px_rgba(5,173,161,0.2)]">
-                                    <MdCheckCircle className="text-5xl" />
+                                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-caribbeangreen-500/10 border border-caribbeangreen-500/20 flex items-center justify-center text-caribbeangreen-100 shadow-[0_0_30px_rgba(5,173,161,0.2)]">
+                                    <MdCheckCircle className="text-3xl sm:text-5xl" />
                                 </div>
 
                                 <div className="space-y-4">
-                                    <h3 className="text-2xl font-black italic tracking-tight">Lesson Mastered!</h3>
-                                    <p className="text-sm text-richblack-400 leading-relaxed italic">You've completed this section of the course. Ready for the next challenge?</p>
+                                    <h3 className="text-lg sm:text-2xl font-black italic tracking-tight">Lesson Mastered!</h3>
+                                    <p className="text-xs sm:text-sm text-richblack-400 leading-relaxed italic">You've completed this section of the course. Ready for the next challenge?</p>
                                 </div>
 
                                 <div className="grid grid-cols-1 gap-3 w-full">
@@ -214,7 +214,7 @@ const VideoDetails = () => {
                                         <button
                                             disabled={loading}
                                             onClick={() => handleLectureCompletion()}
-                                            className="group flex items-center justify-center gap-2 px-6 py-3 bg-yellow-100 text-richblack-900 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-yellow-50 transition-all border border-yellow-100 hover:border-white shadow-lg"
+                                            className="group flex items-center justify-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 bg-yellow-100 text-richblack-900 rounded-lg sm:rounded-xl font-black uppercase text-[10px] sm:text-xs tracking-widest hover:bg-yellow-50 transition-all border border-yellow-100 hover:border-white shadow-lg"
                                         >
                                             {loading ? "Syncing..." : "Mark as Completed"}
                                         </button>
@@ -228,17 +228,17 @@ const VideoDetails = () => {
                                                 setVideoEnded(false)
                                             }
                                         }}
-                                        className="flex items-center justify-center gap-2 px-6 py-3 bg-richblack-800 text-richblack-5 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-richblack-700 transition-all border border-richblack-600"
+                                        className="flex items-center justify-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 bg-richblack-800 text-richblack-5 rounded-lg sm:rounded-xl font-black uppercase text-[10px] sm:text-xs tracking-widest hover:bg-richblack-700 transition-all border border-richblack-600"
                                     >
                                         Rewatch Lesson
                                     </button>
 
-                                    <div className="flex gap-3 mt-4">
+                                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-3 sm:mt-4">
                                         {!isFirstVideo() && (
                                             <button
                                                 disabled={loading}
                                                 onClick={goToPrevVideo}
-                                                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-richblack-900 border border-richblack-700 rounded-xl font-bold text-xs text-richblack-300 hover:bg-richblack-800 transition-all"
+                                                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-richblack-900 border border-richblack-700 rounded-lg sm:rounded-xl font-bold text-[10px] sm:text-xs text-richblack-300 hover:bg-richblack-800 transition-all"
                                             >
                                                 Previous
                                             </button>
@@ -247,7 +247,7 @@ const VideoDetails = () => {
                                             <button
                                                 disabled={loading}
                                                 onClick={goToNextVideo}
-                                                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-richblack-900 border border-richblack-700 rounded-xl font-bold text-xs text-white hover:bg-richblack-800 transition-all shadow-inner"
+                                                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 bg-richblack-900 border border-richblack-700 rounded-lg sm:rounded-xl font-bold text-[10px] sm:text-xs text-white hover:bg-richblack-800 transition-all shadow-inner"
                                             >
                                                 Next Video
                                             </button>
@@ -264,27 +264,27 @@ const VideoDetails = () => {
 
       {/* Video Info Section */}
       <div className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-6 border-b border-richblack-800">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 py-4 sm:py-6 border-b border-richblack-800">
             <div className="space-y-2">
-                <span className="px-3 py-1 bg-yellow-100/10 text-yellow-100 border border-yellow-100/20 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">Learning in Progress</span>
-                <h1 className="text-xl md:text-2xl font-black tracking-tight bg-linear-to-r from-yellow-100 to-yellow-400 bg-clip-text text-transparent italic">
+                <span className="px-2 py-0.5 sm:px-3 sm:py-1 bg-yellow-100/10 text-yellow-100 border border-yellow-100/20 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em]">Learning in Progress</span>
+                <h1 className="text-base sm:text-xl md:text-2xl font-black tracking-tight bg-linear-to-r from-yellow-100 to-yellow-400 bg-clip-text text-transparent italic">
                     {videoData?.title}
                 </h1>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
                 <div className="flex -space-x-2">
                     {[1,2,3].map(i => (
-                        <div key={i} className="w-8 h-8 rounded-full border-2 border-richblack-900 bg-richblack-700"></div>
+                        <div key={i} className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-richblack-900 bg-richblack-700"></div>
                     ))}
                 </div>
-                <p className="text-xs text-richblack-400 font-bold uppercase tracking-widest">Global Students Learning</p>
+                <p className="text-[10px] sm:text-xs text-richblack-400 font-bold uppercase tracking-wider sm:tracking-widest">Global Students Learning</p>
             </div>
         </div>
 
-        <div className="bg-richblack-800/40 border border-richblack-700/50 rounded-4xl p-8">
-            <h3 className="text-sm font-black uppercase tracking-[0.2em] text-yellow-100 mb-4 opacity-70">About this Module</h3>
-            <p className="text-richblack-300 text-lg leading-relaxed italic opacity-90 max-w-4xl">
+        <div className="bg-richblack-800/40 border border-richblack-700/50 rounded-2xl sm:rounded-3xl md:rounded-4xl p-4 sm:p-6 md:p-8">
+            <h3 className="text-xs sm:text-sm font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-yellow-100 mb-3 sm:mb-4 opacity-70">About this Module</h3>
+            <p className="text-richblack-300 text-sm sm:text-base md:text-lg leading-relaxed italic opacity-90 max-w-4xl">
                 {videoData?.description}
             </p>
         </div>

@@ -55,17 +55,17 @@ export default function VideoDetailsSidebar({ setReviewModal, sidebarOpen, setSi
 
   return (
     <>
-      <div className={`h-full w-[320px] max-w-[350px] flex flex-col bg-transparent text-richblack-5`}>
+      <div className={`h-full w-full flex flex-col bg-transparent text-richblack-5`}>
         {/* Header Section */}
-        <div className="px-6 py-8 border-b border-richblack-700/50">
-          <div className="flex items-center justify-between mb-8">
+        <div className="px-3 py-4 sm:px-5 sm:py-6 md:px-6 md:py-8 border-b border-richblack-700/50">
+          <div className="flex items-center justify-between mb-4 sm:mb-6 md:mb-8">
             <button
               onClick={() => navigate(`/dashboard/enrolled-courses`)}
               className="group flex items-center gap-2 text-richblack-300 hover:text-white transition-colors"
               title="Return to Dashboard"
             >
-              <div className="w-8 h-8 rounded-lg bg-richblack-800 flex items-center justify-center border border-richblack-700 group-hover:border-yellow-100/50 transition-all">
-                <IoIosArrowBack size={18} />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-richblack-800 flex items-center justify-center border border-richblack-700 group-hover:border-yellow-100/50 transition-all">
+                <IoIosArrowBack className="text-sm sm:text-base" />
               </div>
               <span className="text-xs font-black uppercase tracking-widest">Dashboard</span>
             </button>
@@ -73,7 +73,7 @@ export default function VideoDetailsSidebar({ setReviewModal, sidebarOpen, setSi
             <div className="flex items-center gap-2">
               <button 
                 onClick={() => setReviewModal(true)}
-                className="px-3 py-1.5 bg-yellow-100 text-richblack-900 rounded-lg text-[10px] font-black uppercase tracking-tighter hover:bg-yellow-50 transition-colors shadow-[0_0_15px_rgba(255,214,10,0.3)]"
+                className="px-2 py-1 sm:px-3 sm:py-1.5 bg-yellow-100 text-richblack-900 rounded-md sm:rounded-lg text-[9px] sm:text-[10px] font-black uppercase tracking-tighter hover:bg-yellow-50 transition-colors shadow-[0_0_15px_rgba(255,214,10,0.3)]"
               >
                 Add Review
               </button>
@@ -85,7 +85,7 @@ export default function VideoDetailsSidebar({ setReviewModal, sidebarOpen, setSi
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-base font-black leading-tight bg-linear-to-r from-yellow-100 to-yellow-400 bg-clip-text text-transparent">
+            <h2 className="text-sm sm:text-base font-black leading-tight bg-linear-to-r from-yellow-100 to-yellow-400 bg-clip-text text-transparent">
               {courseEntireData?.courseName}
             </h2>
             
@@ -109,19 +109,19 @@ export default function VideoDetailsSidebar({ setReviewModal, sidebarOpen, setSi
         </div>
 
         {/* Course Content Sections */}
-        <div className="flex-1 overflow-y-auto no-scrollbar pt-4 pb-12 px-2">
+        <div className="flex-1 overflow-y-auto no-scrollbar pt-2 sm:pt-4 pb-8 sm:pb-12 px-1.5 sm:px-2">
           {courseSectionData.map((section, index) => (
             <div key={index} className="mb-2 group/sec">
               {/* Section Header */}
               <div 
-                className={`flex items-center justify-between px-4 py-4 cursor-pointer rounded-xl transition-all duration-300 ${activeStatus === section?._id ? "bg-richblack-700/40 border border-richblack-600/50 shadow-inner" : "hover:bg-richblack-800/40 border border-transparent"}`}
+                className={`flex items-center justify-between px-2.5 py-2.5 sm:px-4 sm:py-4 cursor-pointer rounded-lg sm:rounded-xl transition-all duration-300 ${activeStatus === section?._id ? "bg-richblack-700/40 border border-richblack-600/50 shadow-inner" : "hover:bg-richblack-800/40 border border-transparent"}`}
                 onClick={() => setActiveStatus(activeStatus === section?._id ? "" : section?._id)}
               >
                 <div className="flex items-center gap-3">
-                    <div className={`w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-bold border ${activeStatus === section?._id ? "bg-yellow-100/10 border-yellow-100/50 text-yellow-100" : "bg-richblack-700 border-richblack-600 text-richblack-400"}`}>
+                    <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-md flex items-center justify-center text-[9px] sm:text-[10px] font-bold border ${activeStatus === section?._id ? "bg-yellow-100/10 border-yellow-100/50 text-yellow-100" : "bg-richblack-700 border-richblack-600 text-richblack-400"}`}>
                         {index + 1}
                     </div>
-                    <span className={`text-sm font-bold tracking-tight ${activeStatus === section?._id ? "text-white" : "text-richblack-200"}`}>
+                    <span className={`text-xs sm:text-sm font-bold tracking-tight ${activeStatus === section?._id ? "text-white" : "text-richblack-200"}`}>
                         {section?.sectionName}
                     </span>
                 </div>
@@ -134,7 +134,7 @@ export default function VideoDetailsSidebar({ setReviewModal, sidebarOpen, setSi
                   {section.subSection.map((subSection, i) => (
                     <div
                       key={i}
-                      className={`group relative flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all duration-300 border ${
+                      className={`group relative flex items-center gap-2 sm:gap-3 px-2.5 py-2 sm:px-4 sm:py-3 rounded-lg cursor-pointer transition-all duration-300 border ${
                         videoBarActive === subSection._id
                           ? "bg-linear-to-r from-yellow-100/10 to-transparent border-yellow-100/30"
                           : "hover:bg-richblack-800/30 border-transparent hover:border-richblack-700"
