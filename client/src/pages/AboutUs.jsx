@@ -24,7 +24,7 @@ const AboutUs = () => {
             Driving Innovation in Online Education for a
             <h1 className='bg-linear-to-bl text-wrap from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] bg-clip-text tex text-transparent'>Brighter Future</h1>
             <p className="mx-auto mt-6 text-center text-base sm:text-lg font-medium text-richblack-300 lg:w-[85%] leading-relaxed">
-              Studynotion is at the forefront of driving innovation in online
+              SkillStream is at the forefront of driving innovation in online
               education. We're passionate about creating a brighter future by
               offering cutting-edge courses, leveraging emerging technologies,
               and nurturing a vibrant learning community.

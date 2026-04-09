@@ -24,9 +24,16 @@ exports.passwordUpdated = (email, name) => {
                 text-align: center;
             }
     
-            .logo {
-                max-width: 200px;
+            .logo-text {
+                font-size: 28px;
+                font-weight: 700;
+                color: #161D29;
+                text-decoration: none;
                 margin-bottom: 20px;
+                display: inline-block;
+            }
+            .logo-text span {
+                color: #1FA2FF;
             }
     
             .message {
@@ -55,8 +62,7 @@ exports.passwordUpdated = (email, name) => {
     
     <body>
         <div class="container">
-            <a href="https://studynotion-edtech-project.vercel.app"><img class="logo"
-                    src="https://i.ibb.co/7Xyj3PC/logo.png" alt="StudyNotion Logo"></a>
+            <a href="https://edtech-frontend-9i9r.onrender.com" class="logo-text">Skill<span>Stream</span></a>
             <div class="message">Password Update Confirmation</div>
             <div class="body">
                 <p>Hey ${name},</p>
@@ -66,7 +72,7 @@ exports.passwordUpdated = (email, name) => {
             </div>
             <div class="support">If you have any questions or need further assistance, please feel free to reach out to us
                 at
-                <a href="mailto:info@studynotion.com">info@studynotion.com</a>. We are here to help!
+                <a href="mailto:info@skillstream.com">info@skillstream.com</a>. We are here to help!
             </div>
         </div>
     </body>

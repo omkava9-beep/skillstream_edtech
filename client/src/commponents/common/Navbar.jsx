@@ -8,7 +8,7 @@ import { IoCartOutline } from "react-icons/io5";
 import { IoMdSearch } from "react-icons/io";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { VscSignOut } from "react-icons/vsc";
-import logo from "../../assets/Logo/Logo-Full-Light.png";
+import logo from "../../assets/Logo/Logo-Full-Light.svg";
 import { apiConnector } from "../../../services/apiConnector";
 import { catagories, courseEndpoints } from "../../../services/apis";
 import { useEffect, useState, useRef } from "react";

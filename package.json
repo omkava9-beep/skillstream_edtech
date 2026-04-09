@@ -1,7 +1,7 @@
 {
-  "name": "studynotion",
+  "name": "skillstream",
   "version": "1.0.0",
-  "description": "StudyNotion - Full Stack Course Platform",
+  "description": "SkillStream - Full Stack Course Platform",
   "private": true,
   "scripts": {
     "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",

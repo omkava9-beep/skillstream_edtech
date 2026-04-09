@@ -214,7 +214,7 @@ const Home = () => {
               </div>
               <div className="lg:w-1/2 flex flex-col gap-6 justify-center">
                 <p className="text-[16px] text-richblack-700 leading-relaxed">
-                  The modern StudyNotion dictates its own terms. Today, to be a competitive
+                  The modern SkillStream dictates its own terms. Today, to be a competitive
                   specialist requires more than professional skills.
                 </p>
                 <div>
@@ -271,7 +271,7 @@ const Home = () => {
                 <div className="h-1 w-20 bg-yellow-100 rounded-full mx-auto lg:mx-0 mt-2"></div>
               </div>
               <p className="font-medium text-lg leading-relaxed text-richblack-300 max-w-[600px]">
-                Instructors from around the world teach millions of students on StudyNotion. We provide the tools and skills to teach what you love.
+                Instructors from around the world teach millions of students on SkillStream. We provide the tools and skills to teach what you love.
               </p>
               <div className="w-fit mx-auto lg:mx-0">
                 <YellowButton linkto="/signup">Start Teaching Today</YellowButton>

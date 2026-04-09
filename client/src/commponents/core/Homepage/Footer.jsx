@@ -43,7 +43,7 @@ const Footer = () => {
                     <div className="lg:w-[50%] flex flex-wrap flex-row justify-between lg:border-r lg:border-richblack-700 pl-3 lg:pr-5 gap-3">
                         <div className="w-[30%] flex flex-col gap-3 lg:w-[30%] mb-7 lg:pl-0">
                             <h1 className="text-richblack-50 font-semibold text-[16px]">
-                                StudyNotion
+                                SkillStream
                             </h1>
                             <div className="flex flex-col gap-2 mt-2">
                                 {["About", "Careers", "Affiliates"].map((ele, i) => {
@@ -204,7 +204,7 @@ const Footer = () => {
                             );
                         })}
                     </div>
-                    <div className="text-center font-medium">Made with ❤️ StudyNotion © {new Date().getFullYear()}</div>
+                    <div className="text-center font-medium">Made with ❤️ SkillStream © {new Date().getFullYear()}</div>
                 </div>
             </div>
         </div>

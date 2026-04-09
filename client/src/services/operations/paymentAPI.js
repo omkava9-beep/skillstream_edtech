@@ -50,7 +50,7 @@ export async function buyCourse(courseId, token, user, navigate, skipNavigation 
             key: import.meta.env.VITE_RAZORPAY_KEY || "rzp_test_RzJ1OcpeDMiyQS",
             amount: amount,
             currency: currency,
-            name: "StudyNotion",
+            name: "SkillStream",
             description: courseName,
             order_id: orderId,
             handler: async function (response) {
@@ -125,7 +125,7 @@ export async function buyMultipleCourses(courseIds, token, user, navigate) {
             key: import.meta.env.VITE_RAZORPAY_KEY || "rzp_test_RzJ1OcpeDMiyQS",
             amount: amount,
             currency: currency,
-            name: "StudyNotion",
+            name: "SkillStream",
             description: `${courseCount} Courses: ${courseNames}`,
             order_id: orderId,
             handler: async function (response) {

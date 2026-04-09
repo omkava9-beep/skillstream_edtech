@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 import { gsap } from "gsap"
-import logo from "../../assets/Logo/Logo-Full-Light.png"
+import logo from "../../assets/Logo/Logo-Full-Light.svg"
 
 const Loader = () => {
   const loaderRef = useRef(null)

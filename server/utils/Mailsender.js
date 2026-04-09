@@ -27,7 +27,7 @@ const MailSender = async (email, title, body) => {
         console.log("Attempting to send email via port 465 to:", email);
 
         let info = await transporter.sendMail({
-            from: `"StudyNotion" <${process.env.MAIL_USER}>`,
+            from: `"SkillStream" <${process.env.MAIL_USER}>`,
             to: `${email}`,
             subject: `${title}`,
             html: `${body}`
