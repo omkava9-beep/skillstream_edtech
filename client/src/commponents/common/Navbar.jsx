@@ -110,9 +110,16 @@ const Navbar = () => {
                   <IoIosArrowDropdown className="transition-transform group-hover:rotate-180" />
                   <div className="invisible absolute top-[120%] left-1/2 -translate-x-1/2 w-[260px] flex flex-col rounded-2xl bg-richblack-800/95 backdrop-blur-xl p-3 opacity-0 group-hover:visible group-hover:opacity-100 group-hover:translate-y-2 transition-all border border-white/10 shadow-2xl z-50">
                     {subLinks?.length > 0 ? (
-                      subLinks.map((sub, i) => (
-                        <Link key={i} to={`/catalog/${sub._id}`} className="px-4 py-3 rounded-xl hover:bg-yellow-100/10 hover:text-yellow-100 transition-all text-sm">{sub.name}</Link>
-                      ))
+                      <>
+                        {subLinks.slice(0, 5).map((sub, i) => (
+                          <Link key={i} to={`/catalog/${sub._id}`} className="px-4 py-3 rounded-xl hover:bg-yellow-100/10 hover:text-yellow-100 transition-all text-sm">{sub.name}</Link>
+                        ))}
+                        {subLinks.length > 5 && (
+                          <Link to="/categories" className="px-4 py-3 mt-1 text-center font-bold text-yellow-100 border-t border-white/5 hover:bg-yellow-100/10 transition-all rounded-b-xl">
+                            All Categories
+                          </Link>
+                        )}
+                      </>
                     ) : (
                       <div className="p-4 text-center text-richblack-400 font-medium">Loading...</div>
                     )}
@@ -194,9 +201,14 @@ const Navbar = () => {
                             <IoIosArrowDropdown className={`transition-all duration-500 ${mobileCatalogOpen ? "rotate-180 text-yellow-100" : "rotate-0 text-richblack-400"}`} />
                           </button>
                           <div className={`mt-4 flex flex-col gap-4 pl-4 border-l border-yellow-100/20 overflow-hidden transition-all duration-500 ${mobileCatalogOpen ? "max-h-[500px] opacity-100 py-2" : "max-h-0 opacity-0"}`}>
-                            {subLinks?.map((sub, idx) => (
+                            {subLinks?.slice(0, 5).map((sub, idx) => (
                               <Link key={idx} to={`/catalog/${sub._id}`} onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-richblack-300 hover:text-yellow-100 transition-colors">{sub.name}</Link>
                             ))}
+                            {subLinks?.length > 5 && (
+                              <Link to="/categories" onClick={() => setIsMenuOpen(false)} className="text-lg font-bold text-yellow-100 hover:text-yellow-50 transition-colors pt-2 border-t border-white/5">
+                                All Categories
+                              </Link>
+                            )}
                           </div>
                         </div>
                       ) : (
